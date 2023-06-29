@@ -1,7 +1,9 @@
 package dblab.sharing_flatform.domain.post;
 
 import dblab.sharing_flatform.domain.base.BaseTime;
+import dblab.sharing_flatform.domain.category.Category;
 import dblab.sharing_flatform.domain.image.Image;
+import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.product.Product;
 import lombok.AccessLevel;
 import lombok.Getter;
