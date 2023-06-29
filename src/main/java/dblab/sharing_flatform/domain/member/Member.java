@@ -3,6 +3,7 @@ package dblab.sharing_flatform.domain.member;
 import dblab.sharing_flatform.domain.address.Address;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.role.Role;
+import dblab.sharing_flatform.domain.role.RoleType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
     private String phoneNumber;
 
     @Embedded
@@ -34,11 +36,29 @@ public class Member {
     // role
     @OneToMany
     @JoinColumn(name = "role_id")
-    private List<Role> roles = new ArrayList<>();
+    private List<MemberRole> roles = new ArrayList<>();
 
     // post
     @OneToMany(mappedBy = "member")
     private List<Post> posts = new ArrayList<>();
+
+    public Member(String name, String password, String phoneNumber, Address address) {
+        this.name = name;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+
+        posts.stream().forEach(
+                p -> {
+                    posts.add(p);
+                    p.initMember(this);
+                }
+        );
+
+        this.roles = List.of();
+    }
+
+
 
 
 }

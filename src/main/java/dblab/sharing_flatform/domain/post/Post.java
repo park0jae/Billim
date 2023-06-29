@@ -33,8 +33,8 @@ public class Post extends BaseTime {
     @Column(nullable = false)
     private String content;
 
-    @Column
-    private Integer like;
+    @Column(nullable = false)
+    private Integer likes;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -53,18 +53,10 @@ public class Post extends BaseTime {
     public Post(String title, String content, Category category, Product product, List<Image> images, Member member) {
         this.title = title;
         this.content = content;
-        this.like = 0;
+        this.likes = 0;
         this.category = category;
         this.product = product;
-
-        initMember(member);
         initImages(images);
-    }
-
-    private void initMember(Member member) {
-        if (this.member == null) {
-            this.member = member;
-        }
     }
 
     private void initImages(List<Image> images) {
@@ -74,5 +66,11 @@ public class Post extends BaseTime {
                     i.initPost(this);
                 }
         );
+    }
+
+    public void initMember(Member member) {
+        if (this.member == null) {
+            this.member = member;
+        }
     }
 }

@@ -51,7 +51,6 @@ public class Image {
         }
     }
 
-
     private String extractExtAndGenerateUniqueName(String originName) {
         String ext = getExt(originName);
         return UUID.randomUUID().toString() + "." + ext;
