@@ -1,6 +1,7 @@
 package dblab.sharing_flatform.domain.member;
 
 import dblab.sharing_flatform.domain.address.Address;
+import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.role.Role;
 import lombok.AccessLevel;
 import lombok.Getter;
