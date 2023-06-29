@@ -27,4 +27,5 @@ public class Product {
         this.quantity = quantity;
         this.price = price;
     }
+
 }
