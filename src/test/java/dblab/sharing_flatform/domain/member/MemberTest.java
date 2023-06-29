@@ -41,7 +41,6 @@ class MemberTest {
     @Test  
     public void initPostsTest() throws Exception {
         Member member = createMember();
-        member.g
 
     }
 }

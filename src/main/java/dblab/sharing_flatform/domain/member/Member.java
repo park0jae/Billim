@@ -63,7 +63,7 @@ public class Member {
         posts.stream().forEach(
                 p -> {
                     posts.add(p);
-                    p.addMember(this);
+                    p.initMember(this);
                 }
         );
     }
