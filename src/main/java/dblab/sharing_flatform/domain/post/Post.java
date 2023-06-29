@@ -4,16 +4,14 @@ import dblab.sharing_flatform.domain.base.BaseTime;
 import dblab.sharing_flatform.domain.category.Category;
 import dblab.sharing_flatform.domain.image.Image;
 import dblab.sharing_flatform.domain.member.Member;
-import dblab.sharing_flatform.domain.product.Product;
+import dblab.sharing_flatform.domain.item.Item;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +39,7 @@ public class Post extends BaseTime {
     private Category category;
 
     @OneToOne(fetch = FetchType.LAZY)
-    private Product product;
+    private Item item;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
@@ -50,14 +48,15 @@ public class Post extends BaseTime {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
-    public Post(String title, String content, Category category, Product product, List<Image> images, Member member) {
+    public Post(String title, String content, Category category, Item item, List<Image> images, Member member) {
         this.title = title;
         this.content = content;
         this.likes = 0;
         this.category = category;
-        this.product = product;
+        this.item = item;
         addImages(images);
     }
+
 
     private void addImages(List<Image> images) {
         images.stream().forEach(
@@ -73,4 +72,13 @@ public class Post extends BaseTime {
             this.member = member;
         }
     }
+
+    public void update(String title, String content, Category category, Item item, List<Image> images) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+        this.item = item;
+        addImages(images);
+    }
+
 }
