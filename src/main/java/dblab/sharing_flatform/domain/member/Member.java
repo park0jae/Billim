@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -42,23 +43,29 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Post> posts = new ArrayList<>();
 
-    public Member(String name, String password, String phoneNumber, Address address) {
+    public Member(String name, String password, String phoneNumber, Address address, List<Role> roles , List<Post> posts) {
         this.name = name;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.address = address;
 
+        addPosts(posts);
+        addRoles(roles);
+    }
+
+    private void addRoles(List<Role> roles) {
+        List<MemberRole> roleList = roles.stream().map(role -> new MemberRole(this, role)).collect(Collectors.toList());
+        this.roles = roleList;
+    }
+
+    private void addPosts(List<Post> posts) {
         posts.stream().forEach(
                 p -> {
                     posts.add(p);
-                    p.initMember(this);
+                    p.addMember(this);
                 }
         );
-
-        this.roles = List.of();
     }
-
-
 
 
 }

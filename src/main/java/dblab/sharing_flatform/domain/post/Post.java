@@ -56,10 +56,10 @@ public class Post extends BaseTime {
         this.likes = 0;
         this.category = category;
         this.product = product;
-        initImages(images);
+        addImages(images);
     }
 
-    private void initImages(List<Image> images) {
+    private void addImages(List<Image> images) {
         images.stream().forEach(
                 i -> {
                     images.add(i);
@@ -68,7 +68,7 @@ public class Post extends BaseTime {
         );
     }
 
-    public void initMember(Member member) {
+    public void addMember(Member member) {
         if (this.member == null) {
             this.member = member;
         }
