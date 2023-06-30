@@ -15,6 +15,7 @@ import dblab.sharing_flatform.util.SecurityUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -41,7 +43,8 @@ public class SignService {
 
     @Transactional
     public void signUp(SignUpRequestDto signUpRequestDto){
-        if(memberRepository.findOneWithRolesByUsername(signUpRequestDto.getUsername()).orElseThrow(MemberNotFoundException::new) != null){
+        if(memberRepository.findOneWithRolesByUsername(signUpRequestDto.getUsername()).orElse(null) != null){
+
             throw new DuplicateSignUpMember();
         }
 
@@ -50,7 +53,9 @@ public class SignService {
                 signUpRequestDto.getPhoneNumber(),
                 signUpRequestDto.getAddress(),
                 List.of(new Role(RoleType.USER)),
-                null);
+                List.of());
+
+        log.info("hello !!!");
 
         memberRepository.save(member);
     }
