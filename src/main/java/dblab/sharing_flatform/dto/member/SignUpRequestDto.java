@@ -1,11 +1,10 @@
 package dblab.sharing_flatform.dto.member;
 
 import dblab.sharing_flatform.domain.address.Address;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import javax.persistence.Embedded;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -14,15 +13,15 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class SignUpRequestDto {
 
-    @NotNull
+    @NotBlank
     private String username;
 
-    @NotNull
+    @NotBlank
     private String password;
 
-    @NotNull
+    @NotBlank
     private String phoneNumber;
 
-    @NotNull
+    @Embedded
     private Address address;
 }

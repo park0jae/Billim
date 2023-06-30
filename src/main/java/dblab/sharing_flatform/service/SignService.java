@@ -47,21 +47,26 @@ public class SignService {
 
     @Transactional
     public void signUp(SignUpRequestDto signUpRequestDto){
-
-        if(memberRepository.findOneWithRolesByUsername(signUpRequestDto.getUsername()).orElseThrow(null) != null){
+        log.info("Sign = {} ",signUpRequestDto);
+        if(memberRepository.findOneWithRolesByUsername(signUpRequestDto.getUsername()).orElse(null) != null){
             throw new DuplicateSignUpMember();
         }
+
+        log.info("!");
 
         Member member = new Member(signUpRequestDto.getUsername(),
                 passwordEncoder.encode(signUpRequestDto.getPassword()),
                 signUpRequestDto.getPhoneNumber(),
                 signUpRequestDto.getAddress(),
-
                 List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)),
                 List.of());
 
+        log.info("2");
 
         memberRepository.save(member);
+
+        log.info("3");
+
     }
 
     public LogInResponseDto login(LoginRequestDto loginRequestDto) {
@@ -77,17 +82,18 @@ public class SignService {
     private String jwtLoginRequest(LoginRequestDto loginRequestDto) {
         UsernamePasswordAuthenticationToken authenticationToken
                 = new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword());
+
+        log.info("LOGIN = {} ", loginRequestDto);
         try {
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken); // loadUserByUsername 메소드 실행
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
             // 토큰 생성 및 리턴
             String jwt = tokenProvider.createAccessToken(authentication);
-
+            log.info("jwt = {} ", jwt);
             if (!StringUtils.hasText(jwt)) {
                 throw new LoginFailureException();
             }
-
             return jwt;
         } catch (BadCredentialsException e) {
             throw new LoginFailureException();
