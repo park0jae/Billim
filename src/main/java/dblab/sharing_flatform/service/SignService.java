@@ -9,8 +9,11 @@ import dblab.sharing_flatform.dto.member.LoginRequestDto;
 import dblab.sharing_flatform.dto.member.SignUpRequestDto;
 import dblab.sharing_flatform.exception.auth.LoginFailureException;
 import dblab.sharing_flatform.exception.member.DuplicateSignUpMember;
+import dblab.sharing_flatform.exception.member.DuplicateUsernameException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
+import dblab.sharing_flatform.exception.role.RoleNotFoundException;
 import dblab.sharing_flatform.repository.member.MemberRepository;
+import dblab.sharing_flatform.repository.role.RoleRepository;
 import dblab.sharing_flatform.util.SecurityUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,13 +38,15 @@ import java.util.stream.Collectors;
 public class SignService {
 
     private final MemberRepository memberRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Transactional
     public void signUp(SignUpRequestDto signUpRequestDto){
-        if(memberRepository.findOneWithRolesByUsername(signUpRequestDto.getUsername()).orElseThrow(MemberNotFoundException::new) != null){
+
+        if(memberRepository.findOneWithRolesByUsername(signUpRequestDto.getUsername()).orElseThrow(null) != null){
             throw new DuplicateSignUpMember();
         }
 
@@ -49,8 +54,8 @@ public class SignService {
                 passwordEncoder.encode(signUpRequestDto.getPassword()),
                 signUpRequestDto.getPhoneNumber(),
                 signUpRequestDto.getAddress(),
-                List.of(new Role(RoleType.USER)),
-                null);
+                List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)),
+                List.of());
 
         memberRepository.save(member);
     }
