@@ -12,5 +12,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @EntityGraph(attributePaths = "roles")
     Optional<Member> findOneWithRolesByUsername(String username);
-
 }

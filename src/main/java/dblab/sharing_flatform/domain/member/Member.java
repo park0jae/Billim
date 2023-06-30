@@ -5,6 +5,7 @@ import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.domain.role.RoleType;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
@@ -52,6 +53,7 @@ public class Member {
         initPosts(posts);
         addRoles(roles);
     }
+
 
     private void addRoles(List<Role> roles) {
         List<MemberRole> roleList = roles.stream().map(role -> new MemberRole(this, role)).collect(Collectors.toList());
