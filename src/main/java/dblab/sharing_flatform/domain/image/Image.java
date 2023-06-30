@@ -1,8 +1,8 @@
 package dblab.sharing_flatform.domain.image;
 
 import dblab.sharing_flatform.domain.post.Post;
-import dblab.sharing_flatform.exception.NoExtException;
-import dblab.sharing_flatform.exception.UnsupportExtException;
+import dblab.sharing_flatform.exception.image.NoExtException;
+import dblab.sharing_flatform.exception.image.UnsupportExtException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

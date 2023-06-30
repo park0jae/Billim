@@ -34,7 +34,7 @@ public class Member {
     @Embedded
     private Address address;
 
-    // role
+    // roles -> 기본전략 : 지연로딩
     @OneToMany
     @JoinColumn(name = "role_id")
     private List<MemberRole> roles = new ArrayList<>();

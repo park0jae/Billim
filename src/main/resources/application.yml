@@ -11,3 +11,8 @@ spring:
       hibernate:
         show_sql: true
         default_batch_fetch_size: 100
+
+
+jwt:
+  secret_key: cWxxbHpiZ2hrZHJtYWRoZmZscW10Cg== // # echo 'qlqlzbghkdrmadhfflqmt'|base64
+  token-validity-in-seconds: 86400 # 24시간
