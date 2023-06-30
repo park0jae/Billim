@@ -59,26 +59,21 @@ public class JwtHandler {
 
         MemberDetails principal = (MemberDetails) authentication.getPrincipal();
 
-        Long id = principal.getId();
-        String username = principal.getUsername();
-
-        // Details, 권한정보 -> Access-Token의 Claim에 담음
-
-        // authorities = "ADMIN,USER,MANAGER" in ADMIN-CASE
         String authorities = principal.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-        // 2. 토큰 만료시간 설정 (현재시간 + 1시간)
         long now = new Date().getTime();
         Date validity = new Date(now + this.tokenValidityMilliSeconds);
 
-        return Jwts.builder()
-                .addClaims(Map.of(AUTH_ID, id)) // 유저 정보 id
-                .addClaims(Map.of(AUTH_USERNAME, username)) // 유저 정보 username
-                .addClaims(Map.of(AUTH_KEY, authorities)) // 권한 정보
+        String jwt = Jwts.builder()
+                .addClaims(Map.of(AUTH_ID, principal.getId()))
+                .addClaims(Map.of(AUTH_USERNAME, principal.getUsername()))
+                .addClaims(Map.of(AUTH_KEY, authorities))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .setExpiration(validity)
                 .compact();
+        return jwt;
     }
 
     /** 권한이 필요한 Request에서 사용
@@ -97,9 +92,9 @@ public class JwtHandler {
 
         List<? extends GrantedAuthority> simpleGrantedAuthorities = authorities.stream().map(auth -> new SimpleGrantedAuthority(auth)).collect(Collectors.toList());
 
-        MemberDetails principal = new MemberDetails((Long) claims.get(AUTH_ID),(String) claims.get(AUTH_USERNAME), simpleGrantedAuthorities);
+        MemberDetails principal = new MemberDetails((String) claims.get(AUTH_ID),(String) claims.get(AUTH_USERNAME), null, simpleGrantedAuthorities);
 
-        return new UsernamePasswordAuthenticationToken(principal.getUsername(), token, simpleGrantedAuthorities);
+        return new UsernamePasswordAuthenticationToken(principal, token, simpleGrantedAuthorities);
     }
 
 

@@ -8,6 +8,7 @@ import dblab.sharing_flatform.config.security.jwt.support.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -52,6 +53,12 @@ public class SecurityConfig {
 
                 .authorizeRequests() // 권한이 필요한 요청
                 .antMatchers("/home", "/sign-up","/login").permitAll() // 홈, 회원가입, 로그인 요청은 권한 필요X
+
+                .antMatchers(HttpMethod.GET, "/adminPage").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.GET, "/managerPage").hasAuthority("MANAGER")
+                .antMatchers(HttpMethod.GET, "/userPage").hasAuthority("USER")
+                .antMatchers(HttpMethod.GET, "/authenticate").authenticated()
+
                 .and()
                 .userDetailsService(memberDetailsService)
                 .apply(new JwtSecurityConfig(tokenProvider));

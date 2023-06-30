@@ -47,12 +47,8 @@ public class SignService {
 
     @Transactional
     public void signUp(SignUpRequestDto signUpRequestDto){
-        log.info("Sign = {} ",signUpRequestDto);
-        if(memberRepository.findOneWithRolesByUsername(signUpRequestDto.getUsername()).orElse(null) != null){
-            throw new DuplicateSignUpMember();
-        }
 
-        log.info("!");
+        validateDuplicateUsername(signUpRequestDto);
 
         Member member = new Member(signUpRequestDto.getUsername(),
                 passwordEncoder.encode(signUpRequestDto.getPassword()),
@@ -60,13 +56,13 @@ public class SignService {
                 signUpRequestDto.getAddress(),
                 List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)),
                 List.of());
-
-        log.info("2");
-
         memberRepository.save(member);
+    }
 
-        log.info("3");
-
+    private void validateDuplicateUsername(SignUpRequestDto signUpRequestDto) {
+        if (memberRepository.findOneWithRolesByUsername(signUpRequestDto.getUsername()).orElse(null) != null) {
+            throw new DuplicateSignUpMember();
+        }
     }
 
     public LogInResponseDto login(LoginRequestDto loginRequestDto) {
@@ -83,12 +79,10 @@ public class SignService {
         UsernamePasswordAuthenticationToken authenticationToken
                 = new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword());
 
-        log.info("LOGIN = {} ", loginRequestDto);
         try {
-            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken); // loadUserByUsername 메소드 실행
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-            // 토큰 생성 및 리턴
             String jwt = tokenProvider.createAccessToken(authentication);
             log.info("jwt = {} ", jwt);
             if (!StringUtils.hasText(jwt)) {
@@ -100,12 +94,10 @@ public class SignService {
         }
     }
 
-    // 유저 이름으로 유저 객체 권한정보 가져오기
     public Optional<Member> getMemberWithAuthorities(String username){
         return memberRepository.findOneWithRolesByUsername(username);
     }
 
-    // SecurityContext에 저장된 username의 정보 가져오기
     public Optional<Member> getMyMemberWithAuthorities(){
         return SecurityUtil.getCurrentUsername().flatMap(memberRepository::findOneWithRolesByUsername);
     }

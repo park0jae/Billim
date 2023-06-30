@@ -3,6 +3,7 @@ package dblab.sharing_flatform.controller.member;
 import dblab.sharing_flatform.dto.member.LogInResponseDto;
 import dblab.sharing_flatform.dto.member.LoginRequestDto;
 import dblab.sharing_flatform.dto.member.SignUpRequestDto;
+import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.service.SignService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,21 +18,17 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/member")
-public class MemberController {
-
+public class SignController {
     private final SignService signService;
-    
-    @PostMapping("/signup")
-    public ResponseEntity<String> signup(@Valid @RequestBody SignUpRequestDto signUpRequestDto){
+    @PostMapping("/sign-up")
+    public Response signup(@Valid @RequestBody SignUpRequestDto signUpRequestDto){
         signService.signUp(signUpRequestDto);
-        return ResponseEntity.ok("Sign Up!");
+        return Response.success();
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LogInResponseDto> login(@RequestBody LoginRequestDto loginRequestDto){
-        LogInResponseDto loginObject = signService.login(loginRequestDto);
-
-        return ResponseEntity.ok(loginObject);
+    public Response login(@RequestBody LoginRequestDto loginRequestDto){
+        LogInResponseDto logInResponseDto = signService.login(loginRequestDto);
+        return Response.success(logInResponseDto);
     }
 }

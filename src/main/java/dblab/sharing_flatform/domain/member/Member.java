@@ -70,7 +70,6 @@ public class Member {
         }
     }
 
-
     public void updateUserInfo(String password, String phoneNumber, Address address) {
         this.password = password;
         this.phoneNumber = phoneNumber;
