@@ -33,8 +33,8 @@ public class JwtHandler {
 
     private Key secretKey;
 
-    public JwtHandler(@Value("{jwt.token-validity-in-seconds}") long tokenValiditySeconds,
-                      @Value("{jwt.secret_key}") String originSecretKey) {
+    public JwtHandler(@Value("${jwt.token-validity-in-seconds}") long tokenValiditySeconds,
+                      @Value("${jwt.secret_key}") String originSecretKey) {
         this.tokenValidityMilliSeconds =  tokenValiditySeconds * 1000;
         this.originSecretKey = originSecretKey;
     }
