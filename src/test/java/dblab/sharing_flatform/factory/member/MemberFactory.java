@@ -6,12 +6,17 @@ import dblab.sharing_flatform.domain.member.MemberRole;
 import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.domain.role.RoleType;
 
+import java.util.Collections;
 import java.util.List;
 
 public class MemberFactory {
 
     public static Member createMember() {
         return new Member("username", "password", "phoneNum", createAddress(), List.of(), List.of());
+    }
+
+    public static Member createMemberWithRoles(List<Role> roles) {
+        return new Member("username", "password", "phoneNum", createAddress(), roles, List.of());
     }
 
     public static Member createSendMember() {
