@@ -6,7 +6,6 @@ import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.domain.role.RoleType;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
 import dblab.sharing_flatform.repository.role.RoleRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -15,7 +14,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static dblab.sharing_flatform.factory.member.MemberFactory.*;
 import static java.util.stream.Collectors.toList;
@@ -48,6 +46,7 @@ public class MemberRepositoryTest {
 
     @Test
     public void findOneWithRolesByUsernameTest(){
+
         // given
         List<RoleType> roleTypes = List.of(RoleType.ADMIN, RoleType.MANAGER, RoleType.USER);
         List<Role> roles = roleTypes.stream().map(roleType -> new Role(roleType)).collect(toList());
@@ -89,11 +88,36 @@ public class MemberRepositoryTest {
 
     @Test
     public void cascadeDeleteMemberToMemberRoleTest(){
+        // given
+        List<RoleType> roleTypes = List.of(RoleType.ADMIN, RoleType.MANAGER, RoleType.USER);
+        List<Role> roles = roleTypes.stream().map(roleType -> new Role(roleType)).collect(toList());
+        roleRepository.saveAll(roles);
+        clear();
+
+        Member member = new Member("user", "password", "phoneNum", createAddress(),
+                List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)), List.of());
+        memberRepository.save(member);
+        clear();
+
+        // when
+        memberRepository.deleteById(member.getId());
+        clear();
+
+        List<MemberRole> result = em.createQuery("select mr from MemberRole mr", MemberRole.class).getResultList();
+
+        // then
+        assertThat(result.size()).isEqualTo(0);
     }
 
     @Test
     public void existsByUsernameTest() {
+        // given
+        Member member = createMember();
+        memberRepository.save(member);
+        clear();
 
+        // then
+        assertThat(memberRepository.existsByUsername(member.getUsername())).isTrue();
     }
 
 
