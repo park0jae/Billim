@@ -59,6 +59,10 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, "/userPage").hasAuthority("USER")
                 .antMatchers(HttpMethod.GET, "/authenticate").authenticated()
 
+                // swagger page
+                .antMatchers("/swagger-uri/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll()
+
+
                 .and()
                 .userDetailsService(memberDetailsService)
                 .apply(new JwtSecurityConfig(tokenProvider));
