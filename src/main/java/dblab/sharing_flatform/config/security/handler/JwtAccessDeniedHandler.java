@@ -1,4 +1,4 @@
-package dblab.sharing_flatform.config.security.exceptionAdvisor;
+package dblab.sharing_flatform.config.security.handler;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

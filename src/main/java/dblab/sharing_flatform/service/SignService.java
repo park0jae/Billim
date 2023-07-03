@@ -8,15 +8,13 @@ import dblab.sharing_flatform.dto.member.LogInResponseDto;
 import dblab.sharing_flatform.dto.member.LoginRequestDto;
 import dblab.sharing_flatform.dto.member.SignUpRequestDto;
 import dblab.sharing_flatform.exception.auth.LoginFailureException;
-import dblab.sharing_flatform.exception.member.DuplicateSignUpMember;
 import dblab.sharing_flatform.exception.member.DuplicateUsernameException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.role.RoleRepository;
 import dblab.sharing_flatform.util.SecurityUtil;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -61,7 +59,7 @@ public class SignService {
 
     private void validateDuplicateUsername(SignUpRequestDto signUpRequestDto) {
         if (memberRepository.findOneWithRolesByUsername(signUpRequestDto.getUsername()).orElse(null) != null) {
-            throw new DuplicateSignUpMember();
+            throw new DuplicateUsernameException();
         }
     }
 
