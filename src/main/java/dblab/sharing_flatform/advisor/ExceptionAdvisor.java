@@ -82,8 +82,6 @@ public class ExceptionAdvisor {
         return Response.failure(400, "검증되지 않은 토큰 정보입니다.");
     }
 
-
-
     // image
     @ExceptionHandler(NoExtException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
