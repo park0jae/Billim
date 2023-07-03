@@ -8,11 +8,8 @@ import dblab.sharing_flatform.repository.member.MemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import static dblab.sharing_flatform.factory.member.MemberFactory.*;
 import static org.assertj.core.api.Assertions.*;
