@@ -1,7 +1,5 @@
 package dblab.sharing_flatform.advisor;
 
-
-import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.exception.ValidateTokenException;
 import dblab.sharing_flatform.exception.auth.AccessDeniedException;
@@ -13,12 +11,10 @@ import dblab.sharing_flatform.exception.image.UnSupportExtException;
 import dblab.sharing_flatform.exception.member.DuplicateUsernameException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -42,6 +38,7 @@ public class ExceptionAdvisor {
         log.info("message = {}", e.getMessage());
         return Response.failure(400, "양식에 맞게 입력해주세요.");
     }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -81,11 +78,6 @@ public class ExceptionAdvisor {
         return Response.failure(400, "검증되지 않은 토큰 정보입니다.");
     }
 
-
-
-
-
-
     // image
     @ExceptionHandler(NoExtException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -116,9 +108,6 @@ public class ExceptionAdvisor {
     public Response memberNotFoundException(MemberNotFoundException e) {
         return Response.failure(404, "회원을 찾을 수 없습니다.");
     }
-
-
-
 
 
 

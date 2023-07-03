@@ -1,8 +1,7 @@
-package dblab.sharing_flatform.service;
+package dblab.sharing_flatform.service.member;
 
 import dblab.sharing_flatform.config.security.jwt.support.TokenProvider;
 import dblab.sharing_flatform.domain.member.Member;
-import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.domain.role.RoleType;
 import dblab.sharing_flatform.dto.member.LogInResponseDto;
 import dblab.sharing_flatform.dto.member.LoginRequestDto;
@@ -29,7 +28,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service

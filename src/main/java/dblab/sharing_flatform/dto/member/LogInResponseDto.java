@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 public class LogInResponseDto {
 
     private String token;
-
     public static LogInResponseDto toDto(String token) {
         return new LogInResponseDto(token);
     }
