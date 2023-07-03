@@ -98,14 +98,23 @@ public class JwtHandler {
         return new UsernamePasswordAuthenticationToken(principal, token, simpleGrantedAuthorities);
     }
 
-
     /** 토큰 검증
      */
-    public boolean validateToken(String token) throws JwtException {
+    public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            log.info("잘못된 JWT 서명입니다.");
+            throw new ValidateTokenException();
+        } catch (ExpiredJwtException e) {
+            log.info("만료된 JWT 토큰입니다.");
+            throw new ValidateTokenException();
+        } catch (UnsupportedJwtException e) {
+            log.info("지원되지 않는 JWT 토큰입니다.");
+            throw new ValidateTokenException();
+        } catch (IllegalArgumentException e) {
+            log.info("JWT 토큰이 잘못되었습니다.");
             throw new ValidateTokenException();
         }
     }
