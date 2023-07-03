@@ -69,7 +69,7 @@ class MemberServiceTest {
 
         // when
         Address address = new Address("TestCity", "TestDistrict", "TestStreet", "TestZipcode");
-        MemberUpdateRequestDto memberUpdateRequestDto = new MemberUpdateRequestDto("updateUser", "updatePass1!", "01011112222", address);
+        MemberUpdateRequestDto memberUpdateRequestDto = new MemberUpdateRequestDto("updatePass1!", "01011112222", address);
         MemberResponseDto updateMember = memberService.update(member.getId(), memberUpdateRequestDto);
 
         // then

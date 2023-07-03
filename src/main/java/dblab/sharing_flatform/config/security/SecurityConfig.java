@@ -55,14 +55,11 @@ public class SecurityConfig {
                 .authorizeRequests() // 권한이 필요한 요청
                 .antMatchers("/home", "/sign-up","/login").permitAll() // 홈, 회원가입, 로그인 요청은 권한 필요X
                 .antMatchers("/swagger-uri/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll() // swagger page
+
                 .antMatchers(HttpMethod.GET,"/member/user").permitAll()
-                .antMatchers(HttpMethod.GET, "/adminPage").hasAuthority("ADMIN")
-                .antMatchers(HttpMethod.GET, "/managerPage").hasAuthority("MANAGER")
-                .antMatchers(HttpMethod.GET, "/userPage").hasAuthority("USER")
-                .antMatchers(HttpMethod.GET, "member/admin/**").hasAuthority("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "member/**").hasAnyRole("ADMIN", "USER")
-                .antMatchers(HttpMethod.PATCH, "member/**").hasAuthority("USER")
-                .antMatchers(HttpMethod.GET, "/authenticate").authenticated();
+                .antMatchers(HttpMethod.GET, "/member/admin/**").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/member/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.PATCH, "/member/**").hasAuthority("USER");
 
                 // 시큐리티 설정 끝
 

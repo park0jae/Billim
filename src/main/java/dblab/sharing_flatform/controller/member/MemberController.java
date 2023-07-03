@@ -32,7 +32,7 @@ public class MemberController {
         return Response.success(currentMember);
     }
 
-    @ApiOperation(value = "특정 사용자 조회", notes = "관리자 권한이 있는 경우 특정 사용자를 조회한다.")
+    @ApiOperation(value = "특정 사용자 조회", notes = "ADMIN 권한이 있는 경우 특정 사용자를 조회한다.")
     @GetMapping("/admin/{username}")
     public Response findMemberByAdmin(@ApiParam(name="조회할 사용자 이름" , required = true) @PathVariable String username){
         MemberResponseDto memberInfo = memberService.getMemberInfo(username);
