@@ -30,8 +30,10 @@ public class ExceptionAdvisor {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Response exception(Exception e) {
-        return Response.failure(500, "예외가 발생했습니다.");
+        return Response.failure(500, e.getMessage());
     }
+
+
 
     // Field Error
     @ExceptionHandler(BindException.class)
@@ -41,11 +43,13 @@ public class ExceptionAdvisor {
         return Response.failure(400, "양식에 맞게 입력해주세요.");
     }
 
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response methodArgumentNotValidException(MethodArgumentNotValidException e) {
         return Response.failure(400, "양식에 맞게 입력해주세요.");
     }
+
 
     // auth
     @ExceptionHandler(AccessDeniedException.class)
@@ -110,9 +114,6 @@ public class ExceptionAdvisor {
     public Response memberNotFoundException(MemberNotFoundException e) {
         return Response.failure(404, "회원을 찾을 수 없습니다.");
     }
-
-
-
 
 
 

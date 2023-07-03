@@ -25,10 +25,8 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtExceptionFilter jwtExceptionFilter;
-
-    private final TokenProvider tokenProvider;
-
     private final MemberDetailsService memberDetailsService;
+    private final JwtFilter jwtFilter;
 
 
     @Bean
@@ -49,21 +47,21 @@ public class SecurityConfig {
                 .exceptionHandling()  // 예외 처리 핸들러 등록
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler)
+
                 .and()
-                .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)// JwtFilter 등록
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)// JwtFilter 등록
                 .addFilterBefore(jwtExceptionFilter, JwtFilter.class)
                 .userDetailsService(memberDetailsService) // 시큐리티 UserDetailsService
 
-
                 .authorizeRequests() // 권한이 필요한 요청
                 .antMatchers("/home", "/sign-up","/login").permitAll() // 홈, 회원가입, 로그인 요청은 권한 필요X
+                .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
+                .antMatchers("/swagger-uri/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll() // swagger page
+
                 .antMatchers(HttpMethod.GET, "/adminPage").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET, "/managerPage").hasAuthority("MANAGER")
                 .antMatchers(HttpMethod.GET, "/userPage").hasAuthority("USER")
-                .antMatchers(HttpMethod.GET, "/authenticate").authenticated()
-
-                // swagger page
-                .antMatchers("/swagger-uri/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll();
+                .antMatchers(HttpMethod.GET, "/authenticate").authenticated();
 
                 // 시큐리티 설정 끝
 
