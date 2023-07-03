@@ -27,7 +27,7 @@ public class SignController {
     @ApiOperation(value = "회원가입", notes = "회원가입을 한다.") // 2
     @PostMapping("/sign-up")
     @ResponseStatus(HttpStatus.CREATED)
-    public Response signup(@ApiParam(name="회원가입 요청 DTO") @Valid @RequestBody SignUpRequestDto signUpRequestDto){
+    public Response signup(@Valid @RequestBody SignUpRequestDto signUpRequestDto){
         signService.signUp(signUpRequestDto);
         return Response.success();
     }
