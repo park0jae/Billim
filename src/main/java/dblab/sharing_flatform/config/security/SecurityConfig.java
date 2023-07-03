@@ -55,9 +55,7 @@ public class SecurityConfig {
 
                 .authorizeRequests() // 권한이 필요한 요청
                 .antMatchers("/home", "/sign-up","/login").permitAll() // 홈, 회원가입, 로그인 요청은 권한 필요X
-                .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
                 .antMatchers("/swagger-uri/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll() // swagger page
-
                 .antMatchers(HttpMethod.GET, "/adminPage").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET, "/managerPage").hasAuthority("MANAGER")
                 .antMatchers(HttpMethod.GET, "/userPage").hasAuthority("USER")
