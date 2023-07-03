@@ -2,6 +2,7 @@ package dblab.sharing_flatform.config.security.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dblab.sharing_flatform.exception.ValidateTokenException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@Slf4j
 public class JwtExceptionFilter extends OncePerRequestFilter {
 
     @Override
@@ -19,7 +21,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (ValidateTokenException e) {
-            response.sendRedirect("/exception/unvalid-token");
+            response.sendRedirect("/exception/invalid-token");
         }
     }
 }

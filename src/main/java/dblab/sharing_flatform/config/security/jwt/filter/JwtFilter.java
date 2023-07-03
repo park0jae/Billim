@@ -30,6 +30,11 @@ public class JwtFilter extends GenericFilterBean {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String jwt = extractTokenFromRequest(httpServletRequest);
 
+        if (httpServletRequest.getRequestURI().startsWith("/exception/invalid-token")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         if (StringUtils.hasText(jwt) && tokenProvider.validate(jwt)) {
             Authentication authentication = tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);

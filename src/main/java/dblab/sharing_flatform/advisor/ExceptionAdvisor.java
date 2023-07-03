@@ -30,7 +30,7 @@ public class ExceptionAdvisor {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Response exception(Exception e) {
-        return Response.failure(500, "예외가 발생했습니다.");
+        return Response.failure(500, e.getMessage());
     }
 
 
