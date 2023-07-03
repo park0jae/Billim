@@ -1,4 +1,4 @@
-package dblab.sharing_flatform.service;
+package dblab.sharing_flatform.service.member;
 
 import dblab.sharing_flatform.config.security.jwt.support.TokenProvider;
 import dblab.sharing_flatform.domain.member.Member;

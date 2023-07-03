@@ -4,6 +4,7 @@ import dblab.sharing_flatform.domain.address.Address;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.domain.role.RoleType;
+import dblab.sharing_flatform.dto.member.MemberUpdateRequestDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -74,6 +75,13 @@ public class Member {
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.address = address;
+    }
+
+    public void updateMember(MemberUpdateRequestDto memberUpdateRequestDto){
+        this.username = memberUpdateRequestDto.getUsername();
+        this.password = memberUpdateRequestDto.getPassword();
+        this.phoneNumber = memberUpdateRequestDto.getPhoneNumber();
+        this.address = memberUpdateRequestDto.getAddress();
     }
 
 }
