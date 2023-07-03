@@ -59,7 +59,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, "/adminPage").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET, "/managerPage").hasAuthority("MANAGER")
                 .antMatchers(HttpMethod.GET, "/userPage").hasAuthority("USER")
-                .antMatchers(HttpMethod.GET, "member/admin/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.GET, "member/admin/**").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "member/**").hasAnyRole("ADMIN", "USER")
                 .antMatchers(HttpMethod.PATCH, "member/**").hasAuthority("USER")
                 .antMatchers(HttpMethod.GET, "/authenticate").authenticated();

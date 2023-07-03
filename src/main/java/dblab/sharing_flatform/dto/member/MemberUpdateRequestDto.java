@@ -17,12 +17,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class MemberUpdateRequestDto {
 
-    @ApiModelProperty(value = "username", notes = "사용자 이름은 한글 또는 알파벳으로 입력해주세요.", required = true, example = "kimdongwoong")
-    @NotBlank(message = "아이디를 입력해주세요.")
-    @Size(min=2, message = "사용자 이름이 너무 짧습니다.")
-    @Pattern(regexp = "^[A-Za-z가-힣]+$", message = "사용자 이름은 한글 또는 알파벳만 입력해주세요.")
-    private String username;
-
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
     @NotBlank(message = "변경할 비밀번호를 입력해주세요.")
     private String password;
