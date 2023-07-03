@@ -1,7 +1,6 @@
 package dblab.sharing_flatform.dto.member;
 
 import dblab.sharing_flatform.domain.address.Address;
-import dblab.sharing_flatform.domain.member.Member;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
