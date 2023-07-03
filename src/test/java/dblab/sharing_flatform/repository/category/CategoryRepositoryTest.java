@@ -74,7 +74,7 @@ class CategoryRepositoryTest {
         // 3		1
         // 4		2
         // 5		2
-        // 6		4
+        // 6		2
         // 7		3
         // 8		NULL
         Category category1 = categoryRepository.save(createCategoryWithName("category1"));
@@ -82,7 +82,7 @@ class CategoryRepositoryTest {
         Category category3 = categoryRepository.save(createCategory("category3", category1));
         Category category4 = categoryRepository.save(createCategory("category4", category2));
         Category category5 = categoryRepository.save(createCategory("category5", category2));
-        Category category6 = categoryRepository.save(createCategory("category6", category4));
+        Category category6 = categoryRepository.save(createCategory("category6", category2));
         Category category7 = categoryRepository.save(createCategory("category7", category3));
         Category category8 = categoryRepository.save(createCategoryWithName("category8"));
         clear();
@@ -97,16 +97,16 @@ class CategoryRepositoryTest {
         // 3      1
         // 4      2
         // 5      2
+        // 6      2
         // 7      3
-        // 6      4
         assertThat(result.get(0).getId()).isEqualTo(category1.getId());
         assertThat(result.get(1).getId()).isEqualTo(category8.getId());
         assertThat(result.get(2).getId()).isEqualTo(category2.getId());
         assertThat(result.get(3).getId()).isEqualTo(category3.getId());
         assertThat(result.get(4).getId()).isEqualTo(category4.getId());
         assertThat(result.get(5).getId()).isEqualTo(category5.getId());
-        assertThat(result.get(6).getId()).isEqualTo(category7.getId());
-        assertThat(result.get(7).getId()).isEqualTo(category6.getId());
+        assertThat(result.get(6).getId()).isEqualTo(category6.getId());
+        assertThat(result.get(7).getId()).isEqualTo(category7.getId());
         assertThat(result.size()).isEqualTo(8);
 
     }
