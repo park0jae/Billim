@@ -13,6 +13,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Slf4j
 @RestController
 public class ExceptionController {
+
     @GetMapping("/exception/access-denied")
     public void accessDenied() {
         throw new AccessDeniedException();
