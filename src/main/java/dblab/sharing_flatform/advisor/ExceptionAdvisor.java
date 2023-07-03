@@ -4,6 +4,7 @@ package dblab.sharing_flatform.advisor;
 import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.exception.ValidateTokenException;
+import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_flatform.exception.auth.IllegalAuthenticationException;
 import dblab.sharing_flatform.exception.auth.LoginFailureException;
@@ -15,7 +16,6 @@ import dblab.sharing_flatform.exception.role.RoleNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class ExceptionAdvisor {
 
-//     uncaught Exception
+    // uncaught Exception
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Response exception(Exception e) {
@@ -49,13 +49,13 @@ public class ExceptionAdvisor {
         return Response.failure(400, "양식에 맞게 입력해주세요.");
     }
 
-
     // auth
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response accessDeniedException(AccessDeniedException e) {
-        return Response.failure(400, "권한이 필요한 요청입니다.");
+        return Response.failure(400, "해당 권한으로 수행할 수 없는 작업입니다.");
     }
+
 
     @ExceptionHandler(AuthenticationEntryPointException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

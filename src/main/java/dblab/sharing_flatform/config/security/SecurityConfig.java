@@ -28,7 +28,6 @@ public class SecurityConfig {
     private final MemberDetailsService memberDetailsService;
     private final JwtFilter jwtFilter;
 
-
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
