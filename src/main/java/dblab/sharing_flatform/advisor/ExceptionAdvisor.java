@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -31,6 +33,20 @@ public class ExceptionAdvisor {
         return Response.failure(500, "예외가 발생했습니다.");
     }
 
+
+    // Field Error
+    @ExceptionHandler(BindException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response bindException(BindException e) {
+        log.info("message = {}", e.getMessage());
+        return Response.failure(400, "양식에 맞게 입력해주세요.");
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response methodArgumentNotValidException(MethodArgumentNotValidException e) {
+        return Response.failure(400, "양식에 맞게 입력해주세요.");
+    }
 
 
     // auth

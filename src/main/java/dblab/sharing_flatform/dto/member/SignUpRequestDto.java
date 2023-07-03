@@ -33,10 +33,8 @@ public class SignUpRequestDto {
     private String password;
 
 
-    @ApiModelProperty(value = "phoneNumber", notes = "전화번호는 하이픈을 포함해야 합니다.", required = true, example = "010-1234-5678")
+    @ApiModelProperty(value = "phoneNumber", notes = "전화번호를 입력해주세요.", required = true, example = "01012345678")
     @NotBlank(message = "전화번호를 입력해주세요.")
-    @Pattern(regexp = "/^0\\d{1,2}(-|\\))\\d{3,4}-\\d{4}$/",
-            message = "전화번호를 하이픈과 함꼐 기재해주세요.")
     private String phoneNumber;
 
     @ApiModelProperty(value = "address", notes = "", required = true)
