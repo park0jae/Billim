@@ -21,6 +21,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (ValidateTokenException e) {
             response.sendRedirect("/exception/invalid-token");
+            return;
         }
     }
 
