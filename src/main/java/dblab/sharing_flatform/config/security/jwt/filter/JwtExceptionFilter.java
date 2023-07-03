@@ -1,6 +1,5 @@
 package dblab.sharing_flatform.config.security.jwt.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dblab.sharing_flatform.exception.ValidateTokenException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -25,4 +24,5 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             return;
         }
     }
+
 }

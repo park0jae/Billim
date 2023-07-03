@@ -17,6 +17,7 @@ public class Response {
         return new Response(true, 0, null);
     }
 
+    // DTO 객체에 대한 success 처리를 위해 <T> 제네릭 타입 선언
     public static <T> Response success(T data) {
         return new Response(true, 0, new Success<>(data));
     }

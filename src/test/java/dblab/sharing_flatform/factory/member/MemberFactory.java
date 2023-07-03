@@ -2,9 +2,7 @@ package dblab.sharing_flatform.factory.member;
 
 import dblab.sharing_flatform.domain.address.Address;
 import dblab.sharing_flatform.domain.member.Member;
-import dblab.sharing_flatform.domain.member.MemberRole;
 import dblab.sharing_flatform.domain.role.Role;
-import dblab.sharing_flatform.domain.role.RoleType;
 
 import java.util.Collections;
 import java.util.List;
