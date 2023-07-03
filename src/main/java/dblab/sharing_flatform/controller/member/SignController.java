@@ -5,29 +5,37 @@ import dblab.sharing_flatform.dto.member.LoginRequestDto;
 import dblab.sharing_flatform.dto.member.SignUpRequestDto;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.service.SignService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+
+@Api(value = "Sign Controller", tags = "Sign")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 public class SignController {
     private final SignService signService;
+
+    @ApiOperation(value = "회원가입", notes = "회원가입을 한다.") // 2
     @PostMapping("/sign-up")
-    public Response signup(@Valid @RequestBody SignUpRequestDto signUpRequestDto){
+    @ResponseStatus(HttpStatus.CREATED)
+    public Response signup(@ApiParam(name="회원가입 요청 DTO") @Valid @RequestBody SignUpRequestDto signUpRequestDto){
         signService.signUp(signUpRequestDto);
         return Response.success();
     }
 
+    @ApiOperation(value = "로그인", notes = "로그인을 한다.") // 2
     @PostMapping("/login")
-    public Response login(@RequestBody LoginRequestDto loginRequestDto){
+    @ResponseStatus(HttpStatus.OK)
+    public Response login(@Valid @RequestBody LoginRequestDto loginRequestDto){
         LogInResponseDto logInResponseDto = signService.login(loginRequestDto);
         return Response.success(logInResponseDto);
     }

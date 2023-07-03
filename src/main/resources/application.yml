@@ -12,6 +12,9 @@ spring:
         show_sql: true
         default_batch_fetch_size: 100
 
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 #echo 'wejfnwkandskjvnwejknfkjvnwekgwnkfnewfjkwnjkwnqkjnkjefwqjknwk'|base64
 jwt:
