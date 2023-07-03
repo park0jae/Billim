@@ -78,7 +78,6 @@ public class Member {
     }
 
     public void updateMember(MemberUpdateRequestDto memberUpdateRequestDto){
-        this.username = memberUpdateRequestDto.getUsername();
         this.password = memberUpdateRequestDto.getPassword();
         this.phoneNumber = memberUpdateRequestDto.getPhoneNumber();
         this.address = memberUpdateRequestDto.getAddress();
