@@ -64,7 +64,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.DELETE, "/category/**").hasAuthority("ADMIN") // 카테고리 삭제, 생성은 ADMIN만 가능
                 .antMatchers(HttpMethod.POST, "/category/**").hasAuthority("ADMIN")
 
-
+                // 메세지 삭제 - 소유주, ADMIN
                 .antMatchers(HttpMethod.DELETE, "/message/send/{id}").access("@sendMessageGuard.check(#id)")
                 .antMatchers(HttpMethod.DELETE, "/message/receive/{id}").access("@receiveMessageGuard.check(#id)");
 
