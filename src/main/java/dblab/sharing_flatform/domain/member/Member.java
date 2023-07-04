@@ -1,5 +1,6 @@
 package dblab.sharing_flatform.domain.member;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dblab.sharing_flatform.domain.address.Address;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.role.Role;
