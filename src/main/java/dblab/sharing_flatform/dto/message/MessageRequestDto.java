@@ -1,10 +1,12 @@
 package dblab.sharing_flatform.dto.message;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dblab.sharing_flatform.domain.member.Member;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.Null;
 
@@ -15,12 +17,9 @@ public class MessageRequestDto {
 
     private String content;
 
-    @Null
+    @Nullable
     private String sendMember;
 
     private String receiveMember;
-
-    private boolean deleteBySender;
-    private boolean deleteByReceiver;
 
 }
