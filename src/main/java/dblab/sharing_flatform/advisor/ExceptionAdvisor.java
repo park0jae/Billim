@@ -11,6 +11,7 @@ import dblab.sharing_flatform.exception.image.NoExtException;
 import dblab.sharing_flatform.exception.image.UnSupportExtException;
 import dblab.sharing_flatform.exception.member.DuplicateUsernameException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
+import dblab.sharing_flatform.exception.message.MessageNotFoundException;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -121,10 +122,6 @@ public class ExceptionAdvisor {
 
 
 
-
-
-
-
     // category
     @ExceptionHandler(CategoryNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -132,6 +129,11 @@ public class ExceptionAdvisor {
         return Response.failure(404, "지정한 카테고리를 찾을 수 없습니다.");
     }
 
-
+    // message
+    @ExceptionHandler(MessageNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response MessageNotFoundException(MessageNotFoundException e){
+        return Response.failure(404, "메시지를 찾을 수 없습니다.");
+    }
 
 }
