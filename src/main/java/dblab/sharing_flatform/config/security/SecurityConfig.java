@@ -63,7 +63,6 @@ public class SecurityConfig {
                 // 카테고리 생성 삭제 - ADMIN
                 .antMatchers(HttpMethod.DELETE, "/category/**").hasAuthority("ADMIN") // 카테고리 삭제, 생성은 ADMIN만 가능
                 .antMatchers(HttpMethod.POST, "/category/**").hasAuthority("ADMIN");
-
                 // 시큐리티 설정 끝
         return http.build();
     }
