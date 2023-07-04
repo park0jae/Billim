@@ -3,6 +3,7 @@ package dblab.sharing_flatform.dto.category;
 import dblab.sharing_flatform.domain.category.Category;
 import dblab.sharing_flatform.helper.FlatListToHierarchicalHelper;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,8 +18,13 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CategoryResponseDto {
 
+    @ApiModelProperty(value = "카테고리 ID", example = "1")
     private Long id;
+
+    @ApiModelProperty(value = "카테고리 명", example = "Book")
     private String name;
+
+    @ApiModelProperty(value = "자식 카테고리 리스트")
     private List<CategoryResponseDto> children;
 
     public static List<CategoryResponseDto> toList(List<Category> categoryList) {

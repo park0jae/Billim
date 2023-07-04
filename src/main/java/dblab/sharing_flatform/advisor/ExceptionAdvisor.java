@@ -6,6 +6,7 @@ import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_flatform.exception.auth.IllegalAuthenticationException;
 import dblab.sharing_flatform.exception.auth.LoginFailureException;
+import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
 import dblab.sharing_flatform.exception.image.NoExtException;
 import dblab.sharing_flatform.exception.image.UnSupportExtException;
 import dblab.sharing_flatform.exception.member.DuplicateUsernameException;
@@ -116,6 +117,19 @@ public class ExceptionAdvisor {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response roleNotFoundException(RoleNotFoundException e) {
         return Response.failure(404, "권한을 찾을 수 없습니다.");
+    }
+
+
+
+
+
+
+
+    // category
+    @ExceptionHandler(CategoryNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response categoryNotFoundException(CategoryNotFoundException e) {
+        return Response.failure(404, "지정한 카테고리를 찾을 수 없습니다.");
     }
 
 

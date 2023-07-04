@@ -108,8 +108,8 @@ class CategoryRepositoryTest {
         assertThat(result.get(6).getId()).isEqualTo(category6.getId());
         assertThat(result.get(7).getId()).isEqualTo(category7.getId());
         assertThat(result.size()).isEqualTo(8);
-
     }
+
     private void clear() {
         em.flush();
         em.clear();

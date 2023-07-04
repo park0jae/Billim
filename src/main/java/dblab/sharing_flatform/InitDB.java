@@ -1,10 +1,12 @@
 package dblab.sharing_flatform;
 
 import dblab.sharing_flatform.domain.address.Address;
+import dblab.sharing_flatform.domain.category.Category;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.domain.role.RoleType;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
+import dblab.sharing_flatform.repository.category.CategoryRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +26,9 @@ public class InitDB {
 
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
+    private final CategoryRepository categoryRepository;
     private final PasswordEncoder passwordEncoder;
+
 
     @Transactional
     @EventListener(ApplicationReadyEvent.class)
@@ -33,6 +37,20 @@ public class InitDB {
         initAdmin();
         initManager();
         initMember();
+        initCategory();
+    }
+
+    @Transactional
+    public void initCategory() {
+
+        Category c1 = categoryRepository.save(new Category("category1", null));
+        Category c2 = categoryRepository.save(new Category("category2", c1));
+        Category c3 = categoryRepository.save(new Category("category3", c1));
+        Category c4 = categoryRepository.save(new Category("category4", c2));
+        Category c5 = categoryRepository.save(new Category("category5", c2));
+        Category c6 = categoryRepository.save(new Category("category6", c2));
+        Category c7 = categoryRepository.save(new Category("category7", c3));
+        Category c8 = categoryRepository.save(new Category("category8", null));
     }
 
     @Transactional

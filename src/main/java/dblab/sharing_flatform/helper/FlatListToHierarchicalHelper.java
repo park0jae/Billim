@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class FlatListToHierarchicalHelper <K,E,D> {
-
+public class FlatListToHierarchicalHelper<K, E, D> {
     private List<E> entities;
     private Function<E, D> toDto;
     private Function<E, E> getParent;
@@ -75,6 +74,4 @@ public class FlatListToHierarchicalHelper <K,E,D> {
     public D toDto(E e) {
         return toDto.apply(e);
     }
-
-
 }
