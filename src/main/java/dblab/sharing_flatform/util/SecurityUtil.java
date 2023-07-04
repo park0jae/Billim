@@ -28,6 +28,5 @@ public class SecurityUtil {
             return Optional.ofNullable((String) authentication.getPrincipal());
         }
 
-        throw new IllegalAuthenticationException();
     }
 }
