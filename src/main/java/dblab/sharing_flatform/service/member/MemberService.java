@@ -17,15 +17,17 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public MemberResponseDto getMemberInfo(String username){
-        Member member = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
-        return MemberResponseDto.toDto(member);
+    public MemberResponseDto getMemberInfoByUsername(String username){
+        return MemberResponseDto.toDto(memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new));
+    }
+
+    public MemberResponseDto getMemberInfoById(Long id){
+        return MemberResponseDto.toDto(memberRepository.findById(id).orElseThrow(MemberNotFoundException::new));
     }
 
     @Transactional
     public void delete(Long id){
-        Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
-        memberRepository.delete(member);
+        memberRepository.delete(memberRepository.findById(id).orElseThrow(MemberNotFoundException::new));
     }
 
     @Transactional
