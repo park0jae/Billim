@@ -18,7 +18,7 @@ import java.util.List;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    // readAll (전체 조회 - 계층형)
+    // 전체 조회
     public List<CategoryResponseDto> readAll() {
         List<Category> categoryList = categoryRepository.findAllOrderByParentIdAscNullsFirstCategoryIdAsc();
         return CategoryResponseDto.toList(categoryList);
@@ -26,14 +26,13 @@ public class CategoryService {
 
     // 생성
     @Transactional
-    public Long create(CategoryRequestDto categoryRequestDto) {
+    public void create(CategoryRequestDto categoryRequestDto) {
         if (categoryRequestDto.getParentCategoryName() != null) {
             Category parentCategory = categoryRepository.findByName(categoryRequestDto.getParentCategoryName()).orElseThrow(CategoryNotFoundException::new);
             categoryRepository.save(CategoryRequestDto.toEntity(categoryRequestDto, parentCategory));
-            }
-        Category savedCategory = categoryRepository.save(CategoryRequestDto.toEntity(categoryRequestDto, null));
-
-        return savedCategory.getId();
+        } else {
+            categoryRepository.save(CategoryRequestDto.toEntity(categoryRequestDto, null));
+        }
     }
 
     // 삭제

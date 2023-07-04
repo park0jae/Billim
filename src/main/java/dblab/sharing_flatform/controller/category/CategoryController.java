@@ -33,8 +33,8 @@ public class CategoryController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Response create(@Valid @RequestBody CategoryRequestDto categoryRequestDto) {
-        Long createdId = categoryService.create(categoryRequestDto);
-        return Response.success(createdId);
+        categoryService.create(categoryRequestDto);
+        return Response.success();
     }
 
 
