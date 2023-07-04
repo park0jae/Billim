@@ -36,7 +36,7 @@ class MemberServiceTest {
         memberRepository.save(member);
 
         //when
-        MemberResponseDto memberInfo = memberService.getMemberInfo(member.getUsername());
+        MemberResponseDto memberInfo = memberService.getMemberInfoByUsername(member.getUsername());
 
         //then
         assertThat(memberInfo.getUsername()).isEqualTo(member.getUsername());
