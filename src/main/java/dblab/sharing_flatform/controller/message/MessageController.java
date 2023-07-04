@@ -19,7 +19,6 @@ public class MessageController {
 
     @PostMapping("/{receiverId}")
     public Response sendMessageToReceiver(@PathVariable Long receiverId ,@RequestBody MessageRequestDto messageRequestDto){
-
         // 유저가 존재하고, 둘다 deleteBy 가 false 이면 성공하도록
         MessageResponseDto messageResponseDto = messageService.sendMessage(messageRequestDto);
         return Response.success(messageResponseDto);
