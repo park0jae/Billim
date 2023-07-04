@@ -57,9 +57,10 @@ public class SecurityConfig {
                 .antMatchers("/swagger-uri/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll() // swagger page
 
                 .antMatchers(HttpMethod.GET,"/member/user").permitAll()
-                .antMatchers(HttpMethod.GET, "/member/admin/**").access("@MemberGuard.check(#id)")
-                .antMatchers(HttpMethod.DELETE, "/member/**").access("@MemberGuard.check(#id)")
-                .antMatchers(HttpMethod.PATCH, "/member/**").access("@MemberGuard.check(#id)")
+
+                .antMatchers(HttpMethod.GET, "/member/admin/**").access("@memberGuard.check(#id)")
+                .antMatchers(HttpMethod.DELETE, "/member/**").access("@memberGuard.check(#id)")
+                .antMatchers(HttpMethod.PATCH, "/member/**").access("@emberGuard.check(#id)")
 
                 // 카테고리 생성 삭제 - ADMIN
                 .antMatchers(HttpMethod.DELETE, "/category/**").hasAuthority("ADMIN") // 카테고리 삭제, 생성은 ADMIN만 가능
