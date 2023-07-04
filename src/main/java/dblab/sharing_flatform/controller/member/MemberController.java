@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Slf4j
 @Api(value = "Member Controller", tags = "Member")
 @RestController
@@ -49,7 +51,8 @@ public class MemberController {
 
     @ApiOperation(value = "회원 정보 수정", notes = "본인인 경우 정보를 수정한다.")
     @PatchMapping("/{id}")
-    public Response updateMember(@ApiParam(name = "수정할 사용자 아이디", required = true) @PathVariable Long id, @RequestBody MemberUpdateRequestDto memberUpdateRequestDto){
+    public Response updateMember(@ApiParam(name = "수정할 사용자 아이디", required = true) @PathVariable Long id,
+                                 @Valid @RequestBody MemberUpdateRequestDto memberUpdateRequestDto){
         MemberResponseDto updateMember = memberService.update(id, memberUpdateRequestDto);
         return Response.success(updateMember);
     }

@@ -28,7 +28,6 @@ class MemberServiceTest {
         memberRepository.deleteAll();
     }
 
-
     // getMemberInfo
     @Test
     public void getMemberInfoTest() throws Exception {
@@ -57,7 +56,6 @@ class MemberServiceTest {
         //then
         assertThat(memberRepository.count()).isEqualTo(0);
     }
-
 
     // update
     @Test
