@@ -45,7 +45,6 @@ public class MemberController {
         return Response.success();
     }
 
-
     @ApiOperation(value = "회원 정보 수정", notes = "본인인 경우 정보를 수정한다.")
     @PatchMapping("/{id}")
     public Response updateMember(@ApiParam(name = "수정할 사용자 아이디", required = true) @PathVariable Long id,
