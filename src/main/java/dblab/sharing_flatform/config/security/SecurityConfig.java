@@ -57,9 +57,9 @@ public class SecurityConfig {
                 .antMatchers("/swagger-uri/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll() // swagger page
 
                 .antMatchers(HttpMethod.GET,"/member/user").permitAll()
-                .antMatchers(HttpMethod.GET, "/member/admin/**").hasAuthority("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/member/**").hasAnyRole("ADMIN", "USER")
-                .antMatchers(HttpMethod.PATCH, "/member/**").hasAuthority("USER");
+                .antMatchers(HttpMethod.GET, "/member/admin/**").access("@MemberGuard.check(#id)")
+                .antMatchers(HttpMethod.DELETE, "/member/**").access("@MemberGuard.check(#id)")
+                .antMatchers(HttpMethod.PATCH, "/member/**").access("@MemberGuard.check(#id)");
 
                 // 시큐리티 설정 끝
 
