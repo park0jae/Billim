@@ -84,7 +84,7 @@ public class PostService {
         Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
 
         // 1. DB - Post 수정
-        // 2. DB - Image 수정 - 추가 및 삭제_
+        // 2. DB - Image 수정 - 추가 및 삭제
         PostUpdateResponseDto postUpdateResponseDto = post.updatePost(postUpdateRequestDto);
 
 //        // 3. 로컬 서버 내 이미지 - 추가 및 삭제

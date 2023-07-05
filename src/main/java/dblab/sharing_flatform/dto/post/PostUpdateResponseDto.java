@@ -33,8 +33,8 @@ public class PostUpdateResponseDto {
                 postUpdateRequestDto.getTitle(),
                 postUpdateRequestDto.getContent(),
                 MemberDto.toDto(post.getMember()),
-                ImageDto.toDtoList(map.get("addList")),
-                ImageDto.toDtoList(map.get("deleteList")));
+                ImageDto.toDtoList(map.getOrDefault("addList", List.of())),
+                ImageDto.toDtoList(map.getOrDefault("deleteList",List.of())));
     }
 
 

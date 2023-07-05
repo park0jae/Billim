@@ -72,6 +72,8 @@ public class Post extends BaseTime {
     }
 
     public PostUpdateResponseDto updatePost(PostUpdateRequestDto postUpdateRequestDto) {
+        Map<String, List<Image>> m = new HashMap<>();
+
         this.title = postUpdateRequestDto.getTitle();
         this.content = postUpdateRequestDto.getContent();
 
@@ -80,27 +82,33 @@ public class Post extends BaseTime {
         }
 
         // 수정/DB - 추가된 이미지 데이터베이스에 올리고, 삭제된 이미지 데이터베이스에서 삭제
-        List<MultipartFile> addImages = postUpdateRequestDto.getAddImages();  // 업로드할 이미지 파일
-        List<String> deleteImageNames = postUpdateRequestDto.getDeleteImageNames(); // 삭제할 이미지 파일 이름
+        if (postUpdateRequestDto.getAddImages() != null) {
+            List<MultipartFile> addImages = postUpdateRequestDto.getAddImages();  // 업로드할 이미지 파일
+            List<Image> addList = addToDB(addImages);
+            m.put("addList", addList);
+        }
 
-        Map<String, List<Image>> map = addAndDeleteFromDB(addImages, deleteImageNames);
+        if (postUpdateRequestDto.getDeleteImageNames() != null) {
+            List<String> deleteImageNames = postUpdateRequestDto.getDeleteImageNames(); // 삭제할 이미지 파일 이름
+            List<Image> deleteList = deleteFromDB(deleteImageNames);
+            m.put("deleteList", deleteList);
+        }
 
-        return PostUpdateResponseDto.toDto(postUpdateRequestDto, this, map);
+        return PostUpdateResponseDto.toDto(postUpdateRequestDto, this, m);
     }
 
-    public HashMap<String, List<Image> > addAndDeleteFromDB(List<MultipartFile> addImages, List<String> deleteImageNames) {
-        HashMap<String, List<Image> > map = new HashMap<>();
-
+    public List<Image> addToDB(List<MultipartFile> addImages) {
         List<Image> addImageList = MultipartToImage(addImages);
-        List<Image> deleteImageList = StringToImage(deleteImageNames);
-
-        map.put("addList", addImageList);
-        map.put("deleteList", deleteImageList);
-
         addImages(addImageList);
+
+        return addImageList;
+    }
+
+    public List<Image> deleteFromDB(List<String> deleteImageNames) {
+        List<Image> deleteImageList = StringToImage(deleteImageNames);
         deleteImages(deleteImageList);
 
-        return map;
+        return deleteImageList;
     }
 
     private void addImages(List<Image> addList) {
