@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,7 @@ public class MessageController {
 
     @ApiOperation(value = "메세지 생성 및 전송", notes = "메세지를 생성하고 수신자에게 전송합니다.")
     @PostMapping
-    public Response sendMessageToReceiver(@RequestBody MessageRequestDto messageRequestDto) {
+    public Response sendMessageToReceiver(@Valid @RequestBody MessageRequestDto messageRequestDto) {
         String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
         messageRequestDto.setSendMember(username);
 
