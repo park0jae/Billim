@@ -69,7 +69,6 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.DELETE, "/message/receive/{id}").access("@receiveMessageGuard.check(#id)")
 
                 // 게시글 생성, 수정 , 삭제 - 소유주, ADMIN
-                .antMatchers(HttpMethod.POST, "/post/{id}").access("@postGuard.check(#id)")
                 .antMatchers(HttpMethod.DELETE, "/post/{id}").access("@postGuard.check(#id)")
                 .antMatchers(HttpMethod.PATCH, "/post/{id}").access("@postGuard.check(#id)");
 

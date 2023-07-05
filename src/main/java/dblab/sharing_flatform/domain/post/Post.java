@@ -48,7 +48,8 @@ public class Post extends BaseTime {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Category category;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL , orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Item item;
 
     @OneToMany(mappedBy = "post",  cascade = CascadeType.PERSIST, orphanRemoval = true)
@@ -118,6 +119,7 @@ public class Post extends BaseTime {
                 }
         );
     }
+
     public void initMember(Member member) {
         if (this.member == null) {
             this.member = member;

@@ -94,6 +94,7 @@ public class PostService {
     }
 
 
+    // create
     public void uploadImagesToServer(List<Image> images, List<MultipartFile> fileImages) {
         if (!images.isEmpty()) {
             for (int i = 0; i < images.size(); i++) {
@@ -102,30 +103,29 @@ public class PostService {
         }
     }
 
-    // create
+    // delete
     public void deleteImagesFromServer(Post post) {
         List<Image> images = post.getImages();
         images.stream().forEach(i -> fileService.delete(i.getUniqueName()));
     }
 
-    // delete
-    private void deleteImagesFromServer(PostUpdateResponseDto postUpdateResponseDto) {
-        List<ImageDto> deleteImageDtoList = postUpdateResponseDto.getDeletedImages();
-        deleteImageDtoList.stream().forEach(i -> fileService.delete(i.getUniqueName()));
-    }
-
-
-    // update - create,
+    // update
     public void updateImagesToServer(PostUpdateRequestDto postUpdateRequestDto, PostUpdateResponseDto postUpdateResponseDto) {
         uploadImagesToServer(postUpdateRequestDto, postUpdateResponseDto);
         deleteImagesFromServer(postUpdateResponseDto);
     }
 
-    // update - delete
+    // update - create
     private void uploadImagesToServer(PostUpdateRequestDto postUpdateRequestDto, PostUpdateResponseDto postUpdateResponseDto) {
         List<ImageDto> addedImages = postUpdateResponseDto.getAddedImages();
         for (int i = 0; i < addedImages.size(); i++) {
             fileService.upload(postUpdateRequestDto.getAddImages().get(i), addedImages.get(i).getUniqueName());
         }
+    }
+
+    // update - delete
+    private void deleteImagesFromServer(PostUpdateResponseDto postUpdateResponseDto) {
+        List<ImageDto> deleteImageDtoList = postUpdateResponseDto.getDeletedImages();
+        deleteImageDtoList.stream().forEach(i -> fileService.delete(i.getUniqueName()));
     }
 }
