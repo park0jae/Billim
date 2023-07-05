@@ -40,9 +40,10 @@ public class PostCreateRequestDto {
     private String categoryName;
 
     @ApiModelProperty(value = "이미지", notes = "이미지를 첨부해주세요.")
-    private List<MultipartFile> images = new ArrayList<>();
+    private List<MultipartFile> multipartFiles = new ArrayList<>();
 
     @ApiModelProperty(value = "물품", notes = "물품을 첨부하세요.", required = false)
+    @Nullable
     private ItemCreateRequestDto itemCreateRequestDto;
 
     @ApiModelProperty(hidden = true)

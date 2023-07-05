@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -38,14 +39,15 @@ public class Post extends BaseTime {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Item item;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
-    private List<Image> images = new ArrayList<>();
+    @OneToMany(mappedBy = "post",  cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private List<Image> images;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     public Post(String title, String content, Category category, Item item, List<Image> images, Member member) {
@@ -54,17 +56,18 @@ public class Post extends BaseTime {
         this.likes = 0;
         this.category = category;
         this.item = item;
+        this.member = member;
+        this.images = new ArrayList<>();
         addImages(images);
     }
 
 
     private void addImages(List<Image> images) {
-        images.stream().forEach(
-                i -> {
-                    images.add(i);
-                    i.initPost(this);
-                }
-        );
+
+        for (int i = 0; i < images.size(); i++) {
+            this.images.add(images.get(i));
+            images.get(i).initPost(this);
+        }
     }
 
     public void initMember(Member member) {

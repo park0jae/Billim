@@ -60,15 +60,20 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.DELETE, "/member/{id}").access("@memberGuard.check(#id)")
                 .antMatchers(HttpMethod.PATCH, "/member/{id}").access("@memberGuard.check(#id)")
 
-                // 카테고리 생성 삭제 - ADMIN
-                .antMatchers(HttpMethod.DELETE, "/category/**").hasAuthority("ADMIN") // 카테고리 삭제, 생성은 ADMIN만 가능
+                // 카테고리 생성,삭제 - ADMIN
+                .antMatchers(HttpMethod.DELETE, "/category/**").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/category/**").hasAuthority("ADMIN")
 
                 // 메세지 삭제 - 소유주, ADMIN
                 .antMatchers(HttpMethod.DELETE, "/message/send/{id}").access("@sendMessageGuard.check(#id)")
-                .antMatchers(HttpMethod.DELETE, "/message/receive/{id}").access("@receiveMessageGuard.check(#id)");
+                .antMatchers(HttpMethod.DELETE, "/message/receive/{id}").access("@receiveMessageGuard.check(#id)")
 
-                // 시큐리티 설정 끝
+                // 게시글 생성, 수정 , 삭제 - 소유주, ADMIN
+                .antMatchers(HttpMethod.POST, "/post/{id}").access("@postGuard.check(#id)")
+                .antMatchers(HttpMethod.DELETE, "/post/{id}").access("@postGuard.check(#id)")
+                .antMatchers(HttpMethod.PATCH, "/post/{id}").access("@postGuard.check(#id)");
+
+        // 시큐리티 설정 끝
         return http.build();
     }
 
