@@ -17,7 +17,6 @@ public class MessageResponseDto {
     private String sendMember;
     private String receiverMember;
 
-
     public static MessageResponseDto toDto(Message message) {
         return new MessageResponseDto(
                 message.getId(),

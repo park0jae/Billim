@@ -4,7 +4,11 @@ import dblab.sharing_flatform.domain.image.Image;
 import dblab.sharing_flatform.domain.item.Item;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.item.ItemCreateRequestDto;
+import dblab.sharing_flatform.dto.item.ItemUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.PostCreateRequestDto;
+import dblab.sharing_flatform.dto.post.PostUpdateRequestDto;
+import dblab.sharing_flatform.dto.post.PostUpdateResponseDto;
+import dblab.sharing_flatform.dto.post.image.ImageDto;
 import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
@@ -50,7 +54,7 @@ public class PostService {
                 images,
                 memberRepository.findByUsername(postCreateRequestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new)));
 
-        // 로컬 서버에 글에 올린 이미지 업로드
+        // 로컬 서버에 post에 첨부한 이미지 업로드
         uploadImagesToServer(images, postCreateRequestDto.getMultipartFiles());
     }
 
@@ -65,28 +69,63 @@ public class PostService {
         deleteImagesFromServer(post);
     }
 
-//    @Transactional
-//    public void update(Long id, PostUpdateRequestDto postUpdateRequestDto) {
-//        Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
-//
-//        post.update(postUpdateRequestDto.getTitle(),
-//                postUpdateRequestDto.getContent(),
-//                categoryRepository.findByName(postUpdateRequestDto.getCategoryName()).orElseThrow(CategoryNotFoundException::new),
-//                postUpdateRequestDto.getItemUpdateRequestDto());
-//
-//        uploadImagesToServer(post.getImages(), postUpdateRequestDto.getAddImages());
-//
-//    }
+    /**
+     *     public void update(String title, String content, Category category, Item item, List<Image> images) {
+     *         this.title = title;
+     *         this.content = content;
+     *         this.category = category;
+     *         this.item = item;
+     *         addImages(images);
+    **/
 
-    private void uploadImagesToServer(List<Image> images, List<MultipartFile> fileImages) {
-        for (int i = 0; i < images.size(); i++) {
-            fileService.upload(fileImages.get(i), images.get(i).getUniqueName());
+    @Transactional
+    public PostUpdateResponseDto update(Long id, PostUpdateRequestDto postUpdateRequestDto) {
+        // 수정할 게시물 찾고
+        Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+
+        // 1. DB - Post 수정
+        // 2. DB - Image 수정 - 추가 및 삭제_
+        PostUpdateResponseDto postUpdateResponseDto = post.updatePost(postUpdateRequestDto);
+
+//        // 3. 로컬 서버 내 이미지 - 추가 및 삭제
+        updateImagesToServer(postUpdateRequestDto, postUpdateResponseDto);
+
+        return postUpdateResponseDto;
+    }
+
+
+    public void uploadImagesToServer(List<Image> images, List<MultipartFile> fileImages) {
+        if (!images.isEmpty()) {
+            for (int i = 0; i < images.size(); i++) {
+                fileService.upload(fileImages.get(i), images.get(i).getUniqueName());
+            }
         }
     }
 
-    private void deleteImagesFromServer(Post post) {
+    // create
+    public void deleteImagesFromServer(Post post) {
         List<Image> images = post.getImages();
         images.stream().forEach(i -> fileService.delete(i.getUniqueName()));
     }
 
+    // delete
+    private void deleteImagesFromServer(PostUpdateResponseDto postUpdateResponseDto) {
+        List<ImageDto> deleteImageDtoList = postUpdateResponseDto.getDeletedImages();
+        deleteImageDtoList.stream().forEach(i -> fileService.delete(i.getUniqueName()));
+    }
+
+
+    // update - create,
+    public void updateImagesToServer(PostUpdateRequestDto postUpdateRequestDto, PostUpdateResponseDto postUpdateResponseDto) {
+        uploadImagesToServer(postUpdateRequestDto, postUpdateResponseDto);
+        deleteImagesFromServer(postUpdateResponseDto);
+    }
+
+    // update - delete
+    private void uploadImagesToServer(PostUpdateRequestDto postUpdateRequestDto, PostUpdateResponseDto postUpdateResponseDto) {
+        List<ImageDto> addedImages = postUpdateResponseDto.getAddedImages();
+        for (int i = 0; i < addedImages.size(); i++) {
+            fileService.upload(postUpdateRequestDto.getAddImages().get(i), addedImages.get(i).getUniqueName());
+        }
+    }
 }
