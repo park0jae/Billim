@@ -43,7 +43,6 @@ public class MessageRepositoryTest {
         flushAndClear();
 
         message = new Message("content", receiveMember, sendMember);
-
     }
 
     @Test
