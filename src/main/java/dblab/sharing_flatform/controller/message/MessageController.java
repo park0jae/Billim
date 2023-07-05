@@ -1,6 +1,5 @@
 package dblab.sharing_flatform.controller.message;
 
-import dblab.sharing_flatform.aop.AssignUsername;
 import dblab.sharing_flatform.dto.message.MessageRequestDto;
 import dblab.sharing_flatform.dto.message.MessageResponseDto;
 import dblab.sharing_flatform.dto.response.Response;
@@ -9,6 +8,8 @@ import dblab.sharing_flatform.service.message.MessageService;
 import dblab.sharing_flatform.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +25,38 @@ public class MessageController {
 
         MessageResponseDto messageResponseDto = messageService.sendMessage(messageRequestDto);
         return Response.success(messageResponseDto);
+    }
+
+    @GetMapping("/send")
+    public Response findSendMessage(){
+        String senderName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
+        List<MessageResponseDto> sendMessage = messageService.findSendMessage(senderName);
+
+        return Response.success(sendMessage);
+    }
+
+    @GetMapping("/receive")
+    public Response findReceiveMessage(){
+        String receiverName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
+        List<MessageResponseDto> receiveMessage = messageService.findReceiveMessage(receiverName);
+
+        return Response.success(receiveMessage);
+    }
+
+    @GetMapping("/send/{id}")
+    public Response findSendMessageToMember(@PathVariable Long id){
+        String senderName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
+        List<MessageResponseDto> sendMessageToMember = messageService.findSendMessageToMember(senderName, id);
+
+        return Response.success(sendMessageToMember);
+    }
+
+    @GetMapping("/receive/{id}")
+    public Response findReceiveMessageByMember(@PathVariable Long id){
+        String receiverName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
+        List<MessageResponseDto> sendMessageToMember = messageService.findReceiveMessageByMember(receiverName, id);
+
+        return Response.success(sendMessageToMember);
     }
 
     @DeleteMapping("/send/{id}")

@@ -8,11 +8,13 @@ import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.message.MessageNotFoundException;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.message.MessageRepository;
-import dblab.sharing_flatform.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -26,13 +28,39 @@ public class MessageService {
 
     @Transactional
     public MessageResponseDto sendMessage(MessageRequestDto messageRequestDto) {
-
         Message message = new Message(messageRequestDto.getContent(),
                 memberRepository.findByUsername(messageRequestDto.getReceiveMember()).orElseThrow(MemberNotFoundException::new),
                 memberRepository.findByUsername(messageRequestDto.getSendMember()).orElseThrow(MemberNotFoundException::new));
 
         messageRepository.save(message);
         return MessageResponseDto.toDto(message);
+    }
+
+    public List<MessageResponseDto> findSendMessage(String senderName){
+        List<Message> messages = messageRepository.findAllBySendMember(senderName);
+
+        return messages.stream().map(message-> MessageResponseDto.toDto(message)).collect(Collectors.toList());
+    }
+
+    public List<MessageResponseDto> findReceiveMessage(String ReceiverName){
+        List<Message> messages = messageRepository.findAllByReceiverMember(ReceiverName);
+
+        return messages.stream().map(message -> MessageResponseDto.toDto(message)).collect(Collectors.toList());
+
+    }
+
+    public List<MessageResponseDto> findSendMessageToMember(String senderName, Long id){
+        Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
+        List<Message> allBySendMemberToMember = messageRepository.findAllBySendAndReceiverMembers(senderName, member.getUsername());
+
+        return allBySendMemberToMember.stream().map(message -> MessageResponseDto.toDto(message)).collect(Collectors.toList());
+    }
+
+    public List<MessageResponseDto> findReceiveMessageByMember(String receiverName, Long id){
+        Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
+        List<Message> allBySendMemberToMember = messageRepository.findAllBySendAndReceiverMembers(member.getUsername(), receiverName);
+
+        return allBySendMemberToMember.stream().map(message -> MessageResponseDto.toDto(message)).collect(Collectors.toList());
     }
 
     @Transactional
@@ -54,6 +82,7 @@ public class MessageService {
             messageRepository.delete(message);
         }
     }
+
 
 
 }
