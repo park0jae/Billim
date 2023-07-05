@@ -11,4 +11,6 @@ public class MessageFactory {
         return new Message("content", createReceiveMember(), createSendMember());
     }
 
+    // message -> save
+
 }

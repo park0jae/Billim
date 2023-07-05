@@ -12,6 +12,7 @@ import dblab.sharing_flatform.exception.image.UnSupportExtException;
 import dblab.sharing_flatform.exception.member.DuplicateUsernameException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.message.MessageNotFoundException;
+import dblab.sharing_flatform.exception.post.PostNotFoundException;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -132,8 +133,17 @@ public class ExceptionAdvisor {
     // message
     @ExceptionHandler(MessageNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Response MessageNotFoundException(MessageNotFoundException e){
+    public Response messageNotFoundException(MessageNotFoundException e){
         return Response.failure(404, "메시지를 찾을 수 없습니다.");
     }
+
+
+    // post
+    @ExceptionHandler(PostNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response postNotFoundException(PostNotFoundException e){
+        return Response.failure(404, "게시글을 찾을 수 없습니다.");
+    }
+
 
 }

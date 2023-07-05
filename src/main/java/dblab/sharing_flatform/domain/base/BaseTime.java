@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PreUpdate;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
@@ -22,4 +23,8 @@ public class BaseTime {
     @LastModifiedDate
     private LocalDateTime lastModified;
 
+    @PreUpdate
+    public void update() {
+        this.lastModified = LocalDateTime.now();
+    }
 }
