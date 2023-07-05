@@ -9,6 +9,8 @@ import dblab.sharing_flatform.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/message")
@@ -23,6 +25,38 @@ public class MessageController {
 
         MessageResponseDto messageResponseDto = messageService.sendMessage(messageRequestDto);
         return Response.success(messageResponseDto);
+    }
+
+    @GetMapping("/send")
+    public Response findSendMessage(){
+        String senderName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
+        List<MessageResponseDto> sendMessage = messageService.findSendMessage(senderName);
+
+        return Response.success(sendMessage);
+    }
+
+    @GetMapping("/receive")
+    public Response findReceiveMessage(){
+        String receiverName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
+        List<MessageResponseDto> receiveMessage = messageService.findReceiveMessage(receiverName);
+
+        return Response.success(receiveMessage);
+    }
+
+    @GetMapping("/send/{id}")
+    public Response findSendMessageToMember(@PathVariable Long id){
+        String senderName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
+        List<MessageResponseDto> sendMessageToMember = messageService.findSendMessageToMember(senderName, id);
+
+        return Response.success(sendMessageToMember);
+    }
+
+    @GetMapping("/receive/{id}")
+    public Response findReceiveMessageByMember(@PathVariable Long id){
+        String receiverName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
+        List<MessageResponseDto> sendMessageToMember = messageService.findReceiveMessageByMember(receiverName, id);
+
+        return Response.success(sendMessageToMember);
     }
 
     @DeleteMapping("/send/{id}")
