@@ -50,6 +50,7 @@ public class SignService {
                 passwordEncoder.encode(memberCreateRequestDto.getPassword()),
                 memberCreateRequestDto.getPhoneNumber(),
                 memberCreateRequestDto.getAddress(),
+                "None",
                 List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)),
                 List.of());
         memberRepository.save(member);

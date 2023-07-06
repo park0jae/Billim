@@ -93,7 +93,7 @@ public class JwtHandler {
 
         List<? extends GrantedAuthority> simpleGrantedAuthorities = authorities.stream().map(auth -> new SimpleGrantedAuthority(auth)).collect(Collectors.toList());
 
-        MemberDetails principal = new MemberDetails((String) claims.get(AUTH_ID),(String) claims.get(AUTH_USERNAME), null, simpleGrantedAuthorities);
+        MemberDetails principal = new MemberDetails((String) claims.get(AUTH_ID),(String) claims.get(AUTH_USERNAME), null, simpleGrantedAuthorities, Map.of());
 
         return new UsernamePasswordAuthenticationToken(principal, token, simpleGrantedAuthorities);
     }
