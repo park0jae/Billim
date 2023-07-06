@@ -1,4 +1,4 @@
-package dblab.sharing_flatform.dto.post.crud.read;
+package dblab.sharing_flatform.dto.post.crud.read.request;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;

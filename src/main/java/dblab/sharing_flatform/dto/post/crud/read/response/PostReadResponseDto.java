@@ -1,4 +1,4 @@
-package dblab.sharing_flatform.dto.post.crud.read;
+package dblab.sharing_flatform.dto.post.crud.read.response;
 
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.item.ItemDto;
@@ -8,8 +8,10 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Data
@@ -20,9 +22,11 @@ public class PostReadResponseDto {
     private Long id;
     private String title;
     private String content;
-    private MemberDto memberResponseDto;
-    private ItemDto itemDto;
-    private List<ImageDto> imageDtoList;
+    private MemberDto writer;
+
+    @Nullable
+    private ItemDto item;
+    private List<ImageDto> imageList;
 
     public static PostReadResponseDto toDto(Post post) {
         return new PostReadResponseDto(
@@ -30,7 +34,7 @@ public class PostReadResponseDto {
                 post.getTitle(),
                 post.getContent(),
                 MemberDto.toDto(post.getMember()),
-                ItemDto.toDto(post.getItem()),
+                Optional.ofNullable(ItemDto.toDto(post.getItem())).orElse(null),
                 post.getImages().stream().map(i -> ImageDto.toDto(i)).collect(Collectors.toList()));
     }
 }

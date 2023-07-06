@@ -21,9 +21,16 @@ public class PostController {
 
     private final PostService postService;
 
+    @ApiOperation(value = "게시글 단건 조회", notes = "게시글 ID로 게시글을 조회합니다.")
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Response read(@PathVariable Long id) {
+        return Response.success(postService.read(id));
+    }
+
     @ApiOperation(value = "게시글 생성", notes = "게시글을 생성합니다.")
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public Response create(@Valid @ModelAttribute PostCreateRequestDto postCreateRequestDto) {
         postCreateRequestDto.setUsername(SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new));
         postService.create(postCreateRequestDto);

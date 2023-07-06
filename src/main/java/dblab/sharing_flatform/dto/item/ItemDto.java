@@ -20,8 +20,12 @@ public class ItemDto {
     private Long quantity;
 
     public static ItemDto toDto(Item item) {
-        return new ItemDto(item.getName(),
-                item.getPrice(),
-                item.getQuantity());
+        if (item != null) {
+            return new ItemDto(item.getName(),
+                    item.getPrice(),
+                    item.getQuantity());
+        } else {
+            return null;
+        }
     }
 }

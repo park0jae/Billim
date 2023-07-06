@@ -4,12 +4,10 @@ import dblab.sharing_flatform.domain.image.Image;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.item.crud.create.ItemCreateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
-import dblab.sharing_flatform.dto.post.crud.read.PagedPostListDto;
-import dblab.sharing_flatform.dto.post.crud.read.PostReadResponseDto;
+import dblab.sharing_flatform.dto.post.crud.read.response.PostReadResponseDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateResponseDto;
 import dblab.sharing_flatform.dto.image.ImageDto;
-import dblab.sharing_flatform.dto.post.crud.read.PostPagingCondition;
 import dblab.sharing_flatform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
@@ -23,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,11 +42,18 @@ public class PostService {
         return PostReadResponseDto.toDto(postRepository.findById(id).orElseThrow(PostNotFoundException::new));
     }
 
-
     // create
     @Transactional
     public void create(PostCreateRequestDto postCreateRequestDto) {
-        List<Image> images = MultiPartFileToImage(postCreateRequestDto.getMultipartFiles());
+
+        List<Image> images = new ArrayList<>();
+
+        if (postCreateRequestDto.getItemCreateRequestDto() != null) {
+             images = MultiPartFileToImage(postCreateRequestDto.getMultipartFiles());
+             uploadImagesToServer(images, postCreateRequestDto.getMultipartFiles());
+        } else {
+            images = List.of();
+        }
 
         postRepository.save(new Post(postCreateRequestDto.getTitle(),
                 postCreateRequestDto.getContent(),
@@ -55,7 +62,6 @@ public class PostService {
                 images,
                 memberRepository.findByUsername(postCreateRequestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new)));
 
-        uploadImagesToServer(images, postCreateRequestDto.getMultipartFiles());
     }
 
     @Transactional

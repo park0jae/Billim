@@ -1,4 +1,4 @@
-package dblab.sharing_flatform.dto.post.crud.read;
+package dblab.sharing_flatform.dto.post.crud.read.response;
 
 import dblab.sharing_flatform.dto.post.PostDto;
 import lombok.AccessLevel;
