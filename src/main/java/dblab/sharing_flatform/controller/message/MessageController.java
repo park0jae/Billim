@@ -1,7 +1,7 @@
 package dblab.sharing_flatform.controller.message;
 
-import dblab.sharing_flatform.dto.message.MessageRequestDto;
-import dblab.sharing_flatform.dto.message.MessageResponseDto;
+import dblab.sharing_flatform.dto.message.crud.create.MessageCreateRequestDto;
+import dblab.sharing_flatform.dto.message.MessageDto;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.service.message.MessageService;
@@ -23,19 +23,19 @@ public class MessageController {
 
     @ApiOperation(value = "메세지 생성 및 전송", notes = "메세지를 생성하고 수신자에게 전송합니다.")
     @PostMapping
-    public Response sendMessageToReceiver(@Valid @RequestBody MessageRequestDto messageRequestDto) {
+    public Response sendMessageToReceiver(@Valid @RequestBody MessageCreateRequestDto messageCreateRequestDto) {
         String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        messageRequestDto.setSendMember(username);
+        messageCreateRequestDto.setSendMember(username);
 
-        MessageResponseDto messageResponseDto = messageService.sendMessage(messageRequestDto);
-        return Response.success(messageResponseDto);
+        MessageDto messageDto = messageService.sendMessage(messageCreateRequestDto);
+        return Response.success(messageDto);
     }
 
     @ApiOperation(value = "송신 메시지 조회", notes = "현재 로그인한 유저가 송신한 메시지를 조회합니다.")
     @GetMapping("/send")
     public Response findSendMessage(){
         String senderName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        List<MessageResponseDto> sendMessage = messageService.findSendMessage(senderName);
+        List<MessageDto> sendMessage = messageService.findSendMessage(senderName);
 
         return Response.success(sendMessage);
     }
@@ -44,7 +44,7 @@ public class MessageController {
     @GetMapping("/receive")
     public Response findReceiveMessage(){
         String receiverName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        List<MessageResponseDto> receiveMessage = messageService.findReceiveMessage(receiverName);
+        List<MessageDto> receiveMessage = messageService.findReceiveMessage(receiverName);
 
         return Response.success(receiveMessage);
     }
@@ -53,7 +53,7 @@ public class MessageController {
     @GetMapping("/send/{id}")
     public Response findSendMessageToMember(@ApiParam(value = "송신자 id", required = true) @PathVariable Long id){
         String senderName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        List<MessageResponseDto> sendMessageToMember = messageService.findSendMessageToMember(senderName, id);
+        List<MessageDto> sendMessageToMember = messageService.findSendMessageToMember(senderName, id);
 
         return Response.success(sendMessageToMember);
     }
@@ -62,7 +62,7 @@ public class MessageController {
     @GetMapping("/receive/{id}")
     public Response findReceiveMessageByMember(@ApiParam(value = "수신자 id", required = true) @PathVariable Long id){
         String receiverName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        List<MessageResponseDto> sendMessageToMember = messageService.findReceiveMessageByMember(receiverName, id);
+        List<MessageDto> sendMessageToMember = messageService.findReceiveMessageByMember(receiverName, id);
 
         return Response.success(sendMessageToMember);
     }

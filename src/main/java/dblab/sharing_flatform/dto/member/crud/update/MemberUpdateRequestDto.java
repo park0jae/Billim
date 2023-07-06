@@ -1,4 +1,4 @@
-package dblab.sharing_flatform.dto.member;
+package dblab.sharing_flatform.dto.member.crud.update;
 
 import dblab.sharing_flatform.domain.address.Address;
 import io.swagger.annotations.ApiModel;

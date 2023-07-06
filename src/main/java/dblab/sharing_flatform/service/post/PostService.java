@@ -1,18 +1,17 @@
 package dblab.sharing_flatform.service.post;
 
 import dblab.sharing_flatform.domain.image.Image;
-import dblab.sharing_flatform.domain.item.Item;
 import dblab.sharing_flatform.domain.post.Post;
-import dblab.sharing_flatform.dto.item.ItemCreateRequestDto;
-import dblab.sharing_flatform.dto.item.ItemUpdateRequestDto;
-import dblab.sharing_flatform.dto.post.PostCreateRequestDto;
-import dblab.sharing_flatform.dto.post.PostUpdateRequestDto;
-import dblab.sharing_flatform.dto.post.PostUpdateResponseDto;
-import dblab.sharing_flatform.dto.post.image.ImageDto;
-import dblab.sharing_flatform.exception.auth.AccessDeniedException;
+import dblab.sharing_flatform.dto.item.crud.create.ItemCreateRequestDto;
+import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
+import dblab.sharing_flatform.dto.post.crud.read.PagedPostListDto;
+import dblab.sharing_flatform.dto.post.crud.read.PostReadResponseDto;
+import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
+import dblab.sharing_flatform.dto.post.crud.update.PostUpdateResponseDto;
+import dblab.sharing_flatform.dto.image.ImageDto;
+import dblab.sharing_flatform.dto.post.crud.read.PostPagingCondition;
 import dblab.sharing_flatform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
-import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
 import dblab.sharing_flatform.repository.item.ItemRepository;
@@ -39,14 +38,16 @@ public class PostService {
     private final ItemRepository itemRepository;
     private final FileService fileService;
 
+    public PostReadResponseDto read(Long id) {
+        return PostReadResponseDto.toDto(postRepository.findById(id).orElseThrow(PostNotFoundException::new));
+    }
+
+
     // create
     @Transactional
     public void create(PostCreateRequestDto postCreateRequestDto) {
-
-        // 글에 올라갈 MultiPartFile -> Image 로 변환
         List<Image> images = MultiPartFileToImage(postCreateRequestDto.getMultipartFiles());
 
-        // 글 저장
         postRepository.save(new Post(postCreateRequestDto.getTitle(),
                 postCreateRequestDto.getContent(),
                 categoryRepository.findByName(postCreateRequestDto.getCategoryName()).orElseThrow(CategoryNotFoundException::new),
@@ -54,12 +55,7 @@ public class PostService {
                 images,
                 memberRepository.findByUsername(postCreateRequestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new)));
 
-        // 로컬 서버에 post에 첨부한 이미지 업로드
         uploadImagesToServer(images, postCreateRequestDto.getMultipartFiles());
-    }
-
-    private List<Image> MultiPartFileToImage(List<MultipartFile> multipartFiles) {
-        return multipartFiles.stream().map(i -> new Image(i.getOriginalFilename())).collect(Collectors.toList());
     }
 
     @Transactional
@@ -69,30 +65,14 @@ public class PostService {
         deleteImagesFromServer(post);
     }
 
-    /**
-     *     public void update(String title, String content, Category category, Item item, List<Image> images) {
-     *         this.title = title;
-     *         this.content = content;
-     *         this.category = category;
-     *         this.item = item;
-     *         addImages(images);
-    **/
-
     @Transactional
     public PostUpdateResponseDto update(Long id, PostUpdateRequestDto postUpdateRequestDto) {
-        // 수정할 게시물 찾고
         Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
-
-        // 1. DB - Post 수정
-        // 2. DB - Image 수정 - 추가 및 삭제
         PostUpdateResponseDto postUpdateResponseDto = post.updatePost(postUpdateRequestDto);
-
-//        // 3. 로컬 서버 내 이미지 - 추가 및 삭제
         updateImagesToServer(postUpdateRequestDto, postUpdateResponseDto);
 
         return postUpdateResponseDto;
     }
-
 
     // create
     public void uploadImagesToServer(List<Image> images, List<MultipartFile> fileImages) {
@@ -127,5 +107,9 @@ public class PostService {
     private void deleteImagesFromServer(PostUpdateResponseDto postUpdateResponseDto) {
         List<ImageDto> deleteImageDtoList = postUpdateResponseDto.getDeletedImages();
         deleteImageDtoList.stream().forEach(i -> fileService.delete(i.getUniqueName()));
+    }
+
+    private List<Image> MultiPartFileToImage(List<MultipartFile> multipartFiles) {
+        return multipartFiles.stream().map(i -> new Image(i.getOriginalFilename())).collect(Collectors.toList());
     }
 }

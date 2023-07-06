@@ -1,8 +1,7 @@
 package dblab.sharing_flatform.controller.post;
 
-import dblab.sharing_flatform.dto.post.PostCreateRequestDto;
-import dblab.sharing_flatform.dto.post.PostUpdateRequestDto;
-import dblab.sharing_flatform.dto.post.PostUpdateResponseDto;
+import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
+import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.service.post.PostService;

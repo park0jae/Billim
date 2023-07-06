@@ -2,8 +2,8 @@ package dblab.sharing_flatform.service.member;
 
 import dblab.sharing_flatform.domain.address.Address;
 import dblab.sharing_flatform.domain.member.Member;
-import dblab.sharing_flatform.dto.member.MemberResponseDto;
-import dblab.sharing_flatform.dto.member.MemberUpdateRequestDto;
+import dblab.sharing_flatform.dto.member.MemberPrivateDto;
+import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +34,7 @@ public class MemberServiceTest {
         given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
 
         //when
-        MemberResponseDto memberInfo = memberService.getMemberInfoByUsername(member.getUsername());
+        MemberPrivateDto memberInfo = memberService.getMemberInfoByUsername(member.getUsername());
 
         //then
         assertThat(memberInfo.getUsername()).isEqualTo(member.getUsername());
@@ -62,7 +62,7 @@ public class MemberServiceTest {
         given(memberRepository.findById(member.getId())).willReturn(Optional.of(member));
 
         // when
-        MemberResponseDto updateMember = memberService.update(member.getId(), memberUpdateRequestDto);
+        MemberPrivateDto updateMember = memberService.update(member.getId(), memberUpdateRequestDto);
 
         // then
         assertThat(updateMember.getPassword()).isEqualTo("updatePass1!");

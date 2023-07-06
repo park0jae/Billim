@@ -1,9 +1,6 @@
-package dblab.sharing_flatform.dto.post;
+package dblab.sharing_flatform.dto.post.crud.create;
 
-import dblab.sharing_flatform.domain.image.Image;
-import dblab.sharing_flatform.domain.item.Item;
-import dblab.sharing_flatform.domain.post.Post;
-import dblab.sharing_flatform.dto.item.ItemCreateRequestDto;
+import dblab.sharing_flatform.dto.item.crud.create.ItemCreateRequestDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
@@ -18,7 +15,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApiModel(value = "게시글 생성 요청")
 @Data

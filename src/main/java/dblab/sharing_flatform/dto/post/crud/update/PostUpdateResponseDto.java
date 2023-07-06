@@ -1,9 +1,9 @@
-package dblab.sharing_flatform.dto.post;
+package dblab.sharing_flatform.dto.post.crud.update;
 
 import dblab.sharing_flatform.domain.image.Image;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.member.MemberDto;
-import dblab.sharing_flatform.dto.post.image.ImageDto;
+import dblab.sharing_flatform.dto.image.ImageDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,6 +36,5 @@ public class PostUpdateResponseDto {
                 ImageDto.toDtoList(map.getOrDefault("addList", List.of())),
                 ImageDto.toDtoList(map.getOrDefault("deleteList",List.of())));
     }
-
 
 }

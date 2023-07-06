@@ -1,13 +1,10 @@
 package dblab.sharing_flatform.domain.member;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import dblab.sharing_flatform.domain.address.Address;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.role.Role;
-import dblab.sharing_flatform.domain.role.RoleType;
-import dblab.sharing_flatform.dto.member.MemberUpdateRequestDto;
+import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;

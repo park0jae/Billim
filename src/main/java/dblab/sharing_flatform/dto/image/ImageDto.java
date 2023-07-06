@@ -1,4 +1,4 @@
-package dblab.sharing_flatform.dto.post.image;
+package dblab.sharing_flatform.dto.image;
 
 import dblab.sharing_flatform.domain.image.Image;
 import lombok.AccessLevel;
@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 

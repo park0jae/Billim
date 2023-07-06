@@ -1,4 +1,4 @@
-package dblab.sharing_flatform.dto.category;
+package dblab.sharing_flatform.dto.category.crud;
 
 import dblab.sharing_flatform.domain.category.Category;
 import dblab.sharing_flatform.helper.FlatListToHierarchicalHelper;
@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CategoryResponseDto {
+public class CategoryDto {
 
     @ApiModelProperty(value = "카테고리 ID", example = "1")
     private Long id;
@@ -25,20 +25,20 @@ public class CategoryResponseDto {
     private String name;
 
     @ApiModelProperty(value = "자식 카테고리 리스트")
-    private List<CategoryResponseDto> children;
+    private List<CategoryDto> children;
 
-    public static List<CategoryResponseDto> toList(List<Category> categoryList) {
+    public static List<CategoryDto> toList(List<Category> categoryList) {
         FlatListToHierarchicalHelper helper = FlatListToHierarchicalHelper.newInstance(
                 categoryList,
-                c -> CategoryResponseDto.toDto(c),
+                c -> CategoryDto.toDto(c),
                 c -> c.getParent(),
                 c -> c.getId(),
                 d -> d.getChildren());
         return helper.convert();
     }
 
-    public static CategoryResponseDto toDto(Category category) {
-        return new CategoryResponseDto(category.getId(),
+    public static CategoryDto toDto(Category category) {
+        return new CategoryDto(category.getId(),
                 category.getName(),
                 new ArrayList<>());
     }

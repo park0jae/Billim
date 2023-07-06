@@ -1,4 +1,4 @@
-package dblab.sharing_flatform.dto.category;
+package dblab.sharing_flatform.dto.category.crud.create;
 
 import dblab.sharing_flatform.domain.category.Category;
 import io.swagger.annotations.ApiModel;
@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CategoryRequestDto {
+public class CategoryCreateRequestDto {
 
     @ApiModelProperty(value = "카테고리 명", notes = "카테고리명을 입력해주세요.", required = true, example = "Essay")
     @NotBlank(message = "카테고리명은 반드시 입력하셔야 합니다.")
@@ -23,7 +23,7 @@ public class CategoryRequestDto {
     @ApiModelProperty(value = "상위 카테고리 명", notes = "상위 카테고리명을 입력해주세요.", required = true, example = "Book")
     private String parentCategoryName;
 
-    public static Category toEntity(CategoryRequestDto categoryRequestDto, Category parent) {
-        return new Category(categoryRequestDto.getName(), parent);
+    public static Category toEntity(CategoryCreateRequestDto categoryCreateRequestDto, Category parent) {
+        return new Category(categoryCreateRequestDto.getName(), parent);
     }
 }

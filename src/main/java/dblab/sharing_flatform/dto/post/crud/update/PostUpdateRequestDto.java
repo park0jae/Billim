@@ -1,8 +1,6 @@
-package dblab.sharing_flatform.dto.post;
+package dblab.sharing_flatform.dto.post.crud.update;
 
-import dblab.sharing_flatform.domain.item.Item;
-import dblab.sharing_flatform.dto.item.ItemCreateRequestDto;
-import dblab.sharing_flatform.dto.item.ItemUpdateRequestDto;
+import dblab.sharing_flatform.dto.item.crud.update.ItemUpdateRequestDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -11,8 +9,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
 import java.util.List;
 

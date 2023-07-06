@@ -3,9 +3,9 @@ package dblab.sharing_flatform.service.member;
 import dblab.sharing_flatform.config.security.jwt.support.TokenProvider;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.role.RoleType;
-import dblab.sharing_flatform.dto.member.LogInResponseDto;
-import dblab.sharing_flatform.dto.member.LoginRequestDto;
-import dblab.sharing_flatform.dto.member.SignUpRequestDto;
+import dblab.sharing_flatform.dto.member.login.LogInResponseDto;
+import dblab.sharing_flatform.dto.member.login.LoginRequestDto;
+import dblab.sharing_flatform.dto.member.crud.create.MemberCreateRequestDto;
 import dblab.sharing_flatform.exception.auth.LoginFailureException;
 import dblab.sharing_flatform.exception.member.DuplicateUsernameException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
@@ -42,21 +42,21 @@ public class SignService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Transactional
-    public void signUp(SignUpRequestDto signUpRequestDto){
+    public void signUp(MemberCreateRequestDto memberCreateRequestDto){
 
-        validateDuplicateUsername(signUpRequestDto);
+        validateDuplicateUsername(memberCreateRequestDto);
 
-        Member member = new Member(signUpRequestDto.getUsername(),
-                passwordEncoder.encode(signUpRequestDto.getPassword()),
-                signUpRequestDto.getPhoneNumber(),
-                signUpRequestDto.getAddress(),
+        Member member = new Member(memberCreateRequestDto.getUsername(),
+                passwordEncoder.encode(memberCreateRequestDto.getPassword()),
+                memberCreateRequestDto.getPhoneNumber(),
+                memberCreateRequestDto.getAddress(),
                 List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)),
                 List.of());
         memberRepository.save(member);
     }
 
-    private void validateDuplicateUsername(SignUpRequestDto signUpRequestDto) {
-        if (memberRepository.findOneWithRolesByUsername(signUpRequestDto.getUsername()).orElse(null) != null) {
+    private void validateDuplicateUsername(MemberCreateRequestDto memberCreateRequestDto) {
+        if (memberRepository.findOneWithRolesByUsername(memberCreateRequestDto.getUsername()).orElse(null) != null) {
             throw new DuplicateUsernameException();
         }
     }

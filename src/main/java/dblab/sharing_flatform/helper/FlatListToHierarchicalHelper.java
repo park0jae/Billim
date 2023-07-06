@@ -40,16 +40,16 @@ public class FlatListToHierarchicalHelper<K, E, D> {
         List<D> roots = new ArrayList<>();
 
         for (E e : entities) {
-            D dto = toDto(e); // entity -> dto
-            dtoMap.put(getKey(e), dto); // dto를 map에 put
-            if (hasParent(e)) { // 부모 엔티티 있는지 검사, 부모 엔티티 있으면
+            D dto = toDto(e);
+            dtoMap.put(getKey(e), dto);
+            if (hasParent(e)) {
                 E parent = getParent(e);
-                K parentKey = getKey(parent); //  부모 Id 추출
+                K parentKey = getKey(parent);
 
-                D parentDto = dtoMap.get(parentKey); // 부모 엔티티를 dtoMap에서 꺼내 (findAllOrderByParentIdAscNullsFirstCategoryIdAsc() 할 예정이므로 반드시 있음)
-                getChildren(parentDto).add(dto); // parentDto의 자식 리스트에 dto 추가
+                D parentDto = dtoMap.get(parentKey);
+                getChildren(parentDto).add(dto);
             } else {
-                roots.add(dto); // 부모 엔티티 없으면 roots에 dto add
+                roots.add(dto);
             }
         }
         return roots;

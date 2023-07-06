@@ -2,13 +2,11 @@ package dblab.sharing_flatform.service.message;
 
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.message.Message;
-import dblab.sharing_flatform.dto.message.MessageRequestDto;
-import dblab.sharing_flatform.dto.message.MessageResponseDto;
+import dblab.sharing_flatform.dto.message.crud.create.MessageCreateRequestDto;
+import dblab.sharing_flatform.dto.message.MessageDto;
 import dblab.sharing_flatform.factory.member.MemberFactory;
-import dblab.sharing_flatform.factory.message.MessageFactory;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.message.MessageRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,13 +44,13 @@ public class MessageServiceTest {
     @Test
     public void sendMessageTest() {
         // Given
-        MessageRequestDto messageRequestDto = new MessageRequestDto("HelloWorld","receiver","sender");
+        MessageCreateRequestDto messageCreateRequestDto = new MessageCreateRequestDto("HelloWorld","receiver","sender");
 
         given(memberRepository.findByUsername("sender")).willReturn(Optional.of(sendMember));
         given(memberRepository.findByUsername("receiver")).willReturn(Optional.of(receiveMember));
 
         // When
-        MessageResponseDto result = messageService.sendMessage(messageRequestDto);
+        MessageDto result = messageService.sendMessage(messageCreateRequestDto);
 
         // Then
         assertThat(result).isNotNull();
@@ -66,7 +63,7 @@ public class MessageServiceTest {
         Message message = new Message("content", receiveMember, sendMember);
 
         // When
-        List<MessageResponseDto> sendMessages = messageService.findSendMessage(message.getSendMember().getUsername());
+        List<MessageDto> sendMessages = messageService.findSendMessage(message.getSendMember().getUsername());
 
         // Then
         assertThat(sendMessages).isNotNull();
@@ -79,7 +76,7 @@ public class MessageServiceTest {
         Message message = new Message("content", receiveMember, sendMember);
 
         // When
-        List<MessageResponseDto> receiveMessages = messageService.findReceiveMessage(message.getSendMember().getUsername());
+        List<MessageDto> receiveMessages = messageService.findReceiveMessage(message.getSendMember().getUsername());
 
         // Then
         assertThat(receiveMessages).isNotNull();
@@ -92,7 +89,7 @@ public class MessageServiceTest {
         given(memberRepository.findById(receiveMember.getId())).willReturn(Optional.of(receiveMember));
 
         // When
-        List<MessageResponseDto> sendMessageToMembers = messageService.findSendMessageToMember(sendMember.getUsername(), receiveMember.getId());
+        List<MessageDto> sendMessageToMembers = messageService.findSendMessageToMember(sendMember.getUsername(), receiveMember.getId());
 
         // Then
         assertThat(sendMessageToMembers).isNotNull();
@@ -106,7 +103,7 @@ public class MessageServiceTest {
         given(memberRepository.findById(sendMember.getId())).willReturn(Optional.of(sendMember));
 
         // When
-        List<MessageResponseDto> receiveMessageByMembers = messageService.findReceiveMessageByMember(receiveMember.getUsername(), receiveMember.getId());
+        List<MessageDto> receiveMessageByMembers = messageService.findReceiveMessageByMember(receiveMember.getUsername(), receiveMember.getId());
 
         // Then
         assertThat(receiveMessageByMembers).isNotNull();

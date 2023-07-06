@@ -2,8 +2,8 @@ package dblab.sharing_flatform.service.message;
 
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.message.Message;
-import dblab.sharing_flatform.dto.message.MessageRequestDto;
-import dblab.sharing_flatform.dto.message.MessageResponseDto;
+import dblab.sharing_flatform.dto.message.crud.create.MessageCreateRequestDto;
+import dblab.sharing_flatform.dto.message.MessageDto;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.message.MessageNotFoundException;
 import dblab.sharing_flatform.repository.member.MemberRepository;
@@ -24,42 +24,41 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
 
-
     @Transactional
-    public MessageResponseDto sendMessage(MessageRequestDto messageRequestDto) {
-        Message message = new Message(messageRequestDto.getContent(),
-                memberRepository.findByUsername(messageRequestDto.getReceiveMember()).orElseThrow(MemberNotFoundException::new),
-                memberRepository.findByUsername(messageRequestDto.getSendMember()).orElseThrow(MemberNotFoundException::new));
+    public MessageDto sendMessage(MessageCreateRequestDto messageCreateRequestDto) {
+        Message message = new Message(messageCreateRequestDto.getContent(),
+                memberRepository.findByUsername(messageCreateRequestDto.getReceiveMember()).orElseThrow(MemberNotFoundException::new),
+                memberRepository.findByUsername(messageCreateRequestDto.getSendMember()).orElseThrow(MemberNotFoundException::new));
 
         messageRepository.save(message);
-        return MessageResponseDto.toDto(message);
+        return MessageDto.toDto(message);
     }
 
-    public List<MessageResponseDto> findSendMessage(String senderName){
+    public List<MessageDto> findSendMessage(String senderName){
         List<Message> messages = messageRepository.findAllBySendMember(senderName);
 
-        return messages.stream().map(message-> MessageResponseDto.toDto(message)).collect(Collectors.toList());
+        return messages.stream().map(message-> MessageDto.toDto(message)).collect(Collectors.toList());
     }
 
-    public List<MessageResponseDto> findReceiveMessage(String ReceiverName){
+    public List<MessageDto> findReceiveMessage(String ReceiverName){
         List<Message> messages = messageRepository.findAllByReceiverMember(ReceiverName);
 
-        return messages.stream().map(message -> MessageResponseDto.toDto(message)).collect(Collectors.toList());
+        return messages.stream().map(message -> MessageDto.toDto(message)).collect(Collectors.toList());
 
     }
 
-    public List<MessageResponseDto> findSendMessageToMember(String senderName, Long id){
+    public List<MessageDto> findSendMessageToMember(String senderName, Long id){
         Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
         List<Message> allBySendMemberToMember = messageRepository.findAllBySendAndReceiverMembers(senderName, member.getUsername());
 
-        return allBySendMemberToMember.stream().map(message -> MessageResponseDto.toDto(message)).collect(Collectors.toList());
+        return allBySendMemberToMember.stream().map(message -> MessageDto.toDto(message)).collect(Collectors.toList());
     }
 
-    public List<MessageResponseDto> findReceiveMessageByMember(String receiverName, Long id){
+    public List<MessageDto> findReceiveMessageByMember(String receiverName, Long id){
         Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
         List<Message> allBySendMemberToMember = messageRepository.findAllBySendAndReceiverMembers(member.getUsername(), receiverName);
 
-        return allBySendMemberToMember.stream().map(message -> MessageResponseDto.toDto(message)).collect(Collectors.toList());
+        return allBySendMemberToMember.stream().map(message -> MessageDto.toDto(message)).collect(Collectors.toList());
     }
 
     @Transactional

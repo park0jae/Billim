@@ -1,4 +1,4 @@
-package dblab.sharing_flatform.dto.member;
+package dblab.sharing_flatform.dto.member.crud.create;
 
 import dblab.sharing_flatform.domain.address.Address;
 import io.swagger.annotations.ApiModel;
@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SignUpRequestDto {
+public class MemberCreateRequestDto {
 
     @ApiModelProperty(value = "username", notes = "사용자 이름은 한글 또는 알파벳으로 입력해주세요.", required = true, example = "kimdongwoong")
     @NotBlank(message = "아이디를 입력해주세요.")

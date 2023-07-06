@@ -1,6 +1,6 @@
 package dblab.sharing_flatform.controller.category;
 
-import dblab.sharing_flatform.dto.category.CategoryRequestDto;
+import dblab.sharing_flatform.dto.category.crud.create.CategoryCreateRequestDto;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.service.category.CategoryService;
 import io.swagger.annotations.Api;
@@ -8,7 +8,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,8 +31,8 @@ public class CategoryController {
     @ApiOperation(value = "카테고리 생성", notes = "카테고리를 생성 / ADMIN 전용")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Response create(@Valid @RequestBody CategoryRequestDto categoryRequestDto) {
-        categoryService.create(categoryRequestDto);
+    public Response create(@Valid @RequestBody CategoryCreateRequestDto categoryCreateRequestDto) {
+        categoryService.create(categoryCreateRequestDto);
         return Response.success();
     }
 
