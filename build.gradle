@@ -35,6 +35,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     compileOnly 'org.projectlombok:lombok'
 
+	// spring web 추가 시작
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	// spring web  끝
+
 
 	runtimeOnly 'com.h2database:h2'
 	// h2 데이터베이스 끝

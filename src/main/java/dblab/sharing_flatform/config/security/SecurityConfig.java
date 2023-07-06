@@ -73,6 +73,7 @@ public class SecurityConfig {
                 // 게시글 생성, 수정 , 삭제 - 소유주, ADMIN
                 .antMatchers(HttpMethod.DELETE, "/post/{id}").access("@postGuard.check(#id)")
                 .antMatchers(HttpMethod.PATCH, "/post/{id}").access("@postGuard.check(#id)")
+
                 .and()
                 //OAuth 2.0 기반 인증을 처리하기위해 Provider와의 연동을 지원
                 .oauth2Login()
@@ -80,9 +81,9 @@ public class SecurityConfig {
                 //OAuth 2.0 Provider로부터 사용자 정보를 가져오는 엔드포인트를 지정하는 메서드
                 .userInfoEndpoint()
                 //OAuth 2.0 인증이 처리되는데 사용될 사용자 서비스를 지정하는 메서드
-                .userService(principalOauth2UserService)
-                .and();
-        // 시큐리티 설정 끝
+                .userService(principalOauth2UserService);
+
+    // 시큐리티 설정 끝
         return http.build();
     }
 
