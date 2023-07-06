@@ -1,11 +1,13 @@
 package dblab.sharing_flatform.controller.post;
 
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
+import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.service.post.PostService;
 import dblab.sharing_flatform.util.SecurityUtil;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -14,12 +16,20 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@Api(value = "Post Controller", tags = "Post")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/post")
 public class PostController {
 
     private final PostService postService;
+
+    @ApiOperation(value = "게시글 검색 -> 목록 조회", notes = "검색조건에 따라 페이징하여 조회합니다.")
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public Response readAll(@Valid PostPagingCondition cond) {
+        return Response.success(postService.readAll(cond));
+    }
 
     @ApiOperation(value = "게시글 단건 조회", notes = "게시글 ID로 게시글을 조회합니다.")
     @GetMapping("/{id}")
