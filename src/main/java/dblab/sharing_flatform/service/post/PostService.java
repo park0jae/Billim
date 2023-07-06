@@ -4,6 +4,8 @@ import dblab.sharing_flatform.domain.image.Image;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.item.crud.create.ItemCreateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
+import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
+import dblab.sharing_flatform.dto.post.crud.read.response.PagedPostListDto;
 import dblab.sharing_flatform.dto.post.crud.read.response.PostReadResponseDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateResponseDto;
@@ -38,6 +40,11 @@ public class PostService {
     private final ItemRepository itemRepository;
     private final FileService fileService;
 
+
+    public PagedPostListDto readAll(PostPagingCondition cond) {
+        return PagedPostListDto.toDto(postRepository.findAllBySearch(cond));
+    }
+
     public PostReadResponseDto read(Long id) {
         return PostReadResponseDto.toDto(postRepository.findById(id).orElseThrow(PostNotFoundException::new));
     }
@@ -45,15 +52,7 @@ public class PostService {
     // create
     @Transactional
     public void create(PostCreateRequestDto postCreateRequestDto) {
-
-        List<Image> images = new ArrayList<>();
-
-        if (postCreateRequestDto.getItemCreateRequestDto() != null) {
-             images = MultiPartFileToImage(postCreateRequestDto.getMultipartFiles());
-             uploadImagesToServer(images, postCreateRequestDto.getMultipartFiles());
-        } else {
-            images = List.of();
-        }
+        List<Image> images = getImages(postCreateRequestDto);
 
         postRepository.save(new Post(postCreateRequestDto.getTitle(),
                 postCreateRequestDto.getContent(),
@@ -61,7 +60,17 @@ public class PostService {
                 postCreateRequestDto.getItemCreateRequestDto() != null ? itemRepository.save(ItemCreateRequestDto.toEntity(postCreateRequestDto.getItemCreateRequestDto())) : null,
                 images,
                 memberRepository.findByUsername(postCreateRequestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new)));
+    }
 
+    private List<Image> getImages(PostCreateRequestDto postCreateRequestDto) {
+        List<Image> images;
+        if (postCreateRequestDto.getItemCreateRequestDto() != null) {
+             images = MultiPartFileToImage(postCreateRequestDto.getMultipartFiles());
+             uploadImagesToServer(images, postCreateRequestDto.getMultipartFiles());
+        } else {
+            images = List.of();
+        }
+        return images;
     }
 
     @Transactional

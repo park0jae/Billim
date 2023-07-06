@@ -1,23 +1,27 @@
 package dblab.sharing_flatform.dto.post.crud.read.request;
 
+import lombok.Data;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public class PostPagingCondition {
-    @NotNull
+
+    @NotNull(message = "페이지 번호를 입력해주세요.")
     @PositiveOrZero(message = "0 이상의 올바른 페이지 번호를 입력해주세요.")
     private Integer page;
 
-    @NotNull
+    @NotNull(message = "페이지 크기를 입력해주세요.")
     @Positive(message = "1 이상의 올바른 페이지당 글 개수를 입력해주세요.")
     private Integer size;
 
     // 검색 조건
-    private List<Long> memberId = new ArrayList<>();
-    private List<Long> categoryId = new ArrayList<>();
+    private String categoryName;
+    private String title;
 
     public PostPagingCondition() {
         this.page = getDefaultPageNum();
