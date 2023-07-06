@@ -4,9 +4,8 @@ import dblab.sharing_flatform.domain.address.Address;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +14,8 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Member {
 
     @Id
@@ -34,6 +35,8 @@ public class Member {
     @Embedded
     private Address address;
 
+    private String provider;
+
     // roles -> 기본전략 : 지연로딩
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<MemberRole> roles = new ArrayList<>();
@@ -42,11 +45,12 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Post> posts = new ArrayList<>();
 
-    public Member(String username, String password, String phoneNumber, Address address, List<Role> roles, List<Post> posts) {
+    public Member(String username, String password, String phoneNumber, Address address, String provider,  List<Role> roles, List<Post> posts) {
         this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.provider = provider;
         initPosts(posts);
         addRoles(roles);
     }

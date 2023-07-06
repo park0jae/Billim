@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,6 @@ public class MemberDetailsService implements UserDetailsService {
         List<SimpleGrantedAuthority> authorities = roles.stream().
                 map(mr -> new SimpleGrantedAuthority(mr.getRole().getRoleType().toString())).collect(Collectors.toList());
 
-        return new MemberDetails(String.valueOf(member.getId()), member.getUsername(), member.getPassword(), authorities);
+        return new MemberDetails(String.valueOf(member.getId()), member.getUsername(), member.getPassword(), authorities, Map.of());
     }
 }

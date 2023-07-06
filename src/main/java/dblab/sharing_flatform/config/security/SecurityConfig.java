@@ -1,5 +1,6 @@
 package dblab.sharing_flatform.config.security;
 
+import dblab.sharing_flatform.config.oauth.PrincipalOauth2UserService;
 import dblab.sharing_flatform.config.security.detailsService.MemberDetailsService;
 import dblab.sharing_flatform.config.security.handler.JwtAccessDeniedHandler;
 import dblab.sharing_flatform.config.security.handler.JwtAuthenticationEntryPoint;
@@ -27,6 +28,7 @@ public class SecurityConfig {
     private final JwtExceptionFilter jwtExceptionFilter;
     private final MemberDetailsService memberDetailsService;
     private final JwtFilter jwtFilter;
+    private final PrincipalOauth2UserService principalOauth2UserService;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -70,8 +72,16 @@ public class SecurityConfig {
 
                 // 게시글 생성, 수정 , 삭제 - 소유주, ADMIN
                 .antMatchers(HttpMethod.DELETE, "/post/{id}").access("@postGuard.check(#id)")
-                .antMatchers(HttpMethod.PATCH, "/post/{id}").access("@postGuard.check(#id)");
-
+                .antMatchers(HttpMethod.PATCH, "/post/{id}").access("@postGuard.check(#id)")
+                .and()
+                //OAuth 2.0 기반 인증을 처리하기위해 Provider와의 연동을 지원
+                .oauth2Login()
+                //인증에 성공하면 실행할 handler (redirect 시킬 목적)
+                //OAuth 2.0 Provider로부터 사용자 정보를 가져오는 엔드포인트를 지정하는 메서드
+                .userInfoEndpoint()
+                //OAuth 2.0 인증이 처리되는데 사용될 사용자 서비스를 지정하는 메서드
+                .userService(principalOauth2UserService)
+                .and();
         // 시큐리티 설정 끝
         return http.build();
     }
