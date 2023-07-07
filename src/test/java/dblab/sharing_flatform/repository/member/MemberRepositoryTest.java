@@ -57,7 +57,6 @@ public class MemberRepositoryTest {
         clear();
 
         // given
-
         Member member = new Member("user", "password", "phoneNum", createAddress(), "None",
                 List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)), List.of());
         memberRepository.save(member);
