@@ -85,4 +85,6 @@ public class Member {
         this.address = memberUpdateRequestDto.getAddress();
     }
 
+
+
 }
