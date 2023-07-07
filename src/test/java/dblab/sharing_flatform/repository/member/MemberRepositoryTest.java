@@ -54,7 +54,7 @@ public class MemberRepositoryTest {
         clear();
 
         // given
-        Member member = new Member("user", "password", "phoneNum", createAddress(),
+        Member member = new Member("user", "password", "phoneNum", createAddress(),"None",
                 List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)), List.of());
         memberRepository.save(member);
         clear();
@@ -75,7 +75,7 @@ public class MemberRepositoryTest {
         clear();
 
         // when
-        Member member = new Member("user", "password", "phoneNum", createAddress(),
+        Member member = new Member("user", "password", "phoneNum", createAddress(),"None",
                 List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)), List.of());
         memberRepository.save(member);
         clear();
@@ -94,7 +94,7 @@ public class MemberRepositoryTest {
         roleRepository.saveAll(roles);
         clear();
 
-        Member member = new Member("user", "password", "phoneNum", createAddress(),
+        Member member = new Member("user", "password", "phoneNum", createAddress(),"None",
                 List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)), List.of());
         memberRepository.save(member);
         clear();
