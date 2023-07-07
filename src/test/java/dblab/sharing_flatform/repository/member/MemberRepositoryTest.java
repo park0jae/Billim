@@ -1,5 +1,6 @@
 package dblab.sharing_flatform.repository.member;
 
+import dblab.sharing_flatform.config.querydsl.QuerydslConfig;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.member.MemberRole;
 import dblab.sharing_flatform.domain.role.Role;
@@ -9,6 +10,7 @@ import dblab.sharing_flatform.repository.role.RoleRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,6 +22,7 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.*;
 
 @DataJpaTest
+@Import(QuerydslConfig.class)
 public class MemberRepositoryTest {
 
     @PersistenceContext
@@ -54,7 +57,8 @@ public class MemberRepositoryTest {
         clear();
 
         // given
-        Member member = new Member("user", "password", "phoneNum", createAddress(),"None",
+
+        Member member = new Member("user", "password", "phoneNum", createAddress(), "None",
                 List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)), List.of());
         memberRepository.save(member);
         clear();

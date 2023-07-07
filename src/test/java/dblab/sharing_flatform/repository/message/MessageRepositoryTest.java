@@ -1,5 +1,6 @@
 package dblab.sharing_flatform.repository.message;
 
+import dblab.sharing_flatform.config.querydsl.QuerydslConfig;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.message.Message;
 import dblab.sharing_flatform.factory.member.MemberFactory;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,6 +21,7 @@ import static dblab.sharing_flatform.factory.message.MessageFactory.*;
 import static org.assertj.core.api.Assertions.*;
 
 @DataJpaTest
+@Import(QuerydslConfig.class)
 public class MessageRepositoryTest {
 
     @PersistenceContext
