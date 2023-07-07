@@ -39,10 +39,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	// spring web  끝
 
-
 	runtimeOnly 'com.h2database:h2'
 	// h2 데이터베이스 끝
-
 
 	// lombok 추가 시작
 	annotationProcessor 'org.projectlombok:lombok'
@@ -74,6 +72,9 @@ dependencies {
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	// Querydsl 추가 끝
 
+	// thymeleaf 추가 시작
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	// thymeleaf 추가 끝
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

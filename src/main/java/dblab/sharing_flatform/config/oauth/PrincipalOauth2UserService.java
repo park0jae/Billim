@@ -13,10 +13,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,6 +33,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+
         OAuth2User oAuth2User = super.loadUser(userRequest);
         OAuth2UserInfo oAuth2UserInfo = null;
 
@@ -44,23 +47,29 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         Optional<Member> memberEntity = memberRepository.findByProvider(oAuth2UserInfo.getProvider());
 
-        Member member;
-        if(memberEntity.isPresent()){
-            member = memberEntity.get();
-            memberRepository.save(member);
-        }else {
-            member = new Member(oAuth2UserInfo.getEmail(),
-                    null,
-                    oAuth2UserInfo.getPhoneNumber(),
-                    oAuth2UserInfo.getAddress(),
-                    "None",
-                    List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)),
-                    List.of());
-            memberRepository.save(member);
-        }
+        log.info("memberEntity={}", memberEntity);
+
+        Member member = saveOrUpdate(oAuth2UserInfo, memberEntity);
+
+        log.info("oauth2UserInfo={}" , oAuth2UserInfo);
 
         return new MemberDetails(Long.toString(member.getId()), member.getUsername(), null, List.of(), oAuth2User.getAttributes());
     }
 
-
+    private Member saveOrUpdate(OAuth2UserInfo oAuth2UserInfo, Optional<Member> memberEntity) {
+        if (memberEntity.isPresent()) {
+            Member member = memberEntity.get();
+            return member;
+        } else {
+            Member member = new Member(oAuth2UserInfo.getEmail(),
+                    "",
+                    oAuth2UserInfo.getPhoneNumber(),
+                    oAuth2UserInfo.getAddress(),
+                    oAuth2UserInfo.getProvider(),
+                    List.of(),
+                    List.of());
+            memberRepository.save(member);
+            return member;
+        }
+    }
 }

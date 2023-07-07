@@ -4,7 +4,6 @@ import dblab.sharing_flatform.domain.address.Address;
 
 public interface OAuth2UserInfo {
     String getProvider();
-
     String getPhoneNumber();
     String getEmail();
     String getName();
