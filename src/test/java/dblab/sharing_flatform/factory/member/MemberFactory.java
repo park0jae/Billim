@@ -10,19 +10,19 @@ import java.util.List;
 public class MemberFactory {
 
     public static Member createMember() {
-        return new Member("username", "password", "phoneNum", createAddress(), List.of(), List.of());
+        return new Member("username", "password", "phoneNum", createAddress(), "None",List.of(), List.of());
     }
 
     public static Member createMemberWithRoles(List<Role> roles) {
-        return new Member("username", "password", "phoneNum", createAddress(), roles, List.of());
+        return new Member("username", "password", "phoneNum", createAddress(),"None", roles, List.of());
     }
 
     public static Member createSendMember() {
-        return new Member("sender", "", "", createAddress(), List.of(), List.of());
+        return new Member("sender", "", "", createAddress(), "None",List.of(), List.of());
     }
 
     public static Member createReceiveMember() {
-        return new Member("receiver", "", "", createAddress(), List.of(), List.of());
+        return new Member("receiver", "", "", createAddress(), "None",List.of(), List.of());
     }
 
     public static Address createAddress() {

@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import java.sql.Driver;
@@ -25,6 +26,8 @@ import java.util.stream.Stream;
 import static com.querydsl.core.types.Projections.constructor;
 import static dblab.sharing_flatform.domain.post.QPost.post;
 
+
+@Repository
 public class QPostRepositoryImpl extends QuerydslRepositorySupport implements QPostRepository {
     private final JPAQueryFactory query;
 
