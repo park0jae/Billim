@@ -19,6 +19,7 @@ public class MemberDetails implements UserDetails, OAuth2User {
     private final String username;
     private final String password;
     private final List<? extends GrantedAuthority> authorities;
+
     private final Map<String, Object> attributes;
 
     public String getId() {

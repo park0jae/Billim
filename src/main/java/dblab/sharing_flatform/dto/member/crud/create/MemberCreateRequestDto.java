@@ -13,7 +13,6 @@ import javax.validation.constraints.Size;
 
 @ApiModel(value = "회원가입 요청")
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberCreateRequestDto {

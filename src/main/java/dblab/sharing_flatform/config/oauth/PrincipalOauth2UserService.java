@@ -16,7 +16,9 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -31,6 +33,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
 
+    @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
@@ -48,7 +51,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
                 break;
         }
 
-        Optional<Member> memberEntity = memberRepository.findByProvider(oAuth2UserInfo.getProvider());
+        Optional<Member> memberEntity = memberRepository.findByProviderAndUsername(oAuth2UserInfo.getProvider(), oAuth2UserInfo.getEmail());
 
         log.info("memberEntity={}", memberEntity);
 
@@ -59,7 +62,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         return new MemberDetails(Long.toString(member.getId()), member.getUsername(), null, List.of(), oAuth2User.getAttributes());
     }
 
-    private Member saveOrUpdate(OAuth2UserInfo oAuth2UserInfo, Optional<Member> memberEntity) {
+    public Member saveOrUpdate(OAuth2UserInfo oAuth2UserInfo, Optional<Member> memberEntity) {
         if (memberEntity.isPresent()) {
             Member member = memberEntity.get();
             return member;
@@ -69,7 +72,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
                     oAuth2UserInfo.getPhoneNumber(),
                     oAuth2UserInfo.getAddress(),
                     oAuth2UserInfo.getProvider(),
-                    List.of(),
+                    List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)),
                     List.of());
             memberRepository.save(member);
             return member;

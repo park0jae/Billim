@@ -14,8 +14,6 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 public class Member {
 
     @Id
@@ -26,7 +24,6 @@ public class Member {
     @Column(nullable = false, updatable = false)
     private String username;
 
-    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
@@ -84,7 +81,5 @@ public class Member {
         this.phoneNumber = memberUpdateRequestDto.getPhoneNumber();
         this.address = memberUpdateRequestDto.getAddress();
     }
-
-
 
 }
