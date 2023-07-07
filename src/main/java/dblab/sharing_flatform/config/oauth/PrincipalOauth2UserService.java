@@ -1,6 +1,7 @@
 package dblab.sharing_flatform.config.oauth;
 
 import dblab.sharing_flatform.config.oauth.provider.KakaoUserInfo;
+import dblab.sharing_flatform.config.oauth.provider.NaverUserInfo;
 import dblab.sharing_flatform.config.oauth.provider.OAuth2UserInfo;
 import dblab.sharing_flatform.config.security.details.MemberDetails;
 import dblab.sharing_flatform.domain.member.Member;
@@ -41,6 +42,9 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         switch (registrationId){
             case "kakao":
                 oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
+                break;
+            case "naver":
+                oAuth2UserInfo = new NaverUserInfo((Map<String, Object>) oAuth2User.getAttributes().get("response"));
                 break;
         }
 

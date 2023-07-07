@@ -19,7 +19,7 @@ public class KakaoUserInfo implements OAuth2UserInfo {
 
     @Override
     public String getPhoneNumber(){
-        return (String) attributes.get("phone_number");
+        return "";
     }
 
     @Override
