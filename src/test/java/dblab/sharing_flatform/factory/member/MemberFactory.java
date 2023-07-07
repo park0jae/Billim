@@ -29,6 +29,4 @@ public class MemberFactory {
         return new Address("city1", "district1", "street1", "zipCode1");
     }
 
-
-
 }
