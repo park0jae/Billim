@@ -77,7 +77,7 @@ public class SecurityConfig {
                 .and()
                 //OAuth 2.0 기반 인증을 처리하기위해 Provider와의 연동을 지원
                 .oauth2Login()
-                .loginPage("/index")
+//                .loginPage("/index")
                 //인증에 성공하면 실행할 handler (redirect 시킬 목적)
                 //OAuth 2.0 Provider로부터 사용자 정보를 가져오는 엔드포인트를 지정하는 메서드
                 .userInfoEndpoint()
