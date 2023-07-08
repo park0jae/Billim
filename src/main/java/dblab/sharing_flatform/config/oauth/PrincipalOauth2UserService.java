@@ -1,5 +1,6 @@
 package dblab.sharing_flatform.config.oauth;
 
+import dblab.sharing_flatform.config.oauth.provider.GoogleUserInfo;
 import dblab.sharing_flatform.config.oauth.provider.KakaoUserInfo;
 import dblab.sharing_flatform.config.oauth.provider.NaverUserInfo;
 import dblab.sharing_flatform.config.oauth.provider.OAuth2UserInfo;
@@ -49,6 +50,8 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             case "naver":
                 oAuth2UserInfo = new NaverUserInfo((Map<String, Object>) oAuth2User.getAttributes().get("response"));
                 break;
+            case "google":
+                oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
         }
 
         Optional<Member> memberEntity = memberRepository.findByProviderAndUsername(oAuth2UserInfo.getProvider(), oAuth2UserInfo.getEmail());
@@ -63,11 +66,11 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
     }
 
     public Member saveOrUpdate(OAuth2UserInfo oAuth2UserInfo, Optional<Member> memberEntity) {
+        Member member;
         if (memberEntity.isPresent()) {
-            Member member = memberEntity.get();
-            return member;
+            member = memberEntity.get();
         } else {
-            Member member = new Member(oAuth2UserInfo.getEmail(),
+            member = new Member(oAuth2UserInfo.getEmail(),
                     "",
                     oAuth2UserInfo.getPhoneNumber(),
                     oAuth2UserInfo.getAddress(),
@@ -75,7 +78,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
                     List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)),
                     List.of());
             memberRepository.save(member);
-            return member;
         }
+        return member;
     }
 }
