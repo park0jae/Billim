@@ -6,7 +6,6 @@ import dblab.sharing_flatform.config.security.handler.JwtAccessDeniedHandler;
 import dblab.sharing_flatform.config.security.handler.JwtAuthenticationEntryPoint;
 import dblab.sharing_flatform.config.security.jwt.filter.JwtExceptionFilter;
 import dblab.sharing_flatform.config.security.jwt.filter.JwtFilter;
-import dblab.sharing_flatform.config.security.jwt.support.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
