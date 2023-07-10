@@ -1,6 +1,7 @@
 package dblab.sharing_flatform.dto.member.crud.create;
 
 import dblab.sharing_flatform.domain.address.Address;
+import dblab.sharing_flatform.domain.member.Member;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -39,5 +40,7 @@ public class MemberCreateRequestDto {
     @NotNull(message = "주소는 반드시 입력해야 합니다.")
     @Embedded
     private Address address;
+
+
 
 }
