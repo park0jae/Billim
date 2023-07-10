@@ -5,6 +5,7 @@ import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
 import lombok.*;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -26,10 +27,10 @@ public class Member {
 
     private String password;
 
-    @Column(nullable = false)
     private String phoneNumber;
 
     @Embedded
+    @Nullable
     private Address address;
 
     private String provider;

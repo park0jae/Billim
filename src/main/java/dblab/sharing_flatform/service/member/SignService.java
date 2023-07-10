@@ -3,6 +3,7 @@ package dblab.sharing_flatform.service.member;
 import dblab.sharing_flatform.config.security.jwt.support.TokenProvider;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.role.RoleType;
+import dblab.sharing_flatform.dto.member.crud.create.OAuth2MemberCreateRequestDto.OAuth2MemberCreateRequestDto;
 import dblab.sharing_flatform.dto.member.login.LogInResponseDto;
 import dblab.sharing_flatform.dto.member.login.LoginRequestDto;
 import dblab.sharing_flatform.dto.member.crud.create.MemberCreateRequestDto;
@@ -43,7 +44,6 @@ public class SignService {
 
     @Transactional
     public void signUp(MemberCreateRequestDto memberCreateRequestDto){
-
         validateDuplicateUsername(memberCreateRequestDto);
 
         Member member = new Member(memberCreateRequestDto.getUsername(),
@@ -53,7 +53,30 @@ public class SignService {
                 "None",
                 List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)),
                 List.of());
+
         memberRepository.save(member);
+    }
+
+    @Transactional
+    public void oAuth2Signup(OAuth2MemberCreateRequestDto req) {
+        Optional<Member> search = memberRepository.findByUsername(req.getEmail());
+
+        // DB에 없으면 회원가입
+        if (search.isEmpty()) {
+            Member member = new Member(req.getEmail(),
+                    passwordEncoder.encode(req.getEmail()),
+                    null,
+                    null,
+                    req.getProvider(),
+                    List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)),
+                    List.of());
+            memberRepository.save(member);
+        }
+    }
+
+    public LogInResponseDto oauth2Login(OAuth2MemberCreateRequestDto req) {
+        String jwt = jwtLoginRequest(new LoginRequestDto(req.getEmail(), req.getEmail()));
+        return LogInResponseDto.toDto(jwt);
     }
 
     private void validateDuplicateUsername(MemberCreateRequestDto memberCreateRequestDto) {
