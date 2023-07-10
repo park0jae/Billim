@@ -4,6 +4,7 @@ import dblab.sharing_flatform.domain.image.Image;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+
 import static dblab.sharing_flatform.factory.post.PostFactory.createPost;
 import static org.assertj.core.api.Assertions.assertThat;
 

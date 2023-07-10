@@ -1,5 +1,6 @@
 package dblab.sharing_flatform.dto.post.crud.read.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
 import java.util.List;
 
+@AllArgsConstructor
 @Data
 public class PostPagingCondition {
 
