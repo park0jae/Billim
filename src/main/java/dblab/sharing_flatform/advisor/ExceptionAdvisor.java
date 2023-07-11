@@ -12,6 +12,9 @@ import dblab.sharing_flatform.exception.image.UnSupportExtException;
 import dblab.sharing_flatform.exception.member.DuplicateUsernameException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.message.MessageNotFoundException;
+import dblab.sharing_flatform.exception.oauth.OAuthCommunicationException;
+import dblab.sharing_flatform.exception.oauth.OAuthUserNotFoundException;
+import dblab.sharing_flatform.exception.oauth.SocialAgreementException;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -144,6 +147,20 @@ public class ExceptionAdvisor {
     public Response postNotFoundException(PostNotFoundException e){
         return Response.failure(404, "게시글을 찾을 수 없습니다.");
     }
+
+
+    // oauth
+    @ExceptionHandler(OAuthUserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response OAuthUserNotFoundException(OAuthUserNotFoundException e){ return Response.failure(404, "OAuth 소셜 유저를 찾을 수 없습니다.");}
+
+    @ExceptionHandler(SocialAgreementException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response SocialAgreementException(SocialAgreementException e){ return Response.failure(404, "OAuth 정보 제공 동의 관련 오류가 발생했습니다.");}
+
+    @ExceptionHandler(OAuthCommunicationException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response OAuthCommunicationException(OAuthCommunicationException e){ return Response.failure(404, "OAuth 연결 해제 링크과의 연결 중 문제가 발생했습니다.");}
 
 
 }
