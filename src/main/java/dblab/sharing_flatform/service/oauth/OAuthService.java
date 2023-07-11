@@ -6,18 +6,19 @@ import com.google.gson.JsonElement;
 import dblab.sharing_flatform.dto.oauth.crud.create.GoogleProfile;
 import dblab.sharing_flatform.dto.oauth.crud.create.KakaoProfile;
 import dblab.sharing_flatform.dto.oauth.crud.create.NaverProfile;
+import dblab.sharing_flatform.exception.oauth.OAuthCommunicationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
+import javax.naming.CommunicationException;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.LinkedHashMap;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -25,6 +26,7 @@ import java.util.LinkedHashMap;
 public class OAuthService {
 
     private final Gson gson;
+    private final RestTemplate restTemplate;
 
     public String getKakaoAccessToken (String code) {
         String access_Token = "";
@@ -322,5 +324,33 @@ public class OAuthService {
 
         return access_Token;
     }
-    
+
+    public void unlinkOAuthService(String accessToken, String provider){
+        String url = "";
+        switch (provider){
+            case "kakao" :
+                url = "https://kapi.kakao.com/v1/user/unlink";
+                break;
+            case "naver" :
+                url = "https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=nX6jP4IgsXNpJRqbg0Q5&client_secret=1vNwHm8Yri&access_token="
+                        +accessToken.replaceAll("'", "")+"&service_provider=NAVER";
+                break;
+            case "google" :
+                url = "https://oauth2.googleapis.com/revoke?token=" + accessToken;
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+
+        if(response.getStatusCode() == HttpStatus.OK){
+            log.info("unlink = {}", response.getBody());
+            return;
+        }
+        throw new OAuthCommunicationException();
+    }
 }

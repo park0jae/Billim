@@ -7,6 +7,8 @@ import dblab.sharing_flatform.dto.oauth.crud.create.KakaoProfile;
 import dblab.sharing_flatform.dto.oauth.crud.create.NaverProfile;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
+import dblab.sharing_flatform.exception.oauth.OAuthUserNotFoundException;
+import dblab.sharing_flatform.exception.oauth.SocialAgreementException;
 import dblab.sharing_flatform.service.member.MemberService;
 import dblab.sharing_flatform.service.member.SignService;
 import dblab.sharing_flatform.service.oauth.OAuthService;
@@ -14,9 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 
 @Slf4j
@@ -41,6 +41,11 @@ public class OauthController {
         String kakaoAccessToken = oAuthService.getKakaoAccessToken(code);
         KakaoProfile kakaoUserInfo = oAuthService.getKakaoUserInfo(kakaoAccessToken);
 
+        if(kakaoUserInfo == null) throw new OAuthUserNotFoundException();
+        if(kakaoUserInfo.getKakao_account().getEmail() == null){
+            oAuthService.unlinkOAuthService(kakaoAccessToken, "kakao");
+            throw new SocialAgreementException();
+        }
         OAuth2MemberCreateRequestDto req = new OAuth2MemberCreateRequestDto(kakaoUserInfo.getKakao_account().getEmail(), "kakao", kakaoAccessToken);
 
         try {
@@ -59,6 +64,12 @@ public class OauthController {
     public Response oauth2LoginGoogle(@RequestParam String code) {
         String googleAccessToken = oAuthService.getGoogleAccessToken(code);
         GoogleProfile googleUserInfo = oAuthService.getGoogleUserInfo(googleAccessToken);
+
+        if(googleUserInfo == null) throw new OAuthUserNotFoundException();
+        if(googleUserInfo.getEmail() == null){
+            oAuthService.unlinkOAuthService(googleAccessToken, "google");
+            throw new SocialAgreementException();
+        }
 
         OAuth2MemberCreateRequestDto google = new OAuth2MemberCreateRequestDto(googleUserInfo.getEmail(), "google", googleAccessToken);
 
@@ -79,6 +90,11 @@ public class OauthController {
         String naverAccessToken = oAuthService.getNaverAccessToken(code);
         NaverProfile naverUserInfo = oAuthService.getNaverUserInfo(naverAccessToken);
 
+        if(naverUserInfo == null) throw new OAuthUserNotFoundException();
+        if(naverUserInfo.getResponse().getEmail() == null){
+            oAuthService.unlinkOAuthService(naverAccessToken, "naver");
+            throw new SocialAgreementException();
+        }
         OAuth2MemberCreateRequestDto req = new OAuth2MemberCreateRequestDto(naverUserInfo.getResponse().getEmail(), "naver", naverAccessToken);
 
         try {
@@ -91,5 +107,6 @@ public class OauthController {
             return Response.success(logInResponseDto);
         }
     }
+
 
 }
