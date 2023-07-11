@@ -5,6 +5,7 @@ import dblab.sharing_flatform.domain.category.Category;
 import dblab.sharing_flatform.domain.image.Image;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.item.Item;
+import dblab.sharing_flatform.domain.reply.Reply;
 import dblab.sharing_flatform.dto.item.crud.update.ItemUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateResponseDto;
@@ -49,7 +50,7 @@ public class Post extends BaseTime {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Item item;
 
-    @OneToMany(mappedBy = "post",  cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Image> images;
 
     @ManyToOne(fetch = FetchType.LAZY)
