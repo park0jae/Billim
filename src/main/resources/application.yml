@@ -21,6 +21,7 @@ spring:
           google:
             client-id: 926626017138-f7c308gtnhcpnbundhdufeeroo1dp44q.apps.googleusercontent.com
             client-secret: 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
+            redirect-uri: http://localhost:8080/oauth2/callback/google
             scope:
               - email
               - profile
@@ -43,7 +44,7 @@ spring:
             #- profile_image
             client-name: Naver
             authorization-grant-type: authorization_code                  # oauth2의 동작 방식은 여러가지가 있는데, 코드를 응답받는 방식으로 진행한다는 의미
-            redirect-uri: https://example.com/oauth
+            redirect-uri: http://localhost:8080/oauth2/callback/naver
 
         provider:
           kakao:
