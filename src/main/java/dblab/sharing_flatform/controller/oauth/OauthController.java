@@ -1,9 +1,10 @@
 package dblab.sharing_flatform.controller.oauth;
 
-import dblab.sharing_flatform.dto.member.MemberPrivateDto;
 import dblab.sharing_flatform.dto.member.crud.create.OAuth2MemberCreateRequestDto.OAuth2MemberCreateRequestDto;
 import dblab.sharing_flatform.dto.member.login.LogInResponseDto;
+import dblab.sharing_flatform.dto.oauth.crud.create.GoogleProfile;
 import dblab.sharing_flatform.dto.oauth.crud.create.KakaoProfile;
+import dblab.sharing_flatform.dto.oauth.crud.create.NaverProfile;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.service.member.MemberService;
@@ -52,4 +53,43 @@ public class OauthController {
             return Response.success(logInResponseDto);
         }
     }
+
+    @ResponseBody
+    @GetMapping("/oauth2/callback/google")
+    public Response oauth2LoginGoogle(@RequestParam String code) {
+        String googleAccessToken = oAuthService.getGoogleAccessToken(code);
+        GoogleProfile googleUserInfo = oAuthService.getGoogleUserInfo(googleAccessToken);
+
+        OAuth2MemberCreateRequestDto google = new OAuth2MemberCreateRequestDto(googleUserInfo.getEmail(), "google", googleAccessToken);
+
+        try{
+            memberService.getMemberInfoByUsername(google.getEmail());
+        }catch (MemberNotFoundException e){
+            signService.oAuth2Signup(google);
+        }finally {
+            LogInResponseDto logInResponseDto = signService.oauth2Login(google);
+            log.info("token = ", logInResponseDto.getToken());
+            return Response.success(logInResponseDto);
+        }
+    }
+
+    @ResponseBody
+    @GetMapping("/oauth2/callback/naver")
+    public Response oauth2LoginNaver(@RequestParam String code) {
+        String naverAccessToken = oAuthService.getNaverAccessToken(code);
+        NaverProfile naverUserInfo = oAuthService.getNaverUserInfo(naverAccessToken);
+
+        OAuth2MemberCreateRequestDto req = new OAuth2MemberCreateRequestDto(naverUserInfo.getResponse().getEmail(), "naver", naverAccessToken);
+
+        try {
+            memberService.getMemberInfoByUsername(req.getEmail());
+        } catch (MemberNotFoundException e) {
+            signService.oAuth2Signup(req);
+        } finally {
+            LogInResponseDto logInResponseDto = signService.oauth2Login(req);
+            log.info("token = ", logInResponseDto.getToken());
+            return Response.success(logInResponseDto);
+        }
+    }
+
 }
