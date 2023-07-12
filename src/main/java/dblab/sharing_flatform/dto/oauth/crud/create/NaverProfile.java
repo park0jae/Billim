@@ -5,7 +5,7 @@ import lombok.ToString;
 
 @ToString
 @Getter
-public class NaverProfile {
+public class NaverProfile extends Profile {
 
     // result =
     // {
