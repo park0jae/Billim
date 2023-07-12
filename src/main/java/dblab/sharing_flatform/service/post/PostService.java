@@ -40,7 +40,6 @@ public class PostService {
     private final ItemRepository itemRepository;
     private final FileService fileService;
 
-
     public PagedPostListDto readAll(PostPagingCondition cond) {
         return PagedPostListDto.toDto(postRepository.findAllBySearch(cond));
     }

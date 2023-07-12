@@ -73,11 +73,12 @@ public class OauthController {
 
         OAuth2MemberCreateRequestDto google = new OAuth2MemberCreateRequestDto(googleUserInfo.getEmail(), "google", googleAccessToken);
 
-        try{
+        try {
             memberService.getMemberInfoByUsername(google.getEmail());
-        }catch (MemberNotFoundException e){
+        } catch (MemberNotFoundException e) {
+
             signService.oAuth2Signup(google);
-        }finally {
+        } finally {
             LogInResponseDto logInResponseDto = signService.oauth2Login(google);
             log.info("token = ", logInResponseDto.getToken());
             return Response.success(logInResponseDto);

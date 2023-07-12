@@ -73,6 +73,9 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.DELETE, "/post/{id}").access("@postGuard.check(#id)")
                 .antMatchers(HttpMethod.PATCH, "/post/{id}").access("@postGuard.check(#id)")
 
+                // 댓글 삭제 - 소유주 , ADMIN
+                .antMatchers(HttpMethod.DELETE, "/reply/{id}").access("@replyGuard.check(#id)")
+
                 .and()
                 //OAuth 2.0 기반 인증을 처리하기위해 Provider와의 연동을 지원
                 .oauth2Login()

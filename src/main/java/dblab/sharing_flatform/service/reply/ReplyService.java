@@ -31,24 +31,29 @@ public class ReplyService {
     @Transactional
     public void create(ReplyCreateRequestDto req) {
         if (req.getParentCommentId() == null) {
-            replyRepository.save(new Reply(req.getContent(),
-                    postRepository.findById(req.getPostId()).orElseThrow(PostNotFoundException::new),
-                    memberRepository.findByUsername(req.getUsername()).orElseThrow(MemberNotFoundException::new),
-                    null
-            ));
+            replyRepository.save(
+                    new Reply(req.getContent(),
+                            true,
+                            postRepository.findById(req.getPostId()).orElseThrow(PostNotFoundException::new),
+                            memberRepository.findByUsername(req.getUsername()).orElseThrow(MemberNotFoundException::new),
+                            null));
         } else if (req.getParentCommentId() != null) {
             Reply parent = replyRepository.findById(req.getParentCommentId()).orElseThrow(ReplyNotFoundException::new);
+
             if (parent.isRoot() == false) {
                 throw new NoRootCommentException();
             }
-            replyRepository.save(new Reply(req.getContent(),
-                    postRepository.findById(req.getPostId()).orElseThrow(PostNotFoundException::new),
-                    memberRepository.findByUsername(req.getUsername()).orElseThrow(MemberNotFoundException::new),
-                    parent));
+            replyRepository.save(
+                    new Reply(req.getContent(),
+                            false,
+                            postRepository.findById(req.getPostId()).orElseThrow(PostNotFoundException::new),
+                            memberRepository.findByUsername(req.getUsername()).orElseThrow(MemberNotFoundException::new),
+                            parent));
         }
     }
 
     // delete
+    @Transactional
     public void delete(Long id) {
         Reply reply = replyRepository.findById(id).orElseThrow(ReplyNotFoundException::new);
         reply.delete();
@@ -56,6 +61,6 @@ public class ReplyService {
 
     // read
     public List<ReplyDto> readAll(Long postId) {
-        return ReplyDto.toDtoList(replyRepository.findAllByPostId(postId));
+        return ReplyDto.toDtoList(replyRepository.findAllOrderByParentIdAscNullsFirstByPostId(postId));
     }
 }

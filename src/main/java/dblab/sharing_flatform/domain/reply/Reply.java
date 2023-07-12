@@ -46,16 +46,17 @@ public class Reply extends BaseTime {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Reply parent;
 
-    public Reply(String content, Post post, Member member, Reply parent) {
+    public Reply(String content, boolean root, Post post, Member member, Reply parent) {
         this.content = content;
+        this.deleted = false;
+        this.root = root;
         this.post = post;
         this.member = member;
         this.parent = parent;
-        this.deleted = false;
     }
 
     public void delete() {
-        this.content = "(삭제댄 댓글입니다)";
+        this.content = "(삭제된 댓글입니다.)";
         this.member = null;
         this.deleted = true;
     }

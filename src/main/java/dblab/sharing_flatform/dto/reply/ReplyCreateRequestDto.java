@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 @Data
 @AllArgsConstructor
@@ -18,6 +19,8 @@ public class ReplyCreateRequestDto {
     @NotBlank(message = "댓글 내용을 입력해주세요")
     private String content;
 
+    @ApiModelProperty(hidden = true)
+    @Null
     private String username;
 
     @ApiModelProperty(value = "게시글 ID", notes = "게시글 ID을 입력해주세요", required = true, example = "1")
