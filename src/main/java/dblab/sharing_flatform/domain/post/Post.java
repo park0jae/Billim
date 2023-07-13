@@ -5,6 +5,7 @@ import dblab.sharing_flatform.domain.category.Category;
 import dblab.sharing_flatform.domain.image.Image;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.item.Item;
+import dblab.sharing_flatform.domain.trade.Trade;
 import dblab.sharing_flatform.dto.item.crud.update.ItemUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateResponseDto;
@@ -57,13 +58,19 @@ public class Post extends BaseTime {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public Post(String title, String content, Category category, Item item, List<Image> images, Member member) {
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trade_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Trade trade;
+
+    public Post(String title, String content, Category category, Item item, List<Image> images, Member member, Trade trade) {
         this.title = title;
         this.content = content;
         this.likes = 0;
         this.category = category;
         this.item = item;
         this.member = member;
+        this.trade = trade;
         this.images = new ArrayList<>();
         addImages(images);
     }
@@ -114,6 +121,11 @@ public class Post extends BaseTime {
                     images.add(i);
                     i.initPost(this);
                 });
+    }
+
+    public void addTrade(Trade trade){
+        this.trade = trade;
+        trade.addPost(this);
     }
 
     private void deleteImages(List<Image> deleteList) {

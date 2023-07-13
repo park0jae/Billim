@@ -19,6 +19,7 @@ import dblab.sharing_flatform.exception.oauth.OAuthUserNotFoundException;
 import dblab.sharing_flatform.exception.oauth.SocialAgreementException;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
+import dblab.sharing_flatform.exception.trade.TradeNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -172,4 +173,12 @@ public class ExceptionAdvisor {
     public Response rootCommentNotFoundException(RootCommentNotFoundException e) {
         return Response.failure(404, "상위 댓글이 존재하지 않습니다.");
     }
+
+
+    // trade
+    @ExceptionHandler(TradeNotFoundException.class)
+    public Response TradeNotFoundException(TradeNotFoundException e) {
+        return Response.failure(404, "거래 내역이 존재하지 않습니다.");
+    }
+
 }

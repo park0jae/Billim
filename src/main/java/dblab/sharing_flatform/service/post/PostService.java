@@ -2,6 +2,7 @@ package dblab.sharing_flatform.service.post;
 
 import dblab.sharing_flatform.domain.image.Image;
 import dblab.sharing_flatform.domain.post.Post;
+import dblab.sharing_flatform.domain.trade.Trade;
 import dblab.sharing_flatform.dto.item.crud.create.ItemCreateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
@@ -10,6 +11,7 @@ import dblab.sharing_flatform.dto.post.crud.read.response.PostReadResponseDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateResponseDto;
 import dblab.sharing_flatform.dto.image.ImageDto;
+import dblab.sharing_flatform.dto.trade.crud.create.TradeRequestDto;
 import dblab.sharing_flatform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
@@ -17,6 +19,7 @@ import dblab.sharing_flatform.repository.category.CategoryRepository;
 import dblab.sharing_flatform.repository.item.ItemRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
+import dblab.sharing_flatform.repository.trade.TradeRepository;
 import dblab.sharing_flatform.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +42,7 @@ public class PostService {
     private final CategoryRepository categoryRepository;
     private final ItemRepository itemRepository;
     private final FileService fileService;
+    private final TradeRepository tradeRepository;
 
     public PagedPostListDto readAll(PostPagingCondition cond) {
         return PagedPostListDto.toDto(postRepository.findAllBySearch(cond));
@@ -58,7 +62,10 @@ public class PostService {
                 categoryRepository.findByName(postCreateRequestDto.getCategoryName()).orElseThrow(CategoryNotFoundException::new),
                 postCreateRequestDto.getItemCreateRequestDto() != null ? itemRepository.save(ItemCreateRequestDto.toEntity(postCreateRequestDto.getItemCreateRequestDto())) : null,
                 images,
-                memberRepository.findByUsername(postCreateRequestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new)));
+                memberRepository.findByUsername(postCreateRequestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new),
+                null
+                )
+        );
     }
 
     @Transactional
