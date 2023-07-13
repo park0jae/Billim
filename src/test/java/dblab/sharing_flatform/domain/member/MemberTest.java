@@ -2,6 +2,7 @@ package dblab.sharing_flatform.domain.member;
 
 import dblab.sharing_flatform.domain.address.Address;
 import dblab.sharing_flatform.domain.post.Post;
+import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -25,17 +26,20 @@ class MemberTest {
     public void updateMemberTest() throws Exception {
         //given
         Member member = createMember();
+
         String phoneNumber = "TestNumber";
         String password = "TestPassword";
+        String introduce = "hi~ I'm test member!";
         Address address = new Address("TestCity", "TestDistrict", "TestStreet", "TestZipcode");
 
         //when
-        member.updateUserInfo(password, phoneNumber, address);
+        member.updateMember(new MemberUpdateRequestDto(password, phoneNumber, address, introduce));
 
         //then
         assertThat(member.getPassword()).isEqualTo(password);
         assertThat(member.getPhoneNumber()).isEqualTo(phoneNumber);
         assertThat(member.getAddress()).isEqualTo(address);
+        assertThat(member.getIntroduce()).isEqualTo(introduce);
     }
     
     @Test  

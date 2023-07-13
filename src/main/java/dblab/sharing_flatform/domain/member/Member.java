@@ -4,6 +4,7 @@ import dblab.sharing_flatform.domain.address.Address;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
+import dblab.sharing_flatform.dto.member.crud.update.OAuthMemberUpdateRequestDto;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
@@ -34,6 +35,8 @@ public class Member {
     private Address address;
 
     private String provider;
+
+    private String introduce;
 
     // roles -> 기본전략 : 지연로딩
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
@@ -71,16 +74,17 @@ public class Member {
         }
     }
 
-    public void updateUserInfo(String password, String phoneNumber, Address address) {
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-    }
-
-    public void updateMember(MemberUpdateRequestDto memberUpdateRequestDto){
-        this.password = memberUpdateRequestDto.getPassword();
+    public void updateMember(MemberUpdateRequestDto memberUpdateRequestDto, String encodedPassword){
+        this.password = encodedPassword;
         this.phoneNumber = memberUpdateRequestDto.getPhoneNumber();
         this.address = memberUpdateRequestDto.getAddress();
+        this.introduce = memberUpdateRequestDto.getIntroduce();
+    }
+
+    public void updateOAuth2Member(OAuthMemberUpdateRequestDto requestDto){
+        this.phoneNumber = requestDto.getPhoneNumber();
+        this.address = requestDto.getAddress();
+        this.introduce = requestDto.getIntroduce();
     }
 
 }

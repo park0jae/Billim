@@ -48,7 +48,6 @@ public class SecurityUtil {
             log.info("No Authentication Found");
             return Optional.empty();
         }
-
         Object principal = authentication.getPrincipal();
         if(principal instanceof MemberDetails){
             MemberDetails memberDetails = (MemberDetails) principal;

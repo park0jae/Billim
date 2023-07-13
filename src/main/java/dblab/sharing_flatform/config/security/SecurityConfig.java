@@ -57,6 +57,8 @@ public class SecurityConfig {
                 .antMatchers("/home", "/sign-up", "/login").permitAll() // 홈, 회원가입, 로그인 요청은 권한 필요X
                 .antMatchers("/swagger-uri/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll() // swagger page
 
+                .antMatchers(HttpMethod.GET, "/member/profile").permitAll()
+                .antMatchers(HttpMethod.PATCH, "/member/oauth").permitAll()
                 .antMatchers(HttpMethod.GET, "/member/{id}").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/member/{id}").access("@memberGuard.check(#id)")
                 .antMatchers(HttpMethod.PATCH, "/member/{id}").access("@memberGuard.check(#id)")

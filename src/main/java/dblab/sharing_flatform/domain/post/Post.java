@@ -47,6 +47,7 @@ public class Post extends BaseTime {
     private Category category;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL , orphanRemoval = true)
+    @JoinColumn(name = "item_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Item item;
 

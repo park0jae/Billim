@@ -19,20 +19,17 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class MemberUpdateRequestDto {
 
-    @ApiModelProperty(value = "password", notes = "Password를 입력해주세요", required = true)
+    @ApiModelProperty(value = "password", notes = "변경할 Password를 입력해주세요")
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
-    @NotBlank(message = "변경할 비밀번호를 입력해주세요.")
     private String password;
 
-    @ApiModelProperty(value = "phoneNumber", notes = "PhoneNumber를 입력해주세요", required = true)
-    @NotBlank(message = "변경할 휴대폰 번호를 입력해주세요.")
+    @ApiModelProperty(value = "phoneNumber", notes = "변경할 PhoneNumber를 입력해주세요")
     private String phoneNumber;
 
-    @ApiModelProperty(value = "address", notes = "", required = true)
-    @NotNull(message = "주소는 반드시 입력해야 합니다.")
+    @ApiModelProperty(value = "address", notes = "변경할 주소를 입력하세요.")
     @Embedded
     private Address address;
 
-
-
+    @ApiModelProperty(value = "introduce", notes = "자기 소개를 입력하세요. (선택)")
+    private String introduce;
 }
