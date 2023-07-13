@@ -4,6 +4,7 @@ package dblab.sharing_flatform.service.member;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.dto.member.MemberPrivateDto;
 import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
+import dblab.sharing_flatform.dto.member.crud.update.OAuthMemberUpdateRequestDto;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,14 @@ public class MemberService {
     public MemberPrivateDto update(Long id, MemberUpdateRequestDto memberUpdateRequestDto){
         Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
         member.updateMember(memberUpdateRequestDto);
+
+        return MemberPrivateDto.toDto(member);
+    }
+
+    @Transactional
+    public MemberPrivateDto oauthMemberUpdate(Long id, OAuthMemberUpdateRequestDto requestDto){
+        Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
+        member.updateOAuth2Member(requestDto);
 
         return MemberPrivateDto.toDto(member);
     }

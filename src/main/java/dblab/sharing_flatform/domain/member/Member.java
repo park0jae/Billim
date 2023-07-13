@@ -4,6 +4,7 @@ import dblab.sharing_flatform.domain.address.Address;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
+import dblab.sharing_flatform.dto.member.crud.update.OAuthMemberUpdateRequestDto;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
@@ -81,6 +82,11 @@ public class Member {
         this.password = memberUpdateRequestDto.getPassword();
         this.phoneNumber = memberUpdateRequestDto.getPhoneNumber();
         this.address = memberUpdateRequestDto.getAddress();
+    }
+
+    public void updateOAuth2Member(OAuthMemberUpdateRequestDto requestDto){
+        this.phoneNumber = requestDto.getPhoneNumber();
+        this.address = requestDto.getAddress();
     }
 
 }

@@ -2,7 +2,10 @@ package dblab.sharing_flatform.controller.member;
 
 import dblab.sharing_flatform.dto.member.MemberPrivateDto;
 import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
+import dblab.sharing_flatform.dto.member.crud.update.OAuthMemberUpdateRequestDto;
 import dblab.sharing_flatform.dto.response.Response;
+import dblab.sharing_flatform.exception.auth.AccessDeniedException;
+import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.service.member.MemberService;
 import dblab.sharing_flatform.config.security.util.SecurityUtil;
 import io.swagger.annotations.Api;
@@ -13,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Api(value = "Member Controller", tags = "Member")
 @RestController
@@ -51,4 +55,17 @@ public class MemberController {
         MemberPrivateDto updateMember = memberService.update(id, memberUpdateRequestDto);
         return Response.success(updateMember);
     }
+
+    @ApiOperation(value = "OAuth 회원 정보 등록", notes = "OAuth 회원 본인의 정보를 등록합니다.")
+    @PatchMapping("/oauth")
+    public Response updateOAuthMember(@Valid @ModelAttribute OAuthMemberUpdateRequestDto requestDto){
+        String currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(AccessDeniedException::new);
+        System.out.println("currentUserId = " + currentUserId);
+
+        MemberPrivateDto updateMember = memberService.oauthMemberUpdate(Long.valueOf(currentUserId), requestDto);
+        return Response.success(updateMember);
+    }
+
+
+
 }
