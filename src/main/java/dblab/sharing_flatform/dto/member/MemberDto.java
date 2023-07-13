@@ -18,5 +18,4 @@ public class MemberDto {
     public static MemberDto toDto(Member member) {
         return new MemberDto(member.getId(), member.getUsername());
     }
-
 }

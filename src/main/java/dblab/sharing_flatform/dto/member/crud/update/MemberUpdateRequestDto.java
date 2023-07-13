@@ -26,8 +26,10 @@ public class MemberUpdateRequestDto {
     @ApiModelProperty(value = "phoneNumber", notes = "변경할 PhoneNumber를 입력해주세요")
     private String phoneNumber;
 
-    @ApiModelProperty(value = "address", notes = "")
+    @ApiModelProperty(value = "address", notes = "변경할 주소를 입력하세요.")
     @Embedded
     private Address address;
 
+    @ApiModelProperty(value = "introduce", notes = "자기 소개를 입력하세요. (선택)")
+    private String introduce;
 }

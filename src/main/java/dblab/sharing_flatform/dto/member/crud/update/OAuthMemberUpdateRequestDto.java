@@ -27,4 +27,7 @@ public class OAuthMemberUpdateRequestDto {
     @Embedded
     private Address address;
 
+    @ApiModelProperty(value = "introduce", notes = "자기 소개를 입력하세요. (선택)")
+    private String introduce;
+
 }

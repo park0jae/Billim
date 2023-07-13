@@ -34,7 +34,7 @@ public class MemberServiceTest {
         given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
 
         //when
-        MemberPrivateDto memberInfo = memberService.getMemberInfoByUsername(member.getUsername());
+        MemberPrivateDto memberInfo = memberService.findMyInfo(member.getUsername());
 
         //then
         assertThat(memberInfo.getUsername()).isEqualTo(member.getUsername());
@@ -57,7 +57,7 @@ public class MemberServiceTest {
         // given
         Member member = createMember();
         Address address = new Address("TestCity", "TestDistrict", "TestStreet", "TestZipcode");
-        MemberUpdateRequestDto memberUpdateRequestDto = new MemberUpdateRequestDto("updatePass1!", "01011112222", address);
+        MemberUpdateRequestDto memberUpdateRequestDto = new MemberUpdateRequestDto("updatePass1!", "01011112222", address, null);
 
         given(memberRepository.findById(member.getId())).willReturn(Optional.of(member));
 
