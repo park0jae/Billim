@@ -40,7 +40,6 @@ public class PostService {
     private final ItemRepository itemRepository;
     private final FileService fileService;
 
-
     public PagedPostListDto readAll(PostPagingCondition cond) {
         return PagedPostListDto.toDto(postRepository.findAllBySearch(cond));
     }
@@ -60,17 +59,6 @@ public class PostService {
                 postCreateRequestDto.getItemCreateRequestDto() != null ? itemRepository.save(ItemCreateRequestDto.toEntity(postCreateRequestDto.getItemCreateRequestDto())) : null,
                 images,
                 memberRepository.findByUsername(postCreateRequestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new)));
-    }
-
-    private List<Image> getImages(PostCreateRequestDto postCreateRequestDto) {
-        List<Image> images;
-        if (postCreateRequestDto.getItemCreateRequestDto() != null) {
-             images = MultiPartFileToImage(postCreateRequestDto.getMultipartFiles());
-             uploadImagesToServer(images, postCreateRequestDto.getMultipartFiles());
-        } else {
-            images = List.of();
-        }
-        return images;
     }
 
     @Transactional
@@ -122,6 +110,17 @@ public class PostService {
     private void deleteImagesFromServer(PostUpdateResponseDto postUpdateResponseDto) {
         List<ImageDto> deleteImageDtoList = postUpdateResponseDto.getDeletedImages();
         deleteImageDtoList.stream().forEach(i -> fileService.delete(i.getUniqueName()));
+    }
+
+    private List<Image> getImages(PostCreateRequestDto postCreateRequestDto) {
+        List<Image> images;
+        if (postCreateRequestDto.getItemCreateRequestDto() != null) {
+            images = MultiPartFileToImage(postCreateRequestDto.getMultipartFiles());
+            uploadImagesToServer(images, postCreateRequestDto.getMultipartFiles());
+        } else {
+            images = List.of();
+        }
+        return images;
     }
 
     private List<Image> MultiPartFileToImage(List<MultipartFile> multipartFiles) {

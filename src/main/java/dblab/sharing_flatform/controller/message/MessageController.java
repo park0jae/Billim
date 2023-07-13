@@ -5,7 +5,7 @@ import dblab.sharing_flatform.dto.message.MessageDto;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.service.message.MessageService;
-import dblab.sharing_flatform.util.SecurityUtil;
+import dblab.sharing_flatform.config.security.util.SecurityUtil;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;

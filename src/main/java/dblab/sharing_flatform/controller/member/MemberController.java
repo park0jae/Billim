@@ -4,7 +4,7 @@ import dblab.sharing_flatform.dto.member.MemberPrivateDto;
 import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.service.member.MemberService;
-import dblab.sharing_flatform.util.SecurityUtil;
+import dblab.sharing_flatform.config.security.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Slf4j
 @Api(value = "Member Controller", tags = "Member")
 @RestController
 @RequiredArgsConstructor
@@ -27,14 +26,14 @@ public class MemberController {
     @GetMapping
     public Response currentUser(){
         String currentUsername = SecurityUtil.getCurrentUsername().get();
-        MemberPrivateDto currentMember = memberService.getMemberInfoByUsername(currentUsername);
+        MemberPrivateDto currentMember = memberService.findMyInfo(currentUsername);
         return Response.success(currentMember);
     }
 
     @ApiOperation(value = "특정 사용자 조회", notes = "ADMIN 권한이 있는 경우 특정 사용자를 조회한다.")
     @GetMapping("/{id}")
     public Response findMemberByAdmin(@ApiParam(name="조회할 사용자 아이디" , required = true) @PathVariable Long id){
-        MemberPrivateDto memberInfo = memberService.getMemberInfoById(id);
+        MemberPrivateDto memberInfo = memberService.findMemberByIdOnlyAdmin(id);
         return Response.success(memberInfo);
     }
 

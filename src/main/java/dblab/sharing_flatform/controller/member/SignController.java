@@ -131,10 +131,11 @@ public class SignController {
             oAuthService.unlinkOAuthService(accessToken, provider);
             throw new SocialAgreementException();
         }
+
         OAuth2MemberCreateRequestDto req = new OAuth2MemberCreateRequestDto(email, provider, accessToken);
 
         try {
-            memberService.getMemberInfoByUsername(req.getEmail());
+            memberService.findMyInfo(req.getEmail());
         } catch (MemberNotFoundException e) {
             signService.oAuth2Signup(req);
         } finally {

@@ -13,7 +13,7 @@ import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.role.RoleRepository;
-import dblab.sharing_flatform.util.SecurityUtil;
+import dblab.sharing_flatform.config.security.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -78,7 +78,7 @@ public class OAuthService {
             JsonElement element = parser.parse(result);
 
             access_Token = element.getAsJsonObject().get("access_token").getAsString();
-            //refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
+//            refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
 
 //            System.out.println("access_token : " + access_Token);
 //            System.out.println("refresh_token : " + refresh_Token);

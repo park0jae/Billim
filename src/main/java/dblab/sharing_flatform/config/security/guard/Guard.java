@@ -1,9 +1,7 @@
 package dblab.sharing_flatform.config.security.guard;
 
 import dblab.sharing_flatform.domain.role.RoleType;
-import dblab.sharing_flatform.util.SecurityUtil;
-
-import java.security.Security;
+import dblab.sharing_flatform.config.security.util.SecurityUtil;
 
 public abstract class Guard {
 

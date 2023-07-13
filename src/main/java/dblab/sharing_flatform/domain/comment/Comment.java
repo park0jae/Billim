@@ -1,10 +1,8 @@
-package dblab.sharing_flatform.domain.reply;
+package dblab.sharing_flatform.domain.comment;
 
 import dblab.sharing_flatform.domain.base.BaseTime;
-import dblab.sharing_flatform.domain.category.Category;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
-import dblab.sharing_flatform.dto.reply.ReplyCreateRequestDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,11 +14,11 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Reply extends BaseTime {
+public class Comment extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reply_id")
+    @Column(name = "comment_id")
     private Long id;
 
     @Column(nullable = false)
@@ -44,22 +42,20 @@ public class Reply extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Reply parent;
+    private Comment parent;
 
-    public Reply(String content, Post post, Member member, Reply parent) {
+    public Comment(String content, boolean root, Post post, Member member, Comment parent) {
         this.content = content;
+        this.deleted = false;
+        this.root = root;
         this.post = post;
         this.member = member;
         this.parent = parent;
-        this.deleted = false;
     }
 
     public void delete() {
-        this.content = "(삭제댄 댓글입니다)";
+        this.content = "(삭제된 댓글입니다.)";
         this.member = null;
         this.deleted = true;
     }
-
-
-
 }

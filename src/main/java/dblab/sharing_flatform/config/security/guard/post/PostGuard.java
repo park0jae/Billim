@@ -1,11 +1,10 @@
 package dblab.sharing_flatform.config.security.guard.post;
 
 import dblab.sharing_flatform.config.security.guard.Guard;
-import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.repository.post.PostRepository;
-import dblab.sharing_flatform.util.SecurityUtil;
+import dblab.sharing_flatform.config.security.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

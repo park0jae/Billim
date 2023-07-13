@@ -7,6 +7,8 @@ import dblab.sharing_flatform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_flatform.exception.auth.IllegalAuthenticationException;
 import dblab.sharing_flatform.exception.auth.LoginFailureException;
 import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
+import dblab.sharing_flatform.exception.comment.CommentNotFoundException;
+import dblab.sharing_flatform.exception.comment.RootCommentNotFoundException;
 import dblab.sharing_flatform.exception.image.NoExtException;
 import dblab.sharing_flatform.exception.image.UnSupportExtException;
 import dblab.sharing_flatform.exception.member.DuplicateUsernameException;
@@ -45,7 +47,6 @@ public class ExceptionAdvisor {
         return Response.failure(400, "양식에 맞게 입력해주세요.");
     }
 
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response methodArgumentNotValidException(MethodArgumentNotValidException e) {
@@ -58,7 +59,6 @@ public class ExceptionAdvisor {
     public Response accessDeniedException(AccessDeniedException e) {
         return Response.failure(400, "해당 권한으로 수행할 수 없는 작업입니다.");
     }
-
 
     @ExceptionHandler(AuthenticationEntryPointException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -98,10 +98,6 @@ public class ExceptionAdvisor {
     }
 
 
-
-
-
-
     // member
     @ExceptionHandler(DuplicateUsernameException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
@@ -116,14 +112,12 @@ public class ExceptionAdvisor {
     }
 
 
-
     // role
     @ExceptionHandler(RoleNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response roleNotFoundException(RoleNotFoundException e) {
         return Response.failure(404, "권한을 찾을 수 없습니다.");
     }
-
 
 
     // category
@@ -136,7 +130,7 @@ public class ExceptionAdvisor {
     // message
     @ExceptionHandler(MessageNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Response messageNotFoundException(MessageNotFoundException e){
+    public Response messageNotFoundException(MessageNotFoundException e) {
         return Response.failure(404, "메시지를 찾을 수 없습니다.");
     }
 
@@ -144,7 +138,7 @@ public class ExceptionAdvisor {
     // post
     @ExceptionHandler(PostNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Response postNotFoundException(PostNotFoundException e){
+    public Response postNotFoundException(PostNotFoundException e) {
         return Response.failure(404, "게시글을 찾을 수 없습니다.");
     }
 
@@ -152,15 +146,30 @@ public class ExceptionAdvisor {
     // oauth
     @ExceptionHandler(OAuthUserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Response OAuthUserNotFoundException(OAuthUserNotFoundException e){ return Response.failure(404, "OAuth 소셜 유저를 찾을 수 없습니다.");}
+    public Response oAuthUserNotFoundException(OAuthUserNotFoundException e) {
+        return Response.failure(404, "OAuth 소셜 유저를 찾을 수 없습니다.");
+    }
 
     @ExceptionHandler(SocialAgreementException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Response SocialAgreementException(SocialAgreementException e){ return Response.failure(404, "OAuth 정보 제공 동의 관련 오류가 발생했습니다.");}
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response socialAgreementException(SocialAgreementException e) {
+        return Response.failure(400, "OAuth 정보 제공 동의 관련 오류가 발생했습니다.");
+    }
 
     @ExceptionHandler(OAuthCommunicationException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Response OAuthCommunicationException(OAuthCommunicationException e){ return Response.failure(404, "OAuth 연결 해제 링크과의 연결 중 문제가 발생했습니다.");}
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response oAuthCommunicationException(OAuthCommunicationException e) {
+        return Response.failure(500, "OAuth 연결 해제 링크과의 연결 중 문제가 발생했습니다.");
+    }
 
+    // comment
+    @ExceptionHandler(CommentNotFoundException.class)
+    public Response commentNotFoundException(CommentNotFoundException e) {
+        return Response.failure(404, "존재하지 않는 댓글입니다.");
+    }
 
+    @ExceptionHandler(RootCommentNotFoundException.class)
+    public Response rootCommentNotFoundException(RootCommentNotFoundException e) {
+        return Response.failure(404, "상위 댓글이 존재하지 않습니다.");
+    }
 }
