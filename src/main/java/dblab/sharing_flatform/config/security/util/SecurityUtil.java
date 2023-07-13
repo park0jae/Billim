@@ -1,4 +1,4 @@
-package dblab.sharing_flatform.util;
+package dblab.sharing_flatform.config.security.util;
 
 import dblab.sharing_flatform.config.security.details.MemberDetails;
 import dblab.sharing_flatform.domain.member.Member;

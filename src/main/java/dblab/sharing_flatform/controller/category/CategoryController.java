@@ -32,8 +32,7 @@ public class CategoryController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Response create(@Valid @RequestBody CategoryCreateRequestDto categoryCreateRequestDto) {
-        categoryService.create(categoryCreateRequestDto);
-        return Response.success();
+        return Response.success(categoryService.create(categoryCreateRequestDto));
     }
 
 

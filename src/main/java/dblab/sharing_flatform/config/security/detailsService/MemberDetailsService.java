@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class MemberDetailsService implements UserDetailsService {
-
     private final MemberRepository memberRepository;
 
     // authenticate() 메소드 실행 시 넘어온 UsernamePasswordAuthentication 내부에

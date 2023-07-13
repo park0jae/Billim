@@ -61,17 +61,6 @@ public class PostService {
                 memberRepository.findByUsername(postCreateRequestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new)));
     }
 
-    private List<Image> getImages(PostCreateRequestDto postCreateRequestDto) {
-        List<Image> images;
-        if (postCreateRequestDto.getItemCreateRequestDto() != null) {
-             images = MultiPartFileToImage(postCreateRequestDto.getMultipartFiles());
-             uploadImagesToServer(images, postCreateRequestDto.getMultipartFiles());
-        } else {
-            images = List.of();
-        }
-        return images;
-    }
-
     @Transactional
     public void delete(Long id) {
         Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
@@ -121,6 +110,17 @@ public class PostService {
     private void deleteImagesFromServer(PostUpdateResponseDto postUpdateResponseDto) {
         List<ImageDto> deleteImageDtoList = postUpdateResponseDto.getDeletedImages();
         deleteImageDtoList.stream().forEach(i -> fileService.delete(i.getUniqueName()));
+    }
+
+    private List<Image> getImages(PostCreateRequestDto postCreateRequestDto) {
+        List<Image> images;
+        if (postCreateRequestDto.getItemCreateRequestDto() != null) {
+            images = MultiPartFileToImage(postCreateRequestDto.getMultipartFiles());
+            uploadImagesToServer(images, postCreateRequestDto.getMultipartFiles());
+        } else {
+            images = List.of();
+        }
+        return images;
     }
 
     private List<Image> MultiPartFileToImage(List<MultipartFile> multipartFiles) {

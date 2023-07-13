@@ -17,11 +17,11 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public MemberPrivateDto getMemberInfoByUsername(String username){
+    public MemberPrivateDto findMyInfo(String username){
         return MemberPrivateDto.toDto(memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new));
     }
 
-    public MemberPrivateDto getMemberInfoById(Long id){
+    public MemberPrivateDto findMemberByIdOnlyAdmin(Long id){
         return MemberPrivateDto.toDto(memberRepository.findById(id).orElseThrow(MemberNotFoundException::new));
     }
 

@@ -1,4 +1,4 @@
-package dblab.sharing_flatform.dto.reply;
+package dblab.sharing_flatform.dto.comment;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
@@ -13,7 +13,7 @@ import javax.validation.constraints.Null;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReplyCreateRequestDto {
+public class CommentCreateRequestDto {
 
     @ApiModelProperty(value = "댓글 내용", notes = "댓글 내용을 입력해주세요", required = true, example = "안녕하세요.")
     @NotBlank(message = "댓글 내용을 입력해주세요")
@@ -29,4 +29,5 @@ public class ReplyCreateRequestDto {
 
     @ApiModelProperty(value = "부모 댓글 아이디", notes = "부모 댓글 아이디를 입력해주세요", example = "7")
     private Long parentCommentId;
+
 }

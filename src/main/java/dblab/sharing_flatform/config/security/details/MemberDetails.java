@@ -1,6 +1,5 @@
 package dblab.sharing_flatform.config.security.details;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -46,7 +45,6 @@ public class MemberDetails implements UserDetails, OAuth2User {
         return password;
     }
 
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -70,6 +68,6 @@ public class MemberDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getName() {
-        return id+"";
+        return id + "";
     }
 }

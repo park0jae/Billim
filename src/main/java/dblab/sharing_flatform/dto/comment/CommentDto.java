@@ -1,7 +1,9 @@
-package dblab.sharing_flatform.dto.reply;
+package dblab.sharing_flatform.dto.comment;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import dblab.sharing_flatform.domain.reply.Reply;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import dblab.sharing_flatform.domain.comment.Comment;
 import dblab.sharing_flatform.helper.FlatListToHierarchicalHelper;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
@@ -15,31 +17,32 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReplyDto {
+public class CommentDto {
 
     private String username;
     private String content;
 
-    @ApiModelProperty(value = "자식 댓글 리스트")
-    private List<ReplyDto> children;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdTime;
 
-    public static List<ReplyDto> toDtoList(List<Reply> replies) {
+    @ApiModelProperty(value = "자식 댓글 리스트")
+    private List<CommentDto> children;
+
+
+    public static List<CommentDto> toDtoList(List<Comment> replies) {
         FlatListToHierarchicalHelper helper = FlatListToHierarchicalHelper.newInstance(
                 replies,
-                r -> ReplyDto.toDto(r),
+                r -> CommentDto.toDto(r),
                 r -> r.getParent(),
                 r -> r.getId(),
                 d -> d.getChildren());
         return helper.convert();
     }
 
-    public static ReplyDto toDto(Reply reply) {
-        return new ReplyDto(reply.getMember() == null ? "(알수없음)" : reply.getMember().getUsername(),
-                        reply.getContent(),
-                        new ArrayList<>(),
-                        reply.getCreatedTime());
+    public static CommentDto toDto(Comment comment) {
+        return new CommentDto(comment.getMember() == null ? "(알수없음)" : comment.getMember().getUsername(),
+                        comment.getContent(),
+                        comment.getCreatedTime(),
+                        new ArrayList<>());
     }
 }

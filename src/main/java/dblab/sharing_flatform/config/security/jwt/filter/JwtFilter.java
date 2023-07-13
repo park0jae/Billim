@@ -24,7 +24,7 @@ public class JwtFilter extends GenericFilterBean {
     private final TokenProvider tokenProvider;
 
     // 인증/인가가 필요한 요청시 실행하는 필터
-    // 토큰 검증 -> 인증정보 SecurityContext에 저장
+    // 토큰 검증 이후 -> 인증정보 Authentication 객체를 SecurityContext에 저장
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
