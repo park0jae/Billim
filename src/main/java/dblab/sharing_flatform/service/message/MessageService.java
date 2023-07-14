@@ -25,10 +25,10 @@ public class MessageService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public MessageDto sendMessage(MessageCreateRequestDto messageCreateRequestDto) {
-        Message message = new Message(messageCreateRequestDto.getContent(),
-                memberRepository.findByUsername(messageCreateRequestDto.getReceiveMember()).orElseThrow(MemberNotFoundException::new),
-                memberRepository.findByUsername(messageCreateRequestDto.getSendMember()).orElseThrow(MemberNotFoundException::new));
+    public MessageDto sendMessage(MessageCreateRequestDto requestDto) {
+        Message message = new Message(requestDto.getContent(),
+                memberRepository.findByUsername(requestDto.getReceiveMember()).orElseThrow(MemberNotFoundException::new),
+                memberRepository.findByUsername(requestDto.getSendMember()).orElseThrow(MemberNotFoundException::new));
 
         messageRepository.save(message);
         return MessageDto.toDto(message);

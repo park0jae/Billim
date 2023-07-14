@@ -23,12 +23,12 @@ public class CategoryService {
     }
 
     @Transactional
-    public Long create(CategoryCreateRequestDto categoryCreateRequestDto) {
-        if (categoryCreateRequestDto.getParentCategoryName() != null) {
-            Category parentCategory = categoryRepository.findByName(categoryCreateRequestDto.getParentCategoryName()).orElseThrow(CategoryNotFoundException::new);
-            return categoryRepository.save(CategoryCreateRequestDto.toEntity(categoryCreateRequestDto, parentCategory)).getId();
+    public Long create(CategoryCreateRequestDto requestDto) {
+        if (requestDto.getParentCategoryName() != null) {
+            Category parentCategory = categoryRepository.findByName(requestDto.getParentCategoryName()).orElseThrow(CategoryNotFoundException::new);
+            return categoryRepository.save(CategoryCreateRequestDto.toEntity(requestDto, parentCategory)).getId();
         } else {
-            return categoryRepository.save(CategoryCreateRequestDto.toEntity(categoryCreateRequestDto, null)).getId();
+            return categoryRepository.save(CategoryCreateRequestDto.toEntity(requestDto, null)).getId();
         }
     }
 
