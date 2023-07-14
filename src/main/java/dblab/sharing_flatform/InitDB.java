@@ -116,7 +116,7 @@ public class InitDB {
                             categoryRepository.findByName("category1").orElse(null),
                             null,
                             List.of(),
-                            memberRepository.findByUsername("admin").orElse(null)));
+                            memberRepository.findByUsername("admin").orElse(null), null));
                 }
             );
     }

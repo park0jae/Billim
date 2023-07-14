@@ -49,15 +49,16 @@ public class PostService {
 
     // create
     @Transactional
-    public void create(PostCreateRequestDto requestDto) {
-        List<PostImage> postImages = getImages(requestDto);
+    public void create(PostCreateRequestDto postCreateRequestDto) {
+        List<PostImage> postImages = getImages(postCreateRequestDto);
 
-        postRepository.save(new Post(requestDto.getTitle(),
-                requestDto.getContent(),
-                categoryRepository.findByName(requestDto.getCategoryName()).orElseThrow(CategoryNotFoundException::new),
-                requestDto.getItemCreateRequestDto() != null ? itemRepository.save(ItemCreateRequestDto.toEntity(requestDto.getItemCreateRequestDto())) : null,
+        postRepository.save(new Post(postCreateRequestDto.getTitle(),
+                postCreateRequestDto.getContent(),
+                categoryRepository.findByName(postCreateRequestDto.getCategoryName()).orElseThrow(CategoryNotFoundException::new),
+                postCreateRequestDto.getItemCreateRequestDto() != null ? itemRepository.save(ItemCreateRequestDto.toEntity(postCreateRequestDto.getItemCreateRequestDto())) : null,
                 postImages,
-                memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new)));
+                memberRepository.findByUsername(postCreateRequestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new),
+                null));
     }
 
     @Transactional

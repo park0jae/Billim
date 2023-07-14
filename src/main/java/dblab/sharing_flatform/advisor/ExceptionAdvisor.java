@@ -18,7 +18,11 @@ import dblab.sharing_flatform.exception.oauth.OAuthCommunicationException;
 import dblab.sharing_flatform.exception.oauth.OAuthUserNotFoundException;
 import dblab.sharing_flatform.exception.oauth.SocialAgreementException;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
+import dblab.sharing_flatform.exception.review.ExistReviewException;
+import dblab.sharing_flatform.exception.review.ImpossibleWriteReviewException;
+import dblab.sharing_flatform.exception.review.ReviewNotFoundException;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
+import dblab.sharing_flatform.exception.trade.TradeNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -100,9 +104,9 @@ public class ExceptionAdvisor {
 
     // member
     @ExceptionHandler(DuplicateUsernameException.class)
-    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public Response duplicateUsernameException(DuplicateUsernameException e) {
-        return Response.failure(406, "이미 사용중인 Username입니다.");
+        return Response.failure(409, "이미 사용중인 Username입니다.");
     }
 
     @ExceptionHandler(MemberNotFoundException.class)
@@ -171,5 +175,31 @@ public class ExceptionAdvisor {
     @ExceptionHandler(RootCommentNotFoundException.class)
     public Response rootCommentNotFoundException(RootCommentNotFoundException e) {
         return Response.failure(404, "상위 댓글이 존재하지 않습니다.");
+    }
+
+
+    // trade
+    @ExceptionHandler(TradeNotFoundException.class)
+    public Response TradeNotFoundException(TradeNotFoundException e) {
+        return Response.failure(404, "거래 내역이 존재하지 않습니다.");
+    }
+
+
+    // review
+    @ExceptionHandler(ImpossibleWriteReviewException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response ImpossibleWriteReviewException(ImpossibleWriteReviewException e) {
+        return Response.failure(400, "리뷰 작성이 불가능합니다. 거래를 완료해주세요.");
+    }
+
+    @ExceptionHandler(ReviewNotFoundException.class)
+    public Response ReviewNotFoundException(ReviewNotFoundException e) {
+        return Response.failure(404, "리뷰가 존재하지 않습니다.");
+    }
+
+    @ExceptionHandler(ExistReviewException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Response ExistReviewException(ExistReviewException e) {
+        return Response.failure(409, "해당 거래에 대한 리뷰가 이미 존재합니다.");
     }
 }
