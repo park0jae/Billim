@@ -18,5 +18,6 @@ public class BorrowerTradeGuard extends Guard {
     protected boolean isResourceOwner(Long id) {
         Long currentId = Long.valueOf(SecurityUtil.getCurrentUserId().orElseThrow(AccessDeniedException::new));
         return tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new).getBorrowerMember().getId().equals(currentId);
+
     }
 }

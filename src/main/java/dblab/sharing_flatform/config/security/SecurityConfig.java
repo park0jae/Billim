@@ -79,7 +79,6 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.DELETE, "/reply/{id}").access("@commentGuard.check(#id)")
 
                 // 거래 생성, 취소 - 소유주 , ADMIN
-                .antMatchers(HttpMethod.POST, "/trade").access("@borrowerTradeGuard.check(#id)")
                 .antMatchers(HttpMethod.DELETE, "/trade/render/{id}").access("@renderTradeGuard.check(#id)")
                 .antMatchers(HttpMethod.DELETE, "/trade/borrower/{id}").access("@borrowerTradeGuard.check(#id)")
 

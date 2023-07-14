@@ -14,11 +14,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class TradeRequestDto {
 
-    private Long postId;
-
-    @Nullable
-    private String renderMember;
-    private String borrowerMember;
+//    @Nullable
+//    private String renderMember;
+//
+//    @Nullable
+//    private String borrowerMember;
 
     @JsonFormat(pattern = "yyyy.MM.dd") //데이터 포맷 변환
     private LocalDate startDate;

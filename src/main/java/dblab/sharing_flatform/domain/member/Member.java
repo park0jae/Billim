@@ -51,14 +51,14 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Post> posts = new ArrayList<>();
 
-<<<<<<< HEAD
+
     @OneToMany(mappedBy = "member")
     private List<Review> reviews;
-=======
+
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL , orphanRemoval = true)
     @JoinColumn(name = "profileImage_id")
     private ProfileImage profileImage;
->>>>>>> ccaed9ae2dec6f1b8d24e99ad16655e2332596c2
+
 
     public Member(String username, String password, String phoneNumber, Address address, String provider,  List<Role> roles, List<Post> posts) {
         this.username = username;
@@ -66,12 +66,9 @@ public class Member {
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.provider = provider;
-<<<<<<< HEAD
         this.reviews = new ArrayList<>();
         this.totalStarRating = 0;
-=======
         this.profileImage = null;
->>>>>>> ccaed9ae2dec6f1b8d24e99ad16655e2332596c2
 
         initPosts(posts);
         addRoles(roles);

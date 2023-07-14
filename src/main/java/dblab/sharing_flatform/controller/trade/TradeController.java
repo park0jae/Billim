@@ -17,9 +17,10 @@ public class TradeController {
 
     private final TradeService tradeService;
 
-    @PostMapping
-    public Response createTrade(@Valid @RequestBody TradeRequestDto tradeRequestDto) {
-        return Response.success(tradeService.createTrade(tradeRequestDto));
+    // id에 해당하는 글에 대해 거래 생성
+    @PostMapping("/{id}")
+    public Response createTrade(@Valid @RequestBody TradeRequestDto tradeRequestDto, @PathVariable Long id) {
+        return Response.success(tradeService.createTrade(tradeRequestDto, id));
     }
 
     @GetMapping("/{id}")

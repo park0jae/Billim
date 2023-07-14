@@ -22,6 +22,8 @@ import dblab.sharing_flatform.exception.review.ExistReviewException;
 import dblab.sharing_flatform.exception.review.ImpossibleWriteReviewException;
 import dblab.sharing_flatform.exception.review.ReviewNotFoundException;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
+import dblab.sharing_flatform.exception.trade.ExistTradeException;
+import dblab.sharing_flatform.exception.trade.ImpossibleCreateTradeException;
 import dblab.sharing_flatform.exception.trade.TradeNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -184,6 +186,18 @@ public class ExceptionAdvisor {
         return Response.failure(404, "거래 내역이 존재하지 않습니다.");
     }
 
+    @ExceptionHandler(ImpossibleCreateTradeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response ImpossibleCreateTradeException(ImpossibleCreateTradeException e) {
+        return Response.failure(400, "거래를 시작할 수 없습니다.");
+    }
+    @ExceptionHandler(ExistTradeException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Response ExistTradeException(ExistTradeException e) {
+        return Response.failure(409, "해당 거래가 이미 진행되었습니다.");
+    }
+
+
 
     // review
     @ExceptionHandler(ImpossibleWriteReviewException.class)
@@ -202,4 +216,7 @@ public class ExceptionAdvisor {
     public Response ExistReviewException(ExistReviewException e) {
         return Response.failure(409, "해당 거래에 대한 리뷰가 이미 존재합니다.");
     }
+
+
+
 }
