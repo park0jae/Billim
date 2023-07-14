@@ -1,6 +1,6 @@
 package dblab.sharing_flatform.domain.post;
 
-import dblab.sharing_flatform.domain.image.Image;
+import dblab.sharing_flatform.domain.image.PostImage;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -28,10 +28,10 @@ class PostTest {
         Post post = createPost();
 
         //when
-        List<Image> images = post.getImages();
+        List<PostImage> postImages = post.getPostImages();
 
         //then
-        images.stream().forEach( i -> assertThat(i.getPost()).isEqualTo(post));
+        postImages.stream().forEach(i -> assertThat(i.getPost()).isEqualTo(post));
     }
 
 }

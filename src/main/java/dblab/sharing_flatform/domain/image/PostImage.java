@@ -16,13 +16,13 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Image {
+public class PostImage {
 
     private static final String extension[] = {"jpg", "jpeg", "gif", "bmp", "png"};
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "image_id")
+    @Column(name = "post_image_id")
     private Long id;
 
     @Column(nullable = false)
@@ -36,7 +36,7 @@ public class Image {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Post post;
 
-    public Image(String originName) {
+    public PostImage(String originName) {
         this.originName = originName;
         this.uniqueName = extractExtAndGenerateUniqueName(originName);
     }

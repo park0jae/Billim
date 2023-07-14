@@ -69,8 +69,12 @@ jwt:
   token-validity-in-seconds: 86400 # 24시간
 
 upload:
-  image:
-    location: /Users/kdo6301/Desktop/sharing_platform_server/
+  post:
+    image:
+      location: /Users/kdo6301/Desktop/sharing_platform_server/post/
+  member:
+    image:
+      location: /Users/kdo6301/Desktop/sharing_platform_server/member/
 
 
 

@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 @ApiModel(value = "카테고리 생성 요청")
 @Data
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class CategoryCreateRequestDto {
 
     @ApiModelProperty(value = "카테고리 명", notes = "카테고리명을 입력해주세요.", required = true, example = "Essay")

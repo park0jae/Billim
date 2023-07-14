@@ -3,7 +3,7 @@ package dblab.sharing_flatform.dto.post.crud.read.response;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.item.ItemDto;
 import dblab.sharing_flatform.dto.member.MemberDto;
-import dblab.sharing_flatform.dto.image.ImageDto;
+import dblab.sharing_flatform.dto.image.postImage.PostImageDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,7 +26,7 @@ public class PostReadResponseDto {
 
     @Nullable
     private ItemDto item;
-    private List<ImageDto> imageList;
+    private List<PostImageDto> imageList;
 
     public static PostReadResponseDto toDto(Post post) {
         return new PostReadResponseDto(
@@ -35,6 +35,6 @@ public class PostReadResponseDto {
                 post.getContent(),
                 MemberDto.toDto(post.getMember()),
                 Optional.ofNullable(ItemDto.toDto(post.getItem())).orElse(null),
-                post.getImages().stream().map(i -> ImageDto.toDto(i)).collect(Collectors.toList()));
+                post.getPostImages().stream().map(i -> PostImageDto.toDto(i)).collect(Collectors.toList()));
     }
 }

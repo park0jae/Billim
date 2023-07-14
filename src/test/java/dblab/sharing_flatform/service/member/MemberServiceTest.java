@@ -10,6 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -25,6 +27,9 @@ public class MemberServiceTest {
 
     @Mock
     MemberRepository memberRepository;
+
+    @Mock
+    PasswordEncoder passwordEncoder;
 
     @Test
     public void getMemberInfoTest() throws Exception {
@@ -57,15 +62,15 @@ public class MemberServiceTest {
         // given
         Member member = createMember();
         Address address = new Address("TestCity", "TestDistrict", "TestStreet", "TestZipcode");
-        MemberUpdateRequestDto memberUpdateRequestDto = new MemberUpdateRequestDto("updatePass1!", "01011112222", address, null);
-
+        MemberUpdateRequestDto memberUpdateRequestDto = new MemberUpdateRequestDto("updatePass1!", "updatedPN", address, null, null);
+        
         given(memberRepository.findById(member.getId())).willReturn(Optional.of(member));
 
         // when
         MemberPrivateDto updateMember = memberService.update(member.getId(), memberUpdateRequestDto);
 
         // then
-        assertThat(updateMember.getPassword()).isEqualTo("updatePass1!");
+        assertThat(updateMember.getPhoneNumber()).isEqualTo("updated");
     }
 
 }

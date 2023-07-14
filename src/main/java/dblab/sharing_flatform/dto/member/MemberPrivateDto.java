@@ -1,6 +1,7 @@
 package dblab.sharing_flatform.dto.member;
 
 import dblab.sharing_flatform.domain.member.Member;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

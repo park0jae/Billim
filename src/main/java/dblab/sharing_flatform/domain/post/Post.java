@@ -2,7 +2,7 @@ package dblab.sharing_flatform.domain.post;
 
 import dblab.sharing_flatform.domain.base.BaseTime;
 import dblab.sharing_flatform.domain.category.Category;
-import dblab.sharing_flatform.domain.image.Image;
+import dblab.sharing_flatform.domain.image.PostImage;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.item.Item;
 import dblab.sharing_flatform.dto.item.crud.update.ItemUpdateRequestDto;
@@ -45,32 +45,31 @@ public class Post extends BaseTime {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Category category;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL , orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "item_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Item item;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<Image> images;
+    private List<PostImage> postImages;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public Post(String title, String content, Category category, Item item, List<Image> images, Member member) {
+    public Post(String title, String content, Category category, Item item, List<PostImage> postImages, Member member) {
         this.title = title;
         this.content = content;
         this.likes = 0;
         this.category = category;
         this.item = item;
         this.member = member;
-        this.images = new ArrayList<>();
-        addImages(images);
+        this.postImages = new ArrayList<>();
+        addImages(postImages);
     }
 
     public PostUpdateResponseDto updatePost(PostUpdateRequestDto postUpdateRequestDto) {
-        Map<String, List<Image>> m = new HashMap<>();
+        Map<String, List<PostImage>> m = new HashMap<>();
 
         this.title = postUpdateRequestDto.getTitle();
         this.content = postUpdateRequestDto.getContent();
@@ -82,45 +81,45 @@ public class Post extends BaseTime {
         // 수정/DB - 추가된 이미지 데이터베이스에 올리고, 삭제된 이미지 데이터베이스에서 삭제
         if (postUpdateRequestDto.getAddImages() != null) {
             List<MultipartFile> addImages = postUpdateRequestDto.getAddImages();  // 업로드할 이미지 파일
-            List<Image> addList = addToDB(addImages);
+            List<PostImage> addList = addToDB(addImages);
             m.put("addList", addList);
         }
 
         if (postUpdateRequestDto.getDeleteImageNames() != null) {
             List<String> deleteImageNames = postUpdateRequestDto.getDeleteImageNames(); // 삭제할 이미지 파일 이름
-            List<Image> deleteList = deleteFromDB(deleteImageNames);
+            List<PostImage> deleteList = deleteFromDB(deleteImageNames);
             m.put("deleteList", deleteList);
         }
 
         return PostUpdateResponseDto.toDto(postUpdateRequestDto, this, m);
     }
 
-    public List<Image> addToDB(List<MultipartFile> addImages) {
-        List<Image> addImageList = MultipartToImage(addImages);
-        addImages(addImageList);
+    public List<PostImage> addToDB(List<MultipartFile> addImages) {
+        List<PostImage> addPostImageList = MultipartToImage(addImages);
+        addImages(addPostImageList);
 
-        return addImageList;
+        return addPostImageList;
     }
 
-    public List<Image> deleteFromDB(List<String> deleteImageNames) {
-        List<Image> deleteImageList = StringToImage(deleteImageNames);
-        deleteImages(deleteImageList);
+    public List<PostImage> deleteFromDB(List<String> deleteImageNames) {
+        List<PostImage> deletePostImageList = StringToImage(deleteImageNames);
+        deleteImages(deletePostImageList);
 
-        return deleteImageList;
+        return deletePostImageList;
     }
 
-    private void addImages(List<Image> addList) {
+    private void addImages(List<PostImage> addList) {
         addList.stream().forEach(
                 i -> {
-                    images.add(i);
+                    postImages.add(i);
                     i.initPost(this);
                 });
     }
 
-    private void deleteImages(List<Image> deleteList) {
+    private void deleteImages(List<PostImage> deleteList) {
         deleteList.stream().forEach(
                 i -> {
-                    images.remove(i);
+                    postImages.remove(i);
                     i.cancel(this);
                 }
         );
@@ -132,20 +131,20 @@ public class Post extends BaseTime {
         }
     }
 
-    private List<Image> StringToImage(List<String> deleteImageNames) {
+    private List<PostImage> StringToImage(List<String> deleteImageNames) {
         return deleteImageNames.stream().map(name -> convertNameToImage(name))
                 .filter(i -> i.isPresent())
                 .map(i -> i.get())
                 .collect(Collectors.toList());
     }
 
-    private Optional<Image> convertNameToImage(String name) {
-        return this.images.stream().filter(i -> i.getOriginName().equals(name)).findAny();
+    private Optional<PostImage> convertNameToImage(String name) {
+        return this.postImages.stream().filter(i -> i.getOriginName().equals(name)).findAny();
     }
 
-    private List<Image> MultipartToImage(List<MultipartFile> addImages) {
+    private List<PostImage> MultipartToImage(List<MultipartFile> addImages) {
         return addImages.stream().map(
-                file -> new Image(file.getOriginalFilename())).collect(Collectors.toList());
+                file -> new PostImage(file.getOriginalFilename())).collect(Collectors.toList());
     }
 
 }

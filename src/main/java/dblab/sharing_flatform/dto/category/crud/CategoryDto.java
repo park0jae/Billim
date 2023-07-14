@@ -15,7 +15,7 @@ import java.util.List;
 @ApiModel(value = "전체 카테고리 조회 응답")
 @Data
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class CategoryDto {
 
     @ApiModelProperty(value = "카테고리 ID", example = "1")

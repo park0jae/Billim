@@ -13,9 +13,8 @@ import java.io.IOException;
 
 @Service
 @Slf4j
-public class FileService {
-
-    @Value("${upload.image.location}")
+public class PostFileService {
+    @Value("${upload.post.image.location}")
     private String location;
 
     @PostConstruct
