@@ -71,7 +71,7 @@ public class ReviewService {
         return reviewRepository.findAllByMember(username).stream().map(review -> ReviewResponseDto.toDto(review)).collect(Collectors.toList());
     }
 
-    public List<ReviewResponseDto> findReviewsByAdmin(Long id){
+    public List<ReviewResponseDto> findReviewsById(Long id){
         Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
         return reviewRepository.findAllByMember(member.getUsername()).stream().map(review -> ReviewResponseDto.toDto(review)).collect(Collectors.toList());
     }

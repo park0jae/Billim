@@ -83,8 +83,8 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.DELETE, "/trade/borrower/{id}").access("@borrowerTradeGuard.check(#id)")
 
                 // 리뷰 조회, 작성, 삭제 - 소유주 , ADMIN
+                .antMatchers(HttpMethod.GET, "/review/{id}").hasAnyAuthority("ADMIN", "MANAGER", "USER")
                 .antMatchers(HttpMethod.GET, "/review").access("@reviewGuard.check(#id)")
-                .antMatchers(HttpMethod.GET, "/review/admin/{id}").access("@reviewOwnerGuard.check(#id)") // ADMIN만 가능함
                 .antMatchers(HttpMethod.POST, "/review/{id}").access("@reviewGuard.check(#id)")
                 .antMatchers(HttpMethod.DELETE, "/review/{id}").access("@reviewGuard.check(#id)")
 
