@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -58,27 +59,23 @@ public class MemberService {
         return MemberPrivateDto.toDto(member);
     }
 
-
     private String encodeRawPassword(String password) {
         return passwordEncoder.encode(password);
     }
 
-    private void memberUpdate(MemberUpdateRequestDto memberUpdateRequestDto, Member member) {
-        String profileImage = member.updateMember(memberUpdateRequestDto, encodeRawPassword(memberUpdateRequestDto.getPassword()));
-
-        if (memberUpdateRequestDto.getImage() != null) {
-            postFileService.upload(memberUpdateRequestDto.getImage(), member.getProfileImage().getUniqueName());
-        }
-        if (profileImage != null) {
-            postFileService.delete(profileImage);
-        }
+    private void memberUpdate(MemberUpdateRequestDto requestDto, Member member) {
+        String profileImage = member.updateMember(requestDto, encodeRawPassword(requestDto.getPassword()));
+        profileImageServerUpdate(requestDto.getImage(), member, profileImage);
     }
 
     private void oAuthMemberUpdate(OAuthMemberUpdateRequestDto requestDto, Member member) {
         String profileImage = member.updateOAuthMember(requestDto);
+        profileImageServerUpdate(requestDto.getImage(), member, profileImage);
+    }
 
-        if (requestDto.getImage() != null) {
-            postFileService.upload(requestDto.getImage(), member.getProfileImage().getUniqueName());
+    private void profileImageServerUpdate(MultipartFile file, Member member, String profileImage) {
+        if (file != null) {
+            postFileService.upload(file, member.getProfileImage().getUniqueName());
         }
         if (profileImage != null) {
             postFileService.delete(profileImage);
