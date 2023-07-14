@@ -41,9 +41,8 @@ public class ReviewController {
         return Response.success();
     }
 
-    // ADMIN 권한으로 특정 사용자의 리뷰 내역 조회
-    @GetMapping("/admin/{id}")
-    public Response findReviewsByAdmin(@PathVariable Long id){
-        return Response.success(reviewService.findReviewsByAdmin(id));
+    @GetMapping("/{id}")
+    public Response findReviewsById(@PathVariable Long id){
+        return Response.success(reviewService.findReviewsById(id));
     }
 }

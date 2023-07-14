@@ -75,12 +75,12 @@ public class Member {
     }
 
     public void calculateTotalStarRating(double rating){
-        this.totalStarRating = (totalStarRating + rating) / reviews.stream().count();
+        this.totalStarRating = Math.round(((this.totalStarRating + rating) / (double) reviews.size()) * 10) / 10.0;
+
     }
 
     public void addReviews(Review review){
         reviews.add(review);
-        calculateTotalStarRating(review.getStarRating());
         review.addMember(this);
     }
 

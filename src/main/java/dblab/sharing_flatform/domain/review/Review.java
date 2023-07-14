@@ -45,13 +45,11 @@ public class Review {
         this.member = member;
         this.reviewerMember = reviewerMember;
         this.trade = trade;
-
-        member.calculateTotalStarRating(starRating);
-        member.addReviews(this);
     }
 
     public void addMember(Member member) {
         this.member = member;
+        member.calculateTotalStarRating(this.starRating);
     }
 
 }
