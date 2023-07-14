@@ -42,7 +42,6 @@ public class PostService {
     private final CategoryRepository categoryRepository;
     private final ItemRepository itemRepository;
     private final FileService fileService;
-    private final TradeRepository tradeRepository;
 
     public PagedPostListDto readAll(PostPagingCondition cond) {
         return PagedPostListDto.toDto(postRepository.findAllBySearch(cond));

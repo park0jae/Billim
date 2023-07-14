@@ -29,9 +29,6 @@ public class TradeService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
 
-    // 1. 글을 올린사람이 거래를 생성함
-    // 거래 (사용 기간)
-
     @Transactional
     public TradeResponseDto createTrade(TradeRequestDto tradeRequestDto){
 
@@ -61,17 +58,15 @@ public class TradeService {
     @Transactional
     public void cancelByRender(Long id){
         Trade trade = tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new);
-        trade.cancelByRender();
 
-        if(trade.isCancelable()) tradeRepository.delete(trade);
+        tradeRepository.delete(trade);
     }
 
     @Transactional
     public void cancelByBorrower(Long id){
         Trade trade = tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new);
-        trade.cancelByBorrower();
 
-        if(trade.isCancelable()) tradeRepository.delete(trade);
+        tradeRepository.delete(trade);
     }
 
 

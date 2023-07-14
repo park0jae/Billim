@@ -33,7 +33,7 @@ class MemberTest {
         Address address = new Address("TestCity", "TestDistrict", "TestStreet", "TestZipcode");
 
         //when
-        member.updateMember(new MemberUpdateRequestDto(password, phoneNumber, address, introduce));
+        member.updateMember(new MemberUpdateRequestDto(password, phoneNumber, address, introduce), password);
 
         //then
         assertThat(member.getPassword()).isEqualTo(password);

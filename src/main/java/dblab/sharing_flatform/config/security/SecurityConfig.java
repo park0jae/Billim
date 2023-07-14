@@ -78,9 +78,17 @@ public class SecurityConfig {
                 // 댓글 삭제 - 소유주 , ADMIN
                 .antMatchers(HttpMethod.DELETE, "/reply/{id}").access("@commentGuard.check(#id)")
 
-                // 거래 취소 - 소유주 , ADMIN
+                // 거래 생성, 취소 - 소유주 , ADMIN
+                .antMatchers(HttpMethod.POST, "/trade").access("@borrowerTradeGuard.check(#id)")
                 .antMatchers(HttpMethod.DELETE, "/trade/render/{id}").access("@renderTradeGuard.check(#id)")
                 .antMatchers(HttpMethod.DELETE, "/trade/borrower/{id}").access("@borrowerTradeGuard.check(#id)")
+
+                // 리뷰 조회, 작성, 삭제 - 소유주 , ADMIN
+                .antMatchers(HttpMethod.GET, "/review").access("@reviewGuard.check(#id)")
+                .antMatchers(HttpMethod.GET, "/review/admin/{id}").access("@reviewOwnerGuard.check(#id)") // ADMIN만 가능함
+                .antMatchers(HttpMethod.POST, "/review/{id}").access("@reviewGuard.check(#id)")
+                .antMatchers(HttpMethod.DELETE, "/review/{id}").access("@reviewGuard.check(#id)")
+
 
                 .and()
                 //OAuth 2.0 기반 인증을 처리하기위해 Provider와의 연동을 지원

@@ -37,8 +37,6 @@ public class Trade {
     private LocalDate startDate;
     private LocalDate endDate;
 
-    private boolean cancelByBorrower;
-    private boolean cancelByRender;
     private boolean tradeComplete;
 
     public Trade(Member renderMember, Member borrowerMember,  LocalDate startDate, LocalDate endDate) {
@@ -46,20 +44,7 @@ public class Trade {
         this.borrowerMember = borrowerMember;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.cancelByBorrower = false;
-        this.cancelByRender = false;
         this.tradeComplete = true;
-    }
-
-    public void cancelByBorrower() {
-        this.cancelByBorrower = true;
-    }
-    public void cancelByRender() {
-        this.cancelByRender = true;
-    }
-
-    public boolean isCancelable() {
-        return isCancelByBorrower() || isCancelByRender();
     }
 
     public void addPost(Post post){
