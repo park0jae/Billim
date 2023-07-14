@@ -23,9 +23,7 @@ public class Comment extends BaseTime {
 
     @Column(nullable = false)
     private String content;
-
     private boolean deleted;
-
     private boolean root;
 
     @ManyToOne(fetch = FetchType.LAZY)

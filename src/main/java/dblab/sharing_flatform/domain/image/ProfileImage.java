@@ -21,9 +21,8 @@ public class ProfileImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "profile_image_id")
     private Long id;
-
-    private String originName;
     private String uniqueName;
+    private String originName;
 
     public ProfileImage(String originName) {
         this.originName = originName;

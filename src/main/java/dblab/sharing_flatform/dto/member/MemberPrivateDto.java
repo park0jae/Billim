@@ -27,7 +27,6 @@ public class MemberPrivateDto {
                 member.getUsername(),
                 member.getPassword(),
                 member.getPhoneNumber(),
-                member.getTotalStarRating()
-                );
+                member.getRating());
     }
 }

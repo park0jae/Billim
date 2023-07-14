@@ -40,8 +40,7 @@ public class Member {
 
     private String introduce;
 
-    @Column(name = "member_rating")
-    private double totalStarRating;
+    private double rating;
 
     // roles -> 기본전략 : 지연로딩
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
@@ -51,14 +50,12 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Post> posts = new ArrayList<>();
 
-
     @OneToMany(mappedBy = "member")
     private List<Review> reviews;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL , orphanRemoval = true)
-    @JoinColumn(name = "profileImage_id")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "profile_image_id")
     private ProfileImage profileImage;
-
 
     public Member(String username, String password, String phoneNumber, Address address, String provider,  List<Role> roles, List<Post> posts) {
         this.username = username;
@@ -67,7 +64,7 @@ public class Member {
         this.address = address;
         this.provider = provider;
         this.reviews = new ArrayList<>();
-        this.totalStarRating = 0;
+        this.rating = 0;
         this.profileImage = null;
 
         initPosts(posts);
@@ -75,7 +72,7 @@ public class Member {
     }
 
     public void calculateTotalStarRating(double rating){
-        this.totalStarRating = Math.round(((this.totalStarRating + rating) / (double) reviews.size()) * 10) / 10.0;
+        this.rating = Math.round(((this.rating + rating) / (double) reviews.size()) * 10) / 10.0;
 
     }
 

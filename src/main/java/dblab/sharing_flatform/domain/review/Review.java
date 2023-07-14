@@ -22,7 +22,6 @@ public class Review {
 
     private String content;
 
-    @Column(name = "star_rating")
     private double starRating;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -51,5 +50,4 @@ public class Review {
         this.member = member;
         member.calculateTotalStarRating(this.starRating);
     }
-
 }

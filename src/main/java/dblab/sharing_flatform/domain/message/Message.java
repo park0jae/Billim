@@ -18,8 +18,9 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "message_id")
     private Long id;
-
     private String content;
+    private boolean deleteBySender;
+    private boolean deleteByReceiver;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id")
@@ -31,14 +32,10 @@ public class Message {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member sendMember;
 
-    private boolean deleteBySender;
-    private boolean deleteByReceiver;
-
     public Message(String content, Member receiveMember, Member sendMember) {
         this.content = content;
         this.receiveMember = receiveMember;
         this.sendMember = sendMember;
-
         this.deleteBySender = false;
         this.deleteByReceiver = false;
     }

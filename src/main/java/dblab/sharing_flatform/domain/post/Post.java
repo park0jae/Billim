@@ -50,9 +50,6 @@ public class Post extends BaseTime {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<PostImage> postImages;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "member_id")
@@ -63,6 +60,8 @@ public class Post extends BaseTime {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Trade trade;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<PostImage> postImages;
 
     public Post(String title, String content, Category category, Item item, List<PostImage> postImages, Member member ,Trade trade) {
         this.title = title;
