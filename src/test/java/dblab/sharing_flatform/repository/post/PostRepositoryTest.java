@@ -2,24 +2,16 @@ package dblab.sharing_flatform.repository.post;
 
 import dblab.sharing_flatform.config.querydsl.QuerydslConfig;
 import dblab.sharing_flatform.domain.category.Category;
-import dblab.sharing_flatform.domain.image.Image;
-import dblab.sharing_flatform.domain.item.Item;
+import dblab.sharing_flatform.domain.image.PostImage;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.post.PostDto;
 import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
-import dblab.sharing_flatform.factory.category.CategoryFactory;
-import dblab.sharing_flatform.factory.member.MemberFactory;
-import dblab.sharing_flatform.factory.post.PostFactory;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
 import dblab.sharing_flatform.repository.image.ImageRepository;
 import dblab.sharing_flatform.repository.item.ItemRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
-import dblab.sharing_flatform.repository.message.MessageRepository;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -31,11 +23,9 @@ import javax.persistence.PersistenceContext;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import static dblab.sharing_flatform.factory.post.PostFactory.createPost;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Import(QuerydslConfig.class)
@@ -87,8 +77,8 @@ class PostRepositoryTest {
         clear();
     }
 
-    public void postInitWithImages(List<Image> images) {
-        post = createPost(images);
+    public void postInitWithImages(List<PostImage> postImages) {
+        post = createPost(postImages);
         category = post.getCategory();
         member = post.getMember();
 
@@ -153,12 +143,12 @@ class PostRepositoryTest {
     @Test
     public void persistImageCascadePost() throws Exception {
         //given
-        List<Image> images = new ArrayList<>();
-        images.add(new Image("testImage1.jpg"));
-        images.add(new Image("testImage2.jpg"));
+        List<PostImage> postImages = new ArrayList<>();
+        postImages.add(new PostImage("testImage1.jpg"));
+        postImages.add(new PostImage("testImage2.jpg"));
 
         //when
-        postInitWithImages(images);
+        postInitWithImages(postImages);
 
         //then
         assertThat(imageRepository.findAll().size()).isEqualTo(2);

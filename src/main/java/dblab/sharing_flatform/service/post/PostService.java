@@ -1,8 +1,7 @@
 package dblab.sharing_flatform.service.post;
 
-import dblab.sharing_flatform.domain.image.Image;
+import dblab.sharing_flatform.domain.image.PostImage;
 import dblab.sharing_flatform.domain.post.Post;
-import dblab.sharing_flatform.domain.trade.Trade;
 import dblab.sharing_flatform.dto.item.crud.create.ItemCreateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
@@ -10,8 +9,7 @@ import dblab.sharing_flatform.dto.post.crud.read.response.PagedPostListDto;
 import dblab.sharing_flatform.dto.post.crud.read.response.PostReadResponseDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateResponseDto;
-import dblab.sharing_flatform.dto.image.ImageDto;
-import dblab.sharing_flatform.dto.trade.crud.create.TradeRequestDto;
+import dblab.sharing_flatform.dto.image.postImage.PostImageDto;
 import dblab.sharing_flatform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
@@ -19,15 +17,13 @@ import dblab.sharing_flatform.repository.category.CategoryRepository;
 import dblab.sharing_flatform.repository.item.ItemRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
-import dblab.sharing_flatform.repository.trade.TradeRepository;
-import dblab.sharing_flatform.service.file.FileService;
+import dblab.sharing_flatform.service.file.PostFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +37,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
     private final ItemRepository itemRepository;
-    private final FileService fileService;
+    private final PostFileService postFileService;
 
     public PagedPostListDto readAll(PostPagingCondition cond) {
         return PagedPostListDto.toDto(postRepository.findAllBySearch(cond));
@@ -54,17 +50,15 @@ public class PostService {
     // create
     @Transactional
     public void create(PostCreateRequestDto postCreateRequestDto) {
-        List<Image> images = getImages(postCreateRequestDto);
+        List<PostImage> postImages = getImages(postCreateRequestDto);
 
         postRepository.save(new Post(postCreateRequestDto.getTitle(),
                 postCreateRequestDto.getContent(),
                 categoryRepository.findByName(postCreateRequestDto.getCategoryName()).orElseThrow(CategoryNotFoundException::new),
                 postCreateRequestDto.getItemCreateRequestDto() != null ? itemRepository.save(ItemCreateRequestDto.toEntity(postCreateRequestDto.getItemCreateRequestDto())) : null,
-                images,
+                postImages,
                 memberRepository.findByUsername(postCreateRequestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new),
-                null
-                )
-        );
+                null));
     }
 
     @Transactional
@@ -78,24 +72,25 @@ public class PostService {
     public PostUpdateResponseDto update(Long id, PostUpdateRequestDto postUpdateRequestDto) {
         Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
         PostUpdateResponseDto postUpdateResponseDto = post.updatePost(postUpdateRequestDto);
+
         updateImagesToServer(postUpdateRequestDto, postUpdateResponseDto);
 
         return postUpdateResponseDto;
     }
 
     // create
-    public void uploadImagesToServer(List<Image> images, List<MultipartFile> fileImages) {
-        if (!images.isEmpty()) {
-            for (int i = 0; i < images.size(); i++) {
-                fileService.upload(fileImages.get(i), images.get(i).getUniqueName());
+    public void uploadImagesToServer(List<PostImage> postImages, List<MultipartFile> fileImages) {
+        if (!postImages.isEmpty()) {
+            for (int i = 0; i < postImages.size(); i++) {
+                postFileService.upload(fileImages.get(i), postImages.get(i).getUniqueName());
             }
         }
     }
 
     // delete
     public void deleteImagesFromServer(Post post) {
-        List<Image> images = post.getImages();
-        images.stream().forEach(i -> fileService.delete(i.getUniqueName()));
+        List<PostImage> postImages = post.getPostImages();
+        postImages.stream().forEach(i -> postFileService.delete(i.getUniqueName()));
     }
 
     // update
@@ -106,30 +101,30 @@ public class PostService {
 
     // update - create
     private void uploadImagesToServer(PostUpdateRequestDto postUpdateRequestDto, PostUpdateResponseDto postUpdateResponseDto) {
-        List<ImageDto> addedImages = postUpdateResponseDto.getAddedImages();
+        List<PostImageDto> addedImages = postUpdateResponseDto.getAddedImages();
         for (int i = 0; i < addedImages.size(); i++) {
-            fileService.upload(postUpdateRequestDto.getAddImages().get(i), addedImages.get(i).getUniqueName());
+            postFileService.upload(postUpdateRequestDto.getAddImages().get(i), addedImages.get(i).getUniqueName());
         }
     }
 
     // update - delete
     private void deleteImagesFromServer(PostUpdateResponseDto postUpdateResponseDto) {
-        List<ImageDto> deleteImageDtoList = postUpdateResponseDto.getDeletedImages();
-        deleteImageDtoList.stream().forEach(i -> fileService.delete(i.getUniqueName()));
+        List<PostImageDto> deletePostImageDtoList = postUpdateResponseDto.getDeletedImages();
+        deletePostImageDtoList.stream().forEach(i -> postFileService.delete(i.getUniqueName()));
     }
 
-    private List<Image> getImages(PostCreateRequestDto postCreateRequestDto) {
-        List<Image> images;
-        if (postCreateRequestDto.getItemCreateRequestDto() != null) {
-            images = MultiPartFileToImage(postCreateRequestDto.getMultipartFiles());
-            uploadImagesToServer(images, postCreateRequestDto.getMultipartFiles());
+    private List<PostImage> getImages(PostCreateRequestDto postCreateRequestDto) {
+        List<PostImage> postImages;
+        if (postCreateRequestDto.getMultipartFiles() != null) {
+            postImages = MultiPartFileToImage(postCreateRequestDto.getMultipartFiles());
+            uploadImagesToServer(postImages, postCreateRequestDto.getMultipartFiles());
         } else {
-            images = List.of();
+            postImages = List.of();
         }
-        return images;
+        return postImages;
     }
 
-    private List<Image> MultiPartFileToImage(List<MultipartFile> multipartFiles) {
-        return multipartFiles.stream().map(i -> new Image(i.getOriginalFilename())).collect(Collectors.toList());
+    private List<PostImage> MultiPartFileToImage(List<MultipartFile> multipartFiles) {
+        return multipartFiles.stream().map(i -> new PostImage(i.getOriginalFilename())).collect(Collectors.toList());
     }
 }

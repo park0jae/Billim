@@ -10,7 +10,7 @@ import java.util.List;
 public class MemberFactory {
 
     public static Member createMember() {
-        return new Member("username", "password", "phoneNum", createAddress(), "None",List.of(), List.of());
+        return new Member("username", "password", "phoneNum", createAddress(), "None", List.of(), List.of());
     }
 
     public static Member createMemberWithRoles(List<Role> roles) {
