@@ -69,13 +69,13 @@ public class PostService {
     }
 
     @Transactional
-    public PostUpdateResponseDto update(Long id, PostUpdateRequestDto postUpdateRequestDto) {
+    public PostUpdateResponseDto update(Long id, PostUpdateRequestDto requestDto) {
         Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
-        PostUpdateResponseDto postUpdateResponseDto = post.updatePost(postUpdateRequestDto);
+        PostUpdateResponseDto responseDto = post.updatePost(requestDto);
 
-        updateImagesToServer(postUpdateRequestDto, postUpdateResponseDto);
+        updateImagesToServer(requestDto, responseDto);
 
-        return postUpdateResponseDto;
+        return responseDto;
     }
 
     // create
@@ -94,30 +94,30 @@ public class PostService {
     }
 
     // update
-    public void updateImagesToServer(PostUpdateRequestDto postUpdateRequestDto, PostUpdateResponseDto postUpdateResponseDto) {
-        uploadImagesToServer(postUpdateRequestDto, postUpdateResponseDto);
-        deleteImagesFromServer(postUpdateResponseDto);
+    public void updateImagesToServer(PostUpdateRequestDto requestDto, PostUpdateResponseDto responseDto) {
+        uploadImagesToServer(requestDto, responseDto);
+        deleteImagesFromServer(responseDto);
     }
 
     // update - create
-    private void uploadImagesToServer(PostUpdateRequestDto postUpdateRequestDto, PostUpdateResponseDto postUpdateResponseDto) {
-        List<PostImageDto> addedImages = postUpdateResponseDto.getAddedImages();
+    private void uploadImagesToServer(PostUpdateRequestDto requestDto, PostUpdateResponseDto responseDto) {
+        List<PostImageDto> addedImages = responseDto.getAddedImages();
         for (int i = 0; i < addedImages.size(); i++) {
-            postFileService.upload(postUpdateRequestDto.getAddImages().get(i), addedImages.get(i).getUniqueName());
+            postFileService.upload(requestDto.getAddImages().get(i), addedImages.get(i).getUniqueName());
         }
     }
 
     // update - delete
-    private void deleteImagesFromServer(PostUpdateResponseDto postUpdateResponseDto) {
-        List<PostImageDto> deletePostImageDtoList = postUpdateResponseDto.getDeletedImages();
+    private void deleteImagesFromServer(PostUpdateResponseDto responseDto) {
+        List<PostImageDto> deletePostImageDtoList = responseDto.getDeletedImages();
         deletePostImageDtoList.stream().forEach(i -> postFileService.delete(i.getUniqueName()));
     }
 
-    private List<PostImage> getImages(PostCreateRequestDto postCreateRequestDto) {
+    private List<PostImage> getImages(PostCreateRequestDto requestDto) {
         List<PostImage> postImages;
-        if (postCreateRequestDto.getMultipartFiles() != null) {
-            postImages = MultiPartFileToImage(postCreateRequestDto.getMultipartFiles());
-            uploadImagesToServer(postImages, postCreateRequestDto.getMultipartFiles());
+        if (requestDto.getMultipartFiles() != null) {
+            postImages = MultiPartFileToImage(requestDto.getMultipartFiles());
+            uploadImagesToServer(postImages, requestDto.getMultipartFiles());
         } else {
             postImages = List.of();
         }

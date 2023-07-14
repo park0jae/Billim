@@ -125,7 +125,6 @@ public class Member {
         return existedImageName;
     }
 
-
     private String updateProfileImage(MultipartFile image) {
         String existedImageName = null;
 

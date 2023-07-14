@@ -43,13 +43,13 @@ public class SignService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Transactional
-    public void signUp(MemberCreateRequestDto memberCreateRequestDto){
-        validateDuplicateUsername(memberCreateRequestDto);
+    public void signUp(MemberCreateRequestDto requestDto){
+        validateDuplicateUsername(requestDto);
 
-        Member member = new Member(memberCreateRequestDto.getUsername(),
-                passwordEncoder.encode(memberCreateRequestDto.getPassword()),
-                memberCreateRequestDto.getPhoneNumber(),
-                memberCreateRequestDto.getAddress(),
+        Member member = new Member(requestDto.getUsername(),
+                passwordEncoder.encode(requestDto.getPassword()),
+                requestDto.getPhoneNumber(),
+                requestDto.getAddress(),
                 "None",
                 List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)),
                 List.of());
@@ -58,46 +58,46 @@ public class SignService {
     }
 
     @Transactional
-    public void oAuth2Signup(OAuth2MemberCreateRequestDto req) {
-        Optional<Member> search = memberRepository.findByUsername(req.getEmail());
+    public void oAuth2Signup(OAuth2MemberCreateRequestDto requestDto) {
+        Optional<Member> search = memberRepository.findByUsername(requestDto.getEmail());
 
         // DB에 없으면 회원가입
         if (search.isEmpty()) {
-            Member member = new Member(req.getEmail(),
-                    passwordEncoder.encode(req.getEmail()),
+            Member member = new Member(requestDto.getEmail(),
+                    passwordEncoder.encode(requestDto.getEmail()),
                     null,
                     null,
-                    req.getProvider(),
+                    requestDto.getProvider(),
                     List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)),
                     List.of());
             memberRepository.save(member);
         }
     }
 
-    public LogInResponseDto oauth2Login(OAuth2MemberCreateRequestDto req) {
-        String jwt = jwtLoginRequest(new LoginRequestDto(req.getEmail(), req.getEmail()));
+    public LogInResponseDto oauth2Login(OAuth2MemberCreateRequestDto requestDto) {
+        String jwt = jwtLoginRequest(new LoginRequestDto(requestDto.getEmail(), requestDto.getEmail()));
         return LogInResponseDto.toDto(jwt);
     }
 
-    private void validateDuplicateUsername(MemberCreateRequestDto memberCreateRequestDto) {
-        if (memberRepository.findOneWithRolesByUsername(memberCreateRequestDto.getUsername()).orElse(null) != null) {
+    private void validateDuplicateUsername(MemberCreateRequestDto requestDto) {
+        if (memberRepository.findOneWithRolesByUsername(requestDto.getUsername()).orElse(null) != null) {
             throw new DuplicateUsernameException();
         }
     }
 
-    public LogInResponseDto login(LoginRequestDto loginRequestDto) {
-        Member member = memberRepository.findByUsername(loginRequestDto.getUsername()).orElseThrow(MemberNotFoundException::new);
+    public LogInResponseDto login(LoginRequestDto requestDto) {
+        Member member = memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(MemberNotFoundException::new);
 
         if (member != null) {
-            String jwt = jwtLoginRequest(loginRequestDto);
+            String jwt = jwtLoginRequest(requestDto);
             return LogInResponseDto.toDto(jwt);
         }
         throw new MemberNotFoundException();
     }
 
-    private String jwtLoginRequest(LoginRequestDto loginRequestDto) {
+    private String jwtLoginRequest(LoginRequestDto requestDto) {
         UsernamePasswordAuthenticationToken authenticationToken
-                = new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword());
+                = new UsernamePasswordAuthenticationToken(requestDto.getUsername(), requestDto.getPassword());
 
         try {
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
