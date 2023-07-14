@@ -17,8 +17,8 @@ import java.time.LocalDate;
 public class TradeResponseDto {
 
     private Long id;
-    private String borrowerMember;
     private String renderMember;
+    private String borrowerMember;
     private LocalDate startDate;
     private LocalDate endDate;
     private boolean tradeComplete;

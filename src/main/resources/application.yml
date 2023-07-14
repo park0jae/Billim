@@ -71,10 +71,10 @@ jwt:
 upload:
   post:
     image:
-      location: /Users/kdo6301/Desktop/sharing_platform_server/post/
+      location: /Users/zerozae/Desktop/sharing_platform_server/post/
   member:
     image:
-      location: /Users/kdo6301/Desktop/sharing_platform_server/member/
+      location: /Users/zerozae/Desktop/sharing_platform_server/member/
 
 
 

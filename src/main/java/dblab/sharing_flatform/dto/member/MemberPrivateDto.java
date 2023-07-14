@@ -19,11 +19,15 @@ public class MemberPrivateDto {
 
     private String phoneNumber;
 
+    private double totalRating;
+
     public static MemberPrivateDto toDto(Member member) {
         return new MemberPrivateDto(
                 member.getId(),
                 member.getUsername(),
                 member.getPassword(),
-                member.getPhoneNumber());
+                member.getPhoneNumber(),
+                member.getTotalStarRating()
+                );
     }
 }
