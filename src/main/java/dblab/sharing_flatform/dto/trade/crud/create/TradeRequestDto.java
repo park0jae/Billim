@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
 
@@ -14,11 +15,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class TradeRequestDto {
 
-//    @Nullable
-//    private String renderMember;
-//
-//    @Nullable
-//    private String borrowerMember;
+    @Null
+    private String renderName;
+
+    private String borrowerName;
 
     @JsonFormat(pattern = "yyyy.MM.dd") //데이터 포맷 변환
     private LocalDate startDate;

@@ -86,7 +86,6 @@ public class Member {
         this.roles = roleList;
     }
 
-
     private void initPosts(List<Post> posts) {
         if (!posts.isEmpty()) {
             posts.stream().forEach(
@@ -125,7 +124,6 @@ public class Member {
         if (this.profileImage != null) {
             existedImageName = this.profileImage.getUniqueName();
         }
-
         if (image != null) {
             this.profileImage = new ProfileImage(image.getOriginalFilename());
         } else {

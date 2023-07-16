@@ -43,7 +43,6 @@ public class PostImageHelper {
         );
     }
 
-
     public static Map<String, List<PostImage>> updateImage(PostUpdateRequestDto requestDto, List<PostImage> postImages, Post post) {
 
         Map<String, List<PostImage>> m = new HashMap<>();

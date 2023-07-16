@@ -38,27 +38,18 @@ public class TradeService {
 
     @Transactional
     public TradeResponseDto createTrade(TradeRequestDto tradeRequestDto, Long id){
-
         Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
-        String borrowerUsername = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        Member member = memberRepository.findByUsername(post.getMember().getUsername()).orElseThrow(MemberNotFoundException::new);
+        Member render = memberRepository.findByUsername(tradeRequestDto.getRenderName()).orElseThrow(MemberNotFoundException::new);
+        Member borrower = memberRepository.findByUsername(tradeRequestDto.getBorrowerName()).orElseThrow(MemberNotFoundException::new);
 
-        if(member.getUsername().equals(borrowerUsername))
+        if (render.getUsername().equals(borrower.getUsername())) {
             throw new ImpossibleCreateTradeException();
-        if(tradeRepository.findByPostId(id).isPresent()){
+        } else if (tradeRepository.findByPostId(id).isPresent()) {
             throw new ExistTradeException();
         }
 
-        Trade trade = new Trade(member,
-                memberRepository.findByUsername(borrowerUsername).orElseThrow(MemberNotFoundException::new),
-                tradeRequestDto.getStartDate(),
-                tradeRequestDto.getEndDate(),
-                post
-        );
-
-        tradeRepository.save(trade);
-
-        return TradeResponseDto.toDto(trade);
+        return TradeResponseDto.toDto(tradeRepository.save(new Trade(render, borrower,
+                tradeRequestDto.getStartDate(), tradeRequestDto.getEndDate(), post)));
     }
 
     public TradeResponseDto findTradeById(Long id){
@@ -70,19 +61,9 @@ public class TradeService {
     }
 
     @Transactional
-    public void cancelByRender(Long id){
+    public void deleteTrade(Long id){
         Trade trade = tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new);
-
         tradeRepository.delete(trade);
     }
-
-    @Transactional
-    public void cancelByBorrower(Long id){
-        Trade trade = tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new);
-
-        tradeRepository.delete(trade);
-    }
-
-
 
 }

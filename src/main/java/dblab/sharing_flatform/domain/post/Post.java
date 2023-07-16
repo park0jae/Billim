@@ -90,7 +90,6 @@ public class Post extends BaseTime {
         return PostUpdateResponseDto.toDto(requestDto, this, m);
     }
 
-
     public void addTrade(Trade trade){
         if (this.trade == null) {
             this.trade = trade;
