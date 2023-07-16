@@ -8,8 +8,7 @@ import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.post.PostDto;
 import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
-import dblab.sharing_flatform.repository.image.ImageRepository;
-import dblab.sharing_flatform.repository.item.ItemRepository;
+import dblab.sharing_flatform.repository.image.PostImageRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,10 +40,7 @@ class PostRepositoryTest {
     CategoryRepository categoryRepository;
 
     @Autowired
-    ItemRepository itemRepository;
-
-    @Autowired
-    ImageRepository imageRepository;
+    PostImageRepository postImageRepository;
 
     @Autowired
     MemberRepository memberRepository;
@@ -57,9 +53,8 @@ class PostRepositoryTest {
     public void initDB() {
         memberRepository.deleteAll();
         categoryRepository.deleteAll();
-        imageRepository.deleteAll();
+        postImageRepository.deleteAll();
         postRepository.deleteAll();
-        itemRepository.deleteAll();
     }
 
     public void postInit() {
@@ -105,27 +100,6 @@ class PostRepositoryTest {
         assertThat(postRepository.findById(post.getId())).isEmpty();
     }
 
-    @Test
-    public void persistCascadeItem() throws Exception {
-        //given
-        postInit();
-
-        //then
-        assertThat(itemRepository.findByName(post.getItem().getName())).isNotEmpty();
-    }
-
-    @Test
-    public void deleteCascadeItem() throws Exception {
-        //given
-        postInit();
-
-        //when
-        itemRepository.delete(post.getItem());
-        clear();
-
-        //then
-        assertThat(postRepository.findById(post.getId())).isEmpty();
-    }
 
     @Test
     public void deleteCascadeMember() throws Exception {
@@ -151,12 +125,8 @@ class PostRepositoryTest {
         postInitWithImages(postImages);
 
         //then
-        assertThat(imageRepository.findAll().size()).isEqualTo(2);
+        assertThat(postImageRepository.findAll().size()).isEqualTo(2);
     }
-
-    //    Post post;
-    //    Member member;
-    //    Category category;
 
     @Test  
     public void findAllBySearchTest() throws Exception {

@@ -37,10 +37,12 @@ public class ReviewService {
     public ReviewResponseDto writeReview(ReviewRequestDto reviewRequestDto, Long id){
         Trade trade = tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new);
 
-        if(!trade.isTradeComplete()){
+        if (!trade.isTradeComplete()) {
+
             throw new ImpossibleWriteReviewException();
         }
-        if(reviewRepository.findByTradeId(id).isPresent()){
+        if (reviewRepository.findByTradeId(id).isPresent()) {
+
             throw new ExistReviewException();
         }
 
@@ -51,7 +53,7 @@ public class ReviewService {
                 trade
                 );
 
-        review.getMember().addReviews(review);
+//        review.getMember().addReviews(review);
         reviewRepository.save(review);
 
         return ReviewResponseDto.toDto(review);

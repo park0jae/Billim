@@ -34,7 +34,7 @@ public class Review {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member reviewerMember;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trade_id")
     private Trade trade;
 
@@ -43,11 +43,17 @@ public class Review {
         this.starRating = starRating;
         this.member = member;
         this.reviewerMember = reviewerMember;
+
+        addTrade(trade);
+    }
+
+    private void addTrade(Trade trade) {
         this.trade = trade;
+        trade.addReview(this);
     }
 
     public void addMember(Member member) {
-        this.member = member;
         member.calculateTotalStarRating(this.starRating);
     }
+
 }

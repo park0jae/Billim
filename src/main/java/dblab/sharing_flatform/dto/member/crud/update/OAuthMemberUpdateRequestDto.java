@@ -1,6 +1,6 @@
 package dblab.sharing_flatform.dto.member.crud.update;
 
-import dblab.sharing_flatform.domain.address.Address;
+import dblab.sharing_flatform.domain.embedded.address.Address;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.Embedded;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 @Data
 @AllArgsConstructor

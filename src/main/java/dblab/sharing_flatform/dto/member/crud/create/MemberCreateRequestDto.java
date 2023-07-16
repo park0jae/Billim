@@ -1,7 +1,6 @@
 package dblab.sharing_flatform.dto.member.crud.create;
 
-import dblab.sharing_flatform.domain.address.Address;
-import dblab.sharing_flatform.domain.member.Member;
+import dblab.sharing_flatform.domain.embedded.address.Address;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;

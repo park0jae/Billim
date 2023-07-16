@@ -1,6 +1,6 @@
 package dblab.sharing_flatform.config.oauth.provider;
 
-import dblab.sharing_flatform.domain.address.Address;
+import dblab.sharing_flatform.domain.embedded.address.Address;
 
 public interface OAuth2UserInfo {
     String getProvider();

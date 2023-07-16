@@ -1,7 +1,7 @@
 package dblab.sharing_flatform.dto.item.crud.update;
 
 
-import dblab.sharing_flatform.domain.item.Item;
+import dblab.sharing_flatform.domain.embedded.item.Item;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;

@@ -1,6 +1,6 @@
 package dblab.sharing_flatform.domain.member;
 
-import dblab.sharing_flatform.domain.address.Address;
+import dblab.sharing_flatform.domain.embedded.address.Address;
 import dblab.sharing_flatform.domain.image.ProfileImage;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.review.Review;
@@ -133,6 +133,5 @@ public class Member {
         }
         return existedImageName;
     }
-
 
 }

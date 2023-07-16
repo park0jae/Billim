@@ -1,6 +1,6 @@
 package dblab.sharing_flatform.service.member;
 
-import dblab.sharing_flatform.domain.address.Address;
+import dblab.sharing_flatform.domain.embedded.address.Address;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.dto.member.MemberPrivateDto;
 import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
@@ -10,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -63,14 +62,14 @@ public class MemberServiceTest {
         Member member = createMember();
         Address address = new Address("TestCity", "TestDistrict", "TestStreet", "TestZipcode");
         MemberUpdateRequestDto memberUpdateRequestDto = new MemberUpdateRequestDto("updatePass1!", "updatedPN", address, null, null);
-        
+
         given(memberRepository.findById(member.getId())).willReturn(Optional.of(member));
 
         // when
         MemberPrivateDto updateMember = memberService.update(member.getId(), memberUpdateRequestDto);
 
         // then
-        assertThat(updateMember.getPhoneNumber()).isEqualTo("updated");
+        assertThat(updateMember.getPhoneNumber()).isEqualTo("updatedPN");
     }
 
 }

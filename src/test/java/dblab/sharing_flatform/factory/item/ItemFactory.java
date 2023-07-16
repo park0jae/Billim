@@ -1,6 +1,6 @@
 package dblab.sharing_flatform.factory.item;
 
-import dblab.sharing_flatform.domain.item.Item;
+import dblab.sharing_flatform.domain.embedded.item.Item;
 
 public class ItemFactory {
     public static Item createItem() {

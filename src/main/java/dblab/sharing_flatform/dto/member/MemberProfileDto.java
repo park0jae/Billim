@@ -19,11 +19,12 @@ public class MemberProfileDto {
     private ProfileImageDto profileImage;
     private String username;
     private String introduce;
+    private double rating;
 
     private List<PostDto> posts;
 
     public static MemberProfileDto toDto(Member member) {
         return new MemberProfileDto(
-                ProfileImageDto.toDto(member.getProfileImage()), member.getUsername(), member.getIntroduce(), PostDto.toDtoList(member.getPosts()));
+                ProfileImageDto.toDto(member.getProfileImage()), member.getUsername(), member.getIntroduce(), member.getRating(), PostDto.toDtoList(member.getPosts()));
     }
 }

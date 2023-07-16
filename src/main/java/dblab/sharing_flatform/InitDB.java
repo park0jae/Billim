@@ -1,6 +1,6 @@
 package dblab.sharing_flatform;
 
-import dblab.sharing_flatform.domain.address.Address;
+import dblab.sharing_flatform.domain.embedded.address.Address;
 import dblab.sharing_flatform.domain.category.Category;
 import dblab.sharing_flatform.domain.comment.Comment;
 import dblab.sharing_flatform.domain.member.Member;

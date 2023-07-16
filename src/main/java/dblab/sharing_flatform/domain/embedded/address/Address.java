@@ -1,4 +1,4 @@
-package dblab.sharing_flatform.domain.address;
+package dblab.sharing_flatform.domain.embedded.address;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;

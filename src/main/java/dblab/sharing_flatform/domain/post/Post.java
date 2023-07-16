@@ -4,22 +4,26 @@ import dblab.sharing_flatform.domain.base.BaseTime;
 import dblab.sharing_flatform.domain.category.Category;
 import dblab.sharing_flatform.domain.image.PostImage;
 import dblab.sharing_flatform.domain.member.Member;
-import dblab.sharing_flatform.domain.item.Item;
+import dblab.sharing_flatform.domain.embedded.item.Item;
 import dblab.sharing_flatform.domain.trade.Trade;
 import dblab.sharing_flatform.dto.item.crud.update.ItemUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateResponseDto;
+import dblab.sharing_flatform.helper.PostImageHelper;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static dblab.sharing_flatform.helper.PostImageHelper.*;
 
 @Entity
 @Getter
@@ -46,21 +50,19 @@ public class Post extends BaseTime {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Category category;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "item_id")
+    @Embedded
+    @Nullable
     private Item item;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "member_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trade_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Trade trade;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostImage> postImages;
 
     public Post(String title, String content, Category category, Item item, List<PostImage> postImages, Member member ,Trade trade) {
@@ -72,92 +74,33 @@ public class Post extends BaseTime {
         this.member = member;
         this.trade = trade;
         this.postImages = new ArrayList<>();
-        addImages(postImages);
+        addImages(postImages, this.postImages, this);
     }
 
-    public PostUpdateResponseDto updatePost(PostUpdateRequestDto postUpdateRequestDto) {
-        Map<String, List<PostImage>> m = new HashMap<>();
+    public PostUpdateResponseDto updatePost(PostUpdateRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
 
-        this.title = postUpdateRequestDto.getTitle();
-        this.content = postUpdateRequestDto.getContent();
-
-        if (postUpdateRequestDto.getItemUpdateRequestDto() != null) {
-            this.item = ItemUpdateRequestDto.toEntity(postUpdateRequestDto.getItemUpdateRequestDto());
+        if (requestDto.getItemUpdateRequestDto() != null) {
+            this.item = ItemUpdateRequestDto.toEntity(requestDto.getItemUpdateRequestDto());
         }
 
-        // 수정/DB - 추가된 이미지 데이터베이스에 올리고, 삭제된 이미지 데이터베이스에서 삭제
-        if (postUpdateRequestDto.getAddImages() != null) {
-            List<MultipartFile> addImages = postUpdateRequestDto.getAddImages();  // 업로드할 이미지 파일
-            List<PostImage> addList = addToDB(addImages);
-            m.put("addList", addList);
-        }
+        Map<String, List<PostImage>> m = updateImage(requestDto, this.postImages, this);
 
-        if (postUpdateRequestDto.getDeleteImageNames() != null) {
-            List<String> deleteImageNames = postUpdateRequestDto.getDeleteImageNames(); // 삭제할 이미지 파일 이름
-            List<PostImage> deleteList = deleteFromDB(deleteImageNames);
-            m.put("deleteList", deleteList);
-        }
-
-        return PostUpdateResponseDto.toDto(postUpdateRequestDto, this, m);
+        return PostUpdateResponseDto.toDto(requestDto, this, m);
     }
 
-    public List<PostImage> addToDB(List<MultipartFile> addImages) {
-        List<PostImage> addPostImageList = MultipartToImage(addImages);
-        addImages(addPostImageList);
-
-        return addPostImageList;
-    }
-
-    public List<PostImage> deleteFromDB(List<String> deleteImageNames) {
-        List<PostImage> deletePostImageList = StringToImage(deleteImageNames);
-        deleteImages(deletePostImageList);
-
-        return deletePostImageList;
-    }
-
-    private void addImages(List<PostImage> addList) {
-        addList.stream().forEach(
-                i -> {
-                    postImages.add(i);
-                    i.initPost(this);
-                });
-    }
 
     public void addTrade(Trade trade){
-        this.trade = trade;
-        trade.addPost(this);
-    }
-
-
-    private void deleteImages(List<PostImage> deleteList) {
-        deleteList.stream().forEach(
-                i -> {
-                    postImages.remove(i);
-                    i.cancel(this);
-                }
-        );
+        if (this.trade == null) {
+            this.trade = trade;
+        }
     }
 
     public void initMember(Member member) {
         if (this.member == null) {
             this.member = member;
         }
-    }
-
-    private List<PostImage> StringToImage(List<String> deleteImageNames) {
-        return deleteImageNames.stream().map(name -> convertNameToImage(name))
-                .filter(i -> i.isPresent())
-                .map(i -> i.get())
-                .collect(Collectors.toList());
-    }
-
-    private Optional<PostImage> convertNameToImage(String name) {
-        return this.postImages.stream().filter(i -> i.getOriginName().equals(name)).findAny();
-    }
-
-    private List<PostImage> MultipartToImage(List<MultipartFile> addImages) {
-        return addImages.stream().map(
-                file -> new PostImage(file.getOriginalFilename())).collect(Collectors.toList());
     }
 
 }

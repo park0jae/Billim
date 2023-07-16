@@ -33,7 +33,6 @@ public class PostImage {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Post post;
 
     public PostImage(String originName) {

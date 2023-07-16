@@ -52,10 +52,10 @@ public class TradeService {
         Trade trade = new Trade(member,
                 memberRepository.findByUsername(borrowerUsername).orElseThrow(MemberNotFoundException::new),
                 tradeRequestDto.getStartDate(),
-                tradeRequestDto.getEndDate()
+                tradeRequestDto.getEndDate(),
+                post
         );
 
-        post.addTrade(trade);
         tradeRepository.save(trade);
 
         return TradeResponseDto.toDto(trade);

@@ -14,7 +14,6 @@ import dblab.sharing_flatform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
-import dblab.sharing_flatform.repository.item.ItemRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
 import dblab.sharing_flatform.service.file.PostFileService;
@@ -36,7 +35,6 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
-    private final ItemRepository itemRepository;
     private final PostFileService postFileService;
 
     public PagedPostListDto readAll(PostPagingCondition cond) {
@@ -49,15 +47,15 @@ public class PostService {
 
     // create
     @Transactional
-    public void create(PostCreateRequestDto postCreateRequestDto) {
-        List<PostImage> postImages = getImages(postCreateRequestDto);
+    public void create(PostCreateRequestDto requestDto) {
+        List<PostImage> postImages = getImages(requestDto);
 
-        postRepository.save(new Post(postCreateRequestDto.getTitle(),
-                postCreateRequestDto.getContent(),
-                categoryRepository.findByName(postCreateRequestDto.getCategoryName()).orElseThrow(CategoryNotFoundException::new),
-                postCreateRequestDto.getItemCreateRequestDto() != null ? itemRepository.save(ItemCreateRequestDto.toEntity(postCreateRequestDto.getItemCreateRequestDto())) : null,
+        postRepository.save(new Post(requestDto.getTitle(),
+                requestDto.getContent(),
+                categoryRepository.findByName(requestDto.getCategoryName()).orElseThrow(CategoryNotFoundException::new),
+                requestDto.getItemCreateRequestDto() != null ? ItemCreateRequestDto.toEntity(requestDto.getItemCreateRequestDto()) : null,
                 postImages,
-                memberRepository.findByUsername(postCreateRequestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new),
+                memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new),
                 null));
     }
 

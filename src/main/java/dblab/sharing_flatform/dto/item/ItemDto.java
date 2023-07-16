@@ -1,8 +1,6 @@
 package dblab.sharing_flatform.dto.item;
 
-import dblab.sharing_flatform.domain.item.Item;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import dblab.sharing_flatform.domain.embedded.item.Item;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
