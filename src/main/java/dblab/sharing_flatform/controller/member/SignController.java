@@ -135,7 +135,7 @@ public class SignController {
         OAuth2MemberCreateRequestDto req = new OAuth2MemberCreateRequestDto(email, provider, accessToken);
 
         try {
-            memberService.findMyInfo(req.getEmail());
+            memberService.readMyInfo(req.getEmail());
         } catch (MemberNotFoundException e) {
             signService.oAuth2Signup(req);
         } finally {

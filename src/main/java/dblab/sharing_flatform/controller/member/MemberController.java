@@ -2,11 +2,11 @@ package dblab.sharing_flatform.controller.member;
 
 import dblab.sharing_flatform.dto.member.MemberPrivateDto;
 import dblab.sharing_flatform.dto.member.MemberProfileDto;
+import dblab.sharing_flatform.dto.member.crud.read.request.MemberPagingCondition;
 import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
 import dblab.sharing_flatform.dto.member.crud.update.OAuthMemberUpdateRequestDto;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.exception.auth.AccessDeniedException;
-import dblab.sharing_flatform.service.file.PostFileService;
 import dblab.sharing_flatform.service.member.MemberService;
 import dblab.sharing_flatform.config.security.util.SecurityUtil;
 import io.swagger.annotations.Api;
@@ -26,12 +26,12 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @ApiOperation(value = "현재 사용자 조회", notes = "현재 사용자를 조회한다.")
+    @ApiOperation(value = "내 정보 조회", notes = "현재 로그인한 회원 정보를 조회합니다.")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Response currentUser(){
         String currentUsername = SecurityUtil.getCurrentUsername().get();
-        MemberPrivateDto currentMember = memberService.findMyInfo(currentUsername);
+        MemberPrivateDto currentMember = memberService.readMyInfo(currentUsername);
         return Response.success(currentMember);
     }
 
@@ -39,7 +39,7 @@ public class MemberController {
     @GetMapping("/profile")
     @ResponseStatus(HttpStatus.OK)
     public Response findMemberProfile(@RequestParam String username){
-        MemberProfileDto memberInfo = memberService.findMemberProfile(username);
+        MemberProfileDto memberInfo = memberService.readMemberProfile(username);
         return Response.success(memberInfo);
     }
 
@@ -47,11 +47,18 @@ public class MemberController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Response findMemberByAdmin(@ApiParam(name="조회할 사용자 아이디" , required = true) @PathVariable Long id){
-        MemberPrivateDto memberInfo = memberService.findMemberByIdOnlyAdmin(id);
+        MemberPrivateDto memberInfo = memberService.readMemberByIdOnlyAdmin(id);
         return Response.success(memberInfo);
     }
 
-    @ApiOperation(value = "사용자 삭제", notes = "관리자 또는 본인인 경우 사용자를 삭제한다.")
+    @ApiOperation(value = "전체 회원 조회", notes = "전체 회원을 조회합니다. (username 검색)")
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    public Response readAll(@Valid MemberPagingCondition cond){
+        return Response.success(memberService.readAll(cond));
+    }
+
+    @ApiOperation(value = "회원 삭제", notes = "관리자 또는 본인인 경우 사용자를 삭제한다.")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Response deleteMember(@ApiParam(name = "삭제할 사용자 아이디", required = true) @PathVariable Long id){

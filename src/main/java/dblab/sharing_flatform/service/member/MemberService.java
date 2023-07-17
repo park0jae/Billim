@@ -2,8 +2,11 @@ package dblab.sharing_flatform.service.member;
 
 
 import dblab.sharing_flatform.domain.member.Member;
+import dblab.sharing_flatform.dto.member.MemberDto;
 import dblab.sharing_flatform.dto.member.MemberPrivateDto;
 import dblab.sharing_flatform.dto.member.MemberProfileDto;
+import dblab.sharing_flatform.dto.member.crud.read.request.MemberPagingCondition;
+import dblab.sharing_flatform.dto.member.crud.read.response.PagedMemberListDto;
 import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
 import dblab.sharing_flatform.dto.member.crud.update.OAuthMemberUpdateRequestDto;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
@@ -11,6 +14,7 @@ import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.service.file.MemberFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,16 +30,20 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberFileService postFileService;
 
-    public MemberPrivateDto findMyInfo(String username){
+    public MemberPrivateDto readMyInfo(String username){
         return MemberPrivateDto.toDto(memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new));
     }
 
-    public MemberPrivateDto findMemberByIdOnlyAdmin(Long id){
+    public MemberPrivateDto readMemberByIdOnlyAdmin(Long id){
         return MemberPrivateDto.toDto(memberRepository.findById(id).orElseThrow(MemberNotFoundException::new));
     }
 
-    public MemberProfileDto findMemberProfile(String username) {
+    public MemberProfileDto readMemberProfile(String username) {
         return MemberProfileDto.toDto(memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new));
+    }
+
+    public PagedMemberListDto readAll(MemberPagingCondition cond) {
+        return PagedMemberListDto.toDto(memberRepository.findAllBySearch(cond));
     }
 
     @Transactional
@@ -81,4 +89,5 @@ public class MemberService {
             postFileService.delete(profileImage);
         }
     }
+
 }
