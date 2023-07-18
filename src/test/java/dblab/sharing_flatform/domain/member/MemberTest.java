@@ -14,11 +14,8 @@ import java.util.List;
 import static dblab.sharing_flatform.factory.member.MemberFactory.createMember;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
 class MemberTest {
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
     @Test
     public void createMemberTest() throws Exception {
         //given

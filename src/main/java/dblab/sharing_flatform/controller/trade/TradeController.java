@@ -30,6 +30,12 @@ public class TradeController {
         return Response.success(tradeService.createTrade(tradeRequestDto, id));
     }
 
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Response completeTrade(@PathVariable Long id){
+        return Response.success(tradeService.completeTrade(id));
+    }
+
     @ApiOperation(value = "Trade ID로 거래를 조회", notes = "Trade ID로 거래를 조회합니다.")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)

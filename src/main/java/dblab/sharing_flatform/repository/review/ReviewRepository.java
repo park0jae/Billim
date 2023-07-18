@@ -12,8 +12,4 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     @Query("select r from Review r join fetch r.member rm where rm.username =:username")
     List<Review> findAllByMember(@Param("username") String username);
-
-    @Query("select r from Review r join fetch r.trade rt where rt.id =:findId")
-    Optional<Review> findByTradeId(@Param("findId") Long findId);
-
 }

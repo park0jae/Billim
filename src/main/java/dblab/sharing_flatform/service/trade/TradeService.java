@@ -44,12 +44,18 @@ public class TradeService {
 
         if (render.getUsername().equals(borrower.getUsername())) {
             throw new ImpossibleCreateTradeException();
-        } else if (tradeRepository.findByPostId(id).isPresent()) {
+        } else if (tradeRepository.findByPostId(id).orElseThrow(TradeNotFoundException::new).isTradeComplete()) {
             throw new ExistTradeException();
         }
+        Trade trade = tradeRepository.save(new Trade(render, borrower, tradeRequestDto.getStartDate(), tradeRequestDto.getEndDate(), post));
+        return TradeResponseDto.toDto(trade);
+    }
 
-        return TradeResponseDto.toDto(tradeRepository.save(new Trade(render, borrower,
-                tradeRequestDto.getStartDate(), tradeRequestDto.getEndDate(), post)));
+    public TradeResponseDto completeTrade(Long id){
+        Trade trade = tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new);
+        trade.isTradeComplete(true);
+
+        return TradeResponseDto.toDto(trade);
     }
 
     public TradeResponseDto findTradeById(Long id){

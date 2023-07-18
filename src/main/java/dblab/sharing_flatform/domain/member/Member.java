@@ -76,7 +76,7 @@ public class Member {
 
     }
 
-    public void addReviews(Review review){
+    public void addReview(Review review){
         reviews.add(review);
         review.addMember(this);
     }
