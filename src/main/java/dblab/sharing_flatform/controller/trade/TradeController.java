@@ -30,8 +30,8 @@ public class TradeController {
         return Response.success(tradeService.createTrade(tradeRequestDto, id));
     }
 
+    @ApiOperation(value = "Trade ID로 Trade 완료", notes = "거래 ID로 Trade를 완료합니다.")
     @PatchMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public Response completeTrade(@PathVariable Long id){
         return Response.success(tradeService.completeTrade(id));
     }

@@ -80,6 +80,10 @@ public class Member {
         review.addMember(this);
     }
 
+    public void deleteReview(Review review){
+        reviews.remove(review);
+    }
+
     private void addRoles(List<Role> roles) {
         List<MemberRole> roleList = roles.stream().map(role -> new MemberRole(this, role)).collect(Collectors.toList());
         this.roles = roleList;

@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,7 +36,7 @@ public class ReviewService {
         Trade trade = tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new);
         Member member = memberRepository.findByUsername(trade.getRenderMember().getUsername()).orElseThrow(MemberNotFoundException::new);
 
-        if (!trade.isTradeComplete() || SecurityUtil.getCurrentUsername().get().equals(trade.getBorrowerMember().getUsername())) {
+        if (trade.isTradeComplete() == false || !SecurityUtil.getCurrentUsername().get().equals(trade.getBorrowerMember().getUsername())) {
             throw new ImpossibleWriteReviewException();
         }
         if (trade.isWrittenReview()) {
@@ -49,6 +48,7 @@ public class ReviewService {
                 memberRepository.findByUsername(trade.getRenderMember().getUsername()).orElseThrow(MemberNotFoundException::new),
                 memberRepository.findByUsername(trade.getBorrowerMember().getUsername()).orElseThrow(MemberNotFoundException::new)
                 );
+
         reviewRepository.save(review);
         trade.isWrittenReview(true);
         trade.addReview(review);
@@ -59,9 +59,11 @@ public class ReviewService {
     @Transactional
     public void deleteReview(Long id){
         Trade trade = tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new);
-        trade.isWrittenReview(false);
+        Review review = reviewRepository.findById(trade.getReview().getId()).orElseThrow(ReviewNotFoundException::new);
 
-        reviewRepository.delete(reviewRepository.findById(trade.getReview().getId()).orElseThrow(ReviewNotFoundException::new));
+        memberRepository.findById(trade.getRenderMember().getId()).orElseThrow(MemberNotFoundException::new).deleteReview(review);
+        trade.isWrittenReview(false);
+        reviewRepository.delete(review);
     }
 
     public List<ReviewResponseDto> findAllReviews(){
