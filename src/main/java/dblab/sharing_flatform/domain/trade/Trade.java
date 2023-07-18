@@ -37,20 +37,23 @@ public class Trade {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Post post;
 
-    @OneToOne(mappedBy = "trade", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "review_id")
     private Review review;
 
     private LocalDate startDate;
     private LocalDate endDate;
 
     private boolean tradeComplete;
+    private boolean writtenReview;
 
     public Trade(Member renderMember, Member borrowerMember,  LocalDate startDate, LocalDate endDate, Post post) {
         this.renderMember = renderMember;
         this.borrowerMember = borrowerMember;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.tradeComplete = true;
+        this.tradeComplete = false;
+        this.writtenReview = false;
         addPost(post);
     }
 
@@ -63,7 +66,16 @@ public class Trade {
         if (this.review == null) {
             this.review = review;
         }
+    }
 
+    public void isTradeComplete(boolean value){
+        this.tradeComplete = value;
+    }
+    public void isWrittenReview(boolean value){
+        this.writtenReview = value;
+        if(value == false){
+            this.review = null;
+        }
     }
 }
 

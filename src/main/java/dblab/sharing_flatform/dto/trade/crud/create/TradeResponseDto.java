@@ -22,6 +22,7 @@ public class TradeResponseDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private boolean tradeComplete;
+    private boolean writtenReview;
 
 
     public static TradeResponseDto toDto(Trade trade) {
@@ -32,7 +33,9 @@ public class TradeResponseDto {
                     trade.getBorrowerMember().getUsername(),
                     trade.getStartDate(),
                     trade.getEndDate(),
-                    trade.isTradeComplete());
+                    trade.isTradeComplete(),
+                    trade.isWrittenReview()
+                    );
 
         } else {
             return null;

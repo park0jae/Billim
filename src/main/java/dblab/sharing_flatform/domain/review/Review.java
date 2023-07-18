@@ -34,24 +34,13 @@ public class Review {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member reviewerMember;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trade_id")
-    private Trade trade;
-
-    public Review (String content, double starRating, Member member, Member reviewerMember, Trade trade){
+    public Review (String content, double starRating, Member member, Member reviewerMember){
         this.content = content;
         this.starRating = starRating;
         this.member = member;
         this.reviewerMember = reviewerMember;
 
-        addTrade(trade);
     }
-
-    private void addTrade(Trade trade) {
-        this.trade = trade;
-        trade.addReview(this);
-    }
-
     public void addMember(Member member) {
         member.calculateTotalStarRating(this.starRating);
     }

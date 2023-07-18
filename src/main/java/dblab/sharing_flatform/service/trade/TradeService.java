@@ -5,11 +5,8 @@ import dblab.sharing_flatform.config.security.util.SecurityUtil;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.trade.Trade;
-import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
-import dblab.sharing_flatform.dto.post.crud.read.response.PagedPostListDto;
 import dblab.sharing_flatform.dto.trade.crud.create.TradeRequestDto;
 import dblab.sharing_flatform.dto.trade.crud.create.TradeResponseDto;
-import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
 import dblab.sharing_flatform.exception.trade.ExistTradeException;
@@ -24,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -42,14 +40,25 @@ public class TradeService {
         Member render = memberRepository.findByUsername(tradeRequestDto.getRenderName()).orElseThrow(MemberNotFoundException::new);
         Member borrower = memberRepository.findByUsername(tradeRequestDto.getBorrowerName()).orElseThrow(MemberNotFoundException::new);
 
+        Optional<Trade> findTrade = tradeRepository.findByPostId(id);
+
         if (render.getUsername().equals(borrower.getUsername())) {
             throw new ImpossibleCreateTradeException();
-        } else if (tradeRepository.findByPostId(id).isPresent()) {
-            throw new ExistTradeException();
         }
+        if (findTrade.isPresent()){
+            if(findTrade.get().isTradeComplete())
+                throw new ExistTradeException();
+        }
+        Trade trade = tradeRepository.save(new Trade(render, borrower, tradeRequestDto.getStartDate(), tradeRequestDto.getEndDate(), post));
+        return TradeResponseDto.toDto(trade);
+    }
 
-        return TradeResponseDto.toDto(tradeRepository.save(new Trade(render, borrower,
-                tradeRequestDto.getStartDate(), tradeRequestDto.getEndDate(), post)));
+    @Transactional
+    public TradeResponseDto completeTrade(Long id){
+        Trade trade = tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new);
+        trade.isTradeComplete(true);
+
+        return TradeResponseDto.toDto(trade);
     }
 
     public TradeResponseDto findTradeById(Long id){

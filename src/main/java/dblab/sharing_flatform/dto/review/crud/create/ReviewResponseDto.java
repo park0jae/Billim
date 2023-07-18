@@ -17,7 +17,6 @@ public class ReviewResponseDto {
     private double starRating;
     private String member;
     private String reviewerMember;
-    private TradeResponseDto trade;
 
     public static ReviewResponseDto toDto(Review review) {
         if (review != null) {
@@ -26,8 +25,7 @@ public class ReviewResponseDto {
                     review.getContent(),
                     review.getStarRating(),
                     review.getMember().getUsername(),
-                    review.getReviewerMember().getUsername(),
-                    TradeResponseDto.toDto(review.getTrade()));
+                    review.getReviewerMember().getUsername());
         } else {
             return null;
         }
