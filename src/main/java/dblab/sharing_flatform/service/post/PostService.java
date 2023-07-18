@@ -1,9 +1,11 @@
 package dblab.sharing_flatform.service.post;
 
 import dblab.sharing_flatform.domain.image.PostImage;
+import dblab.sharing_flatform.domain.likepost.LikePost;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.item.crud.create.ItemCreateRequestDto;
+import dblab.sharing_flatform.dto.post.PostDto;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateResponseDto;
 import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
@@ -17,11 +19,13 @@ import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
+import dblab.sharing_flatform.repository.likepost.LikePostRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
 import dblab.sharing_flatform.service.file.PostFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,11 +43,18 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
     private final PostFileService postFileService;
+    private final LikePostRepository likePostRepository;
 
     public PagedPostListDto readAll(PostPagingCondition cond) {
-        return PagedPostListDto.toDto(postRepository.findAllBySearch(cond));
+        return PagedPostListDto.toDto(postRepository.findAllByCategoryAndTitle(cond));
     }
 
+    public List<PostDto> readAllLikePost(Long id) {
+        List<Post> posts = postRepository.findAllById(
+                likePostRepository.findAllByMemberId(id).stream().map(lp -> lp.getPost().getId()).collect(Collectors.toList()));
+
+        return PostDto.toDtoList(posts);
+    }
 
     public PostReadResponseDto read(Long id) {
         return PostReadResponseDto.toDto(postRepository.findById(id).orElseThrow(PostNotFoundException::new));
@@ -144,10 +155,11 @@ public class PostService {
         if (post.getLikeMembers().contains(member)) {
             post.likeDown();
             post.getLikeMembers().remove(member);
+            likePostRepository.deleteByMemberIdAndPostId(member.getId(), post.getId());
         } else {
             post.likeUp();
             post.getLikeMembers().add(member);
+            likePostRepository.save(new LikePost(member, post));
         }
     }
-
 }

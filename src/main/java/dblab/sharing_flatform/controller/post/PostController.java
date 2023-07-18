@@ -11,6 +11,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +41,15 @@ public class PostController {
         return Response.success(postService.read(id));
     }
 
+    @ApiOperation(value ="좋아요 누른 게시글 전체 조회", notes = "해당 번호의 게시글에 좋아요 남기기/좋아요 취소")
+    @GetMapping("/like")
+    @ResponseStatus(HttpStatus.OK)
+    public Response readAllLikePost() {
+        String id = SecurityUtil.getCurrentUserId().get();
+        System.out.println("id = " + id);
+        return Response.success(postService.readAllLikePost(Long.valueOf(id)));
+    }
+
     @ApiOperation(value = "게시글 생성", notes = "게시글을 생성합니다.")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -63,14 +75,6 @@ public class PostController {
         return Response.success(postService.update(id, postUpdateRequestDto));
     }
 
-//    @ApiOperation(value ="좋아요 누른 게시글 전체 조회", notes = "해당 번호의 게시글에 좋아요 남기기/좋아요 취소")
-//    @PostMapping("/like")
-//    @ResponseStatus(HttpStatus.OK)
-//    public Response readAllLikePost() {
-//        String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-//        return Response.success(postService.readAllLikePost(username));
-//    }
-
     @ApiOperation(value = "게시글 좋아요/좋아요 취소", notes = "해당 번호의 게시글에 좋아요 남기기/좋아요 취소")
     @PostMapping("/like/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -79,6 +83,5 @@ public class PostController {
         postService.like(id, username);
         return Response.success();
     }
-
 
 }
