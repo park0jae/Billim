@@ -6,7 +6,6 @@ import dblab.sharing_flatform.domain.review.Review;
 import dblab.sharing_flatform.domain.trade.Trade;
 import dblab.sharing_flatform.dto.review.crud.create.ReviewRequestDto;
 import dblab.sharing_flatform.dto.review.crud.create.ReviewResponseDto;
-import dblab.sharing_flatform.dto.trade.crud.create.TradeResponseDto;
 import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.review.ExistReviewException;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,32 +34,36 @@ public class ReviewService {
     @Transactional
     public ReviewResponseDto writeReview(ReviewRequestDto reviewRequestDto, Long id){
         Trade trade = tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new);
+        Member member = memberRepository.findByUsername(trade.getRenderMember().getUsername()).orElseThrow(MemberNotFoundException::new);
 
-        if (!trade.isTradeComplete()) {
-
+        if (trade.isTradeComplete() == false || !SecurityUtil.getCurrentUsername().get().equals(trade.getBorrowerMember().getUsername())) {
             throw new ImpossibleWriteReviewException();
         }
-        if (reviewRepository.findByTradeId(id).isPresent()) {
-
+        if (trade.isWrittenReview()) {
             throw new ExistReviewException();
         }
 
         Review review = new Review(reviewRequestDto.getContent(),
                 reviewRequestDto.getStarRating(),
                 memberRepository.findByUsername(trade.getRenderMember().getUsername()).orElseThrow(MemberNotFoundException::new),
-                memberRepository.findByUsername(trade.getBorrowerMember().getUsername()).orElseThrow(MemberNotFoundException::new),
-                trade
+                memberRepository.findByUsername(trade.getBorrowerMember().getUsername()).orElseThrow(MemberNotFoundException::new)
                 );
 
-//        review.getMember().addReviews(review);
         reviewRepository.save(review);
-
+        trade.isWrittenReview(true);
+        trade.addReview(review);
+        member.addReview(review);
         return ReviewResponseDto.toDto(review);
     }
 
     @Transactional
     public void deleteReview(Long id){
-        reviewRepository.delete(reviewRepository.findById(id).orElseThrow(ReviewNotFoundException::new));
+        Trade trade = tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new);
+        Review review = reviewRepository.findById(trade.getReview().getId()).orElseThrow(ReviewNotFoundException::new);
+
+        memberRepository.findById(trade.getRenderMember().getId()).orElseThrow(MemberNotFoundException::new).deleteReview(review);
+        trade.isWrittenReview(false);
+        reviewRepository.delete(review);
     }
 
     public List<ReviewResponseDto> findAllReviews(){

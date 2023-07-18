@@ -75,9 +75,13 @@ public class Member {
         this.rating = Math.round(((this.rating + rating) / (double) reviews.size()) * 10) / 10.0;
     }
 
-    public void addReviews(Review review){
+    public void addReview(Review review){
         reviews.add(review);
         review.addMember(this);
+    }
+
+    public void deleteReview(Review review){
+        reviews.remove(review);
     }
 
     private void addRoles(List<Role> roles) {

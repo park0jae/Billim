@@ -14,7 +14,6 @@ values
     ('kdo6301', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', '전주시', '덕진구', '금암동', '709-4', '안녕하세요 김동웅입니다. 잘부탁드립니다.', '012-6606-3323', null, null, 0),
     ('okvv26', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', '전주시', '덕진구', '금암동', '709-3', '안녕하세요 박영재입니다. 잘부탁드립니다.', '011-3134-7623', null, null, 0);
 
-
 -- MEMBER_ROLE
 INSERT INTO MEMBER_ROLE (member_id, role_id)
 values

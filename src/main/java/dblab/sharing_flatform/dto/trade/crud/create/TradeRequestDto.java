@@ -15,9 +15,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class TradeRequestDto {
 
-    @Null
+    @Nullable
     private String renderName;
-
     private String borrowerName;
 
     @JsonFormat(pattern = "yyyy.MM.dd") //데이터 포맷 변환
