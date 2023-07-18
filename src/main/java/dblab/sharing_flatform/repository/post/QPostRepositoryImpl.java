@@ -37,7 +37,7 @@ public class QPostRepositoryImpl extends QuerydslRepositorySupport implements QP
     }
 
     @Override
-    public Page<PostDto> findAllBySearch(PostPagingCondition cond) {
+    public Page<PostDto> findAllByCategoryAndTitle(PostPagingCondition cond) {
         Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize());
         Predicate predicate = createPredicate(cond); // 검색 조건
         return new PageImpl<>(fetchAll(predicate, pageable), pageable, fetchCount(predicate));

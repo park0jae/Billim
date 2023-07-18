@@ -66,6 +66,7 @@ public class Post extends BaseTime {
     private List<PostImage> postImages;
 
     @OneToMany
+    @JoinColumn(name = "post_id")
     private List<Member> likeMembers = new ArrayList<>();
 
     public Post(String title, String content, Category category, Item item, List<PostImage> postImages, Member member ,Trade trade) {
@@ -77,6 +78,7 @@ public class Post extends BaseTime {
         this.member = member;
         this.trade = trade;
         this.postImages = new ArrayList<>();
+
         addImages(postImages, this.postImages, this);
     }
 
