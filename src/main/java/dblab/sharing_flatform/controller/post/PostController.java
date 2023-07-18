@@ -62,4 +62,23 @@ public class PostController {
                            @Valid @ModelAttribute PostUpdateRequestDto postUpdateRequestDto) {
         return Response.success(postService.update(id, postUpdateRequestDto));
     }
+
+//    @ApiOperation(value ="좋아요 누른 게시글 전체 조회", notes = "해당 번호의 게시글에 좋아요 남기기/좋아요 취소")
+//    @PostMapping("/like")
+//    @ResponseStatus(HttpStatus.OK)
+//    public Response readAllLikePost() {
+//        String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
+//        return Response.success(postService.readAllLikePost(username));
+//    }
+
+    @ApiOperation(value = "게시글 좋아요/좋아요 취소", notes = "해당 번호의 게시글에 좋아요 남기기/좋아요 취소")
+    @PostMapping("/like/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Response likeUp(@ApiParam(value = "좋아요할 게시글 id", required = true) @PathVariable Long id) {
+        String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
+        postService.like(id, username);
+        return Response.success();
+    }
+
+
 }

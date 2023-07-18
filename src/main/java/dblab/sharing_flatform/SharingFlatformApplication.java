@@ -13,5 +13,4 @@ public class SharingFlatformApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SharingFlatformApplication.class, args);
 	}
-
 }

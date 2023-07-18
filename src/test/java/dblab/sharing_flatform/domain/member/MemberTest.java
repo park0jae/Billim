@@ -20,7 +20,6 @@ class MemberTest {
     public void createMemberTest() throws Exception {
         //given
         Member member = createMember();
-
         //then
         assertThat(member).isNotNull();
     }

@@ -6,13 +6,13 @@ values (1, 'ADMIN'),
 
 -- MEMBER // password : 1q2w3e4r!!
 INSERT INTO MEMBER
-(member_id, username, password, city, district, street, zip_code, introduce, phone_number, profile_image_id, provider, rating)
+(member_id, username, city, district, street, zip_code, introduce, phone_number, profile_image_id, provider, rating, password)
 values
-    (1, 'admin123', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', '서울시', '관악구', '신림동', '56-1', '안녕하세요 ADMIN입니다.', '011-3124-3678', null, null, 0),
-    (2, 'manager123', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', '서울시', '강북구', '미아동', '56-3', '안녕하세요 MANAGER입니다.', '011-1311-5478', null, null, 0),
-    (3, 'user123', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', '서울시', '광진구', '화양동', '620-1', '안녕하세요 USER입니다. 잘부탁드립니다.', '011-3134-7623', null, null, 0),
-    (4, 'kdo6301', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', '전주시', '덕진구', '금암동', '709-4', '안녕하세요 김동웅입니다. 잘부탁드립니다.', '012-6606-3323', null, null, 0),
-    (5, 'okvv26', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', '전주시', '덕진구', '금암동', '709-3', '안녕하세요 박영재입니다. 잘부탁드립니다.', '011-3134-7623', null, null, 0);
+    (1, 'admin123', '서울시', '관악구', '신림동', '56-1', '안녕하세요 ADMIN입니다.', '011-3124-3678', null, null, 0, '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2'),
+    (2, 'manager123', '서울시', '강북구', '미아동', '56-3', '안녕하세요 MANAGER입니다.', '011-1311-5478', null, null, 0, '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2'),
+    (3, 'user123', '서울시', '광진구', '화양동', '620-1', '안녕하세요 USER입니다. 잘부탁드립니다.', '011-3134-7623', null, null, 0, '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2'),
+    (4, 'kdo6301', '전주시', '덕진구', '금암동', '709-4', '안녕하세요 김동웅입니다. 잘부탁드립니다.', '012-6606-3323', null, null, 0, '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2'),
+    (5, 'okvv26', '전주시', '덕진구', '금암동', '709-3', '안녕하세요 박영재입니다. 잘부탁드립니다.', '011-3134-7623', null, null, 0, '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2');
 
 -- MEMBER_ROLE
 INSERT INTO MEMBER_ROLE (member_id, role_id)
@@ -71,11 +71,11 @@ values
     (40, '자유게시판', 39),
     (41, '신고게시판', 39);
 
-INSERT INTO POST (post_id, created_time, last_modified, category_id, content, name, price, quantity, likes, member_id, title)
+INSERT INTO POST (post_id, created_time, last_modified, category_id, title, content, name, price, quantity, likes, member_id)
 values
-    (1, now() , now() , 1, '공지사항 내용입니다.', null ,null, null, 0, 1, '필독 공지사항'),
-    (2, now() , now() , 4, '아이패드5 PRO 대여해드립니다.', '아이패드 프로5' , 50000 , 1, 0, 3, '아이패드5 PRO 대여해드립니다.'),
-    (3, now() , now() , 13, '할리갈리, 마피아, 뱅 등 다수 보드게임 대여해드립니다. 자세한 사항은 쪽지나 채팅주세요', '보드 게임' , 5000 , 1, 0, 3, '보드게임 대여해드립니다. 종류 많음');
+    (1, now() , now() , 1, '필독 공지사항', '공지사항 내용입니다.', null ,null, null, 0, 1),
+    (2, now() , now() , 4, '아이패드5 PRO 대여해드립니다.', '아이패드5 PRO 대여해드립니다!!', '아이패드 프로5' , 50000 , 1, 0, 3),
+    (3, now() , now() , 13, '보드게임 대여해드립니다. 종류 많음', '할리갈리, 마피아, 뱅 등 다수 보드게임 대여해드립니다. 자세한 사항은 쪽지나 채팅주세요', '보드 게임' , 5000 , 1, 0, 3);
 
 INSERT INTO COMMENT (comment_id, created_time, last_modified, content, deleted, member_id, parent_id, post_id, root)
 values

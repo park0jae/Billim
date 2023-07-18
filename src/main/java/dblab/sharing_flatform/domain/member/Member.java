@@ -73,7 +73,6 @@ public class Member {
 
     public void calculateTotalStarRating(double rating){
         this.rating = Math.round(((this.rating + rating) / (double) reviews.size()) * 10) / 10.0;
-
     }
 
     public void addReview(Review review){
