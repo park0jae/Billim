@@ -34,7 +34,6 @@ public class ReviewService {
     @Transactional
     public ReviewResponseDto writeReview(ReviewRequestDto reviewRequestDto, Long id){
         Trade trade = tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new);
-        Member member = memberRepository.findByUsername(trade.getRenderMember().getUsername()).orElseThrow(MemberNotFoundException::new);
 
         if (trade.isTradeComplete() == false || !SecurityUtil.getCurrentUsername().get().equals(trade.getBorrowerMember().getUsername())) {
             throw new ImpossibleWriteReviewException();
@@ -49,10 +48,10 @@ public class ReviewService {
                 memberRepository.findByUsername(trade.getBorrowerMember().getUsername()).orElseThrow(MemberNotFoundException::new)
                 );
 
+
+
         reviewRepository.save(review);
-        trade.isWrittenReview(true);
         trade.addReview(review);
-        member.addReview(review);
         return ReviewResponseDto.toDto(review);
     }
 
@@ -61,8 +60,7 @@ public class ReviewService {
         Trade trade = tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new);
         Review review = reviewRepository.findById(trade.getReview().getId()).orElseThrow(ReviewNotFoundException::new);
 
-        memberRepository.findById(trade.getRenderMember().getId()).orElseThrow(MemberNotFoundException::new).deleteReview(review);
-        trade.isWrittenReview(false);
+        trade.deleteReview(review);
         reviewRepository.delete(review);
     }
 
