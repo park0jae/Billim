@@ -7,10 +7,12 @@ import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.domain.role.RoleType;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
 import dblab.sharing_flatform.repository.role.RoleRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -32,6 +34,11 @@ public class MemberRepositoryTest {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @BeforeEach
+    public void beforeEach() {
+        memberRepository.deleteAll();
+    }
 
     @Test
     public void findByUsernameTest(){

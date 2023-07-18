@@ -38,7 +38,7 @@ public class MemberServiceTest {
         given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
 
         //when
-        MemberPrivateDto memberInfo = memberService.findMyInfo(member.getUsername());
+        MemberPrivateDto memberInfo = memberService.readMyInfo(member.getUsername());
 
         //then
         assertThat(memberInfo.getUsername()).isEqualTo(member.getUsername());
