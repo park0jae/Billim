@@ -57,7 +57,6 @@ public class Trade {
     public void addPost(Post post){
         this.post = post;
         post.addTrade(this);
-
     }
 
     public void addReview(Review review) {

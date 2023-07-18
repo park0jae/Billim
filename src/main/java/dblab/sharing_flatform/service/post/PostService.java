@@ -1,6 +1,7 @@
 package dblab.sharing_flatform.service.post;
 
 import dblab.sharing_flatform.domain.image.PostImage;
+import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.item.crud.create.ItemCreateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
@@ -12,6 +13,7 @@ import dblab.sharing_flatform.dto.post.crud.update.PostUpdateResponseDto;
 import dblab.sharing_flatform.dto.image.postImage.PostImageDto;
 import dblab.sharing_flatform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
+import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
@@ -40,6 +42,7 @@ public class PostService {
     public PagedPostListDto readAll(PostPagingCondition cond) {
         return PagedPostListDto.toDto(postRepository.findAllBySearch(cond));
     }
+
 
     public PostReadResponseDto read(Long id) {
         return PostReadResponseDto.toDto(postRepository.findById(id).orElseThrow(PostNotFoundException::new));
@@ -74,6 +77,14 @@ public class PostService {
         updateImagesToServer(requestDto, responseDto);
 
         return responseDto;
+    }
+
+    @Transactional
+    public void like(Long id, String username) {
+        Member member = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
+        Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+
+        likeUpOrDown(member, post);
     }
 
     // create
@@ -125,4 +136,15 @@ public class PostService {
     private List<PostImage> MultiPartFileToImage(List<MultipartFile> multipartFiles) {
         return multipartFiles.stream().map(i -> new PostImage(i.getOriginalFilename())).collect(Collectors.toList());
     }
+
+    private void likeUpOrDown(Member member, Post post) {
+        if (post.getLikeMembers().contains(member)) {
+            post.likeDown();
+            post.getLikeMembers().remove(member);
+        } else {
+            post.likeUp();
+            post.getLikeMembers().add(member);
+        }
+    }
+
 }

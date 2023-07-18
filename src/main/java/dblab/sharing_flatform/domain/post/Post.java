@@ -65,6 +65,9 @@ public class Post extends BaseTime {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostImage> postImages;
 
+    @OneToMany
+    private List<Member> likeMembers = new ArrayList<>();
+
     public Post(String title, String content, Category category, Item item, List<PostImage> postImages, Member member ,Trade trade) {
         this.title = title;
         this.content = content;
@@ -88,6 +91,14 @@ public class Post extends BaseTime {
         Map<String, List<PostImage>> m = updateImage(requestDto, this.postImages, this);
 
         return PostUpdateResponseDto.toDto(requestDto, this, m);
+    }
+
+    public void likeUp() {
+        this.likes ++;
+    }
+
+    public void likeDown() {
+        this.likes --;
     }
 
     public void addTrade(Trade trade){
