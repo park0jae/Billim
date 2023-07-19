@@ -35,7 +35,7 @@ public class Member {
     private Address address;
     private String provider;
     private String introduce;
-    private double rating;
+    private Double rating;
 
     // roles -> 기본전략 : 지연로딩
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
@@ -45,13 +45,13 @@ public class Member {
     @JoinColumn(name = "profile_image_id")
     private ProfileImage profileImage;
 
-    public Member(String username, String password, String phoneNumber, Address address, String provider,  List<Role> roles, List<Post> posts) {
+    public Member(String username, String password, String phoneNumber, Address address, String provider, List<Role> roles) {
         this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.provider = provider;
-        this.rating = 0;
+        this.rating = 0.0;
         this.profileImage = null;
         addRoles(roles);
     }
@@ -95,5 +95,10 @@ public class Member {
         }
         return existedImageName;
     }
+
+    public void calculateTotalStarRating(Double rating, Long reviewNum) {
+        this.rating = Math.round(((this.rating + rating) / (double) reviewNum) * 10) / 10.0;
+    }
+
 
 }

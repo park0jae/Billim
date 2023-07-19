@@ -14,6 +14,6 @@ public class ReviewRequestDto {
 
     private String content;
 
-    private double starRating;
+    private Double starRating;
 
 }

@@ -11,4 +11,7 @@ import java.util.Optional;
 public interface ReviewRepository extends JpaRepository<Review, Long>, QReviewRepository {
     @Query("select r from Review r join fetch r.member rm where rm.id =:memberId")
     List<Review> findAllWithMemberByMemberId(@Param("memberId") Long memberId);
+
+    @Query("select count(r) from Review r join fetch r.member rm where rm.id =:memberId")
+    Long countByMemberId(@Param("memberId") Long memberId);
 }

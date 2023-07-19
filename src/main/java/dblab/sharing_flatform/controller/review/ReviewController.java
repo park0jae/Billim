@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Api(value = "Review Controller", tags = "Review")
@@ -31,6 +32,7 @@ public class ReviewController {
         Long memberId = Long.valueOf(SecurityUtil.getCurrentUserId().orElseThrow(AccessDeniedException::new));
         return Response.success(reviewService.findCurrentUserReviews(memberId));
     }
+
     @ApiOperation(value = "모든 리뷰 조회 (ADMIN 권한)", notes = "(ADMIN 권한으로) 작성된 모든 리뷰를 조회합니다.")
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
@@ -47,9 +49,9 @@ public class ReviewController {
     @ApiOperation(value = "거래에 대한 리뷰 작성", notes = "거래 번호로 리뷰를 생성합니다.")
     @PostMapping("/{tradeId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Response writeReview(@PathVariable Long tradeId, @RequestBody ReviewRequestDto reviewRequestDto){
-        String memberId = SecurityUtil.getCurrentUserId().orElseThrow(AccessDeniedException::new);
-        return Response.success(reviewService.writeReview(reviewRequestDto, tradeId, Long.valueOf(memberId)));
+    public Response writeReview(@PathVariable Long tradeId, @Valid @RequestBody ReviewRequestDto reviewRequestDto){
+        Long memberId = Long.valueOf(SecurityUtil.getCurrentUserId().orElseThrow(AccessDeniedException::new));
+        return Response.success(reviewService.writeReview(reviewRequestDto, tradeId, memberId));
     }
 
     @ApiOperation(value = "거래에 대해 작성한 리뷰 삭제", notes = "현재 로그인한 유저에게 작성된 리뷰를 조회합니다.")
