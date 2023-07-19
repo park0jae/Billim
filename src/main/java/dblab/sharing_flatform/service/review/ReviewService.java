@@ -50,10 +50,9 @@ public class ReviewService {
                 memberRepository.findByUsername(trade.getBorrowerMember().getUsername()).orElseThrow(MemberNotFoundException::new)
                 );
 
-
-
         reviewRepository.save(review);
         trade.addReview(review);
+
         return ReviewResponseDto.toDto(review);
     }
 
@@ -61,8 +60,8 @@ public class ReviewService {
     public void deleteReview(Long tradeId){
         Trade trade = tradeRepository.findById(tradeId).orElseThrow(TradeNotFoundException::new);
         Review review = reviewRepository.findById(trade.getReview().getId()).orElseThrow(ReviewNotFoundException::new);
+        trade.deleteReview();
 
-        trade.deleteReview(review);
         reviewRepository.delete(review);
     }
 

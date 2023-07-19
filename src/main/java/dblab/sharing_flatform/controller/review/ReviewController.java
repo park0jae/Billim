@@ -51,7 +51,6 @@ public class ReviewController {
         return Response.success(reviewService.writeReview(reviewRequestDto, tradeId));
     }
 
-
     @ApiOperation(value = "거래에 대해 작성한 리뷰 삭제", notes = "현재 로그인한 유저에게 작성된 리뷰를 조회합니다.")
     @DeleteMapping("/{tradeId}")
     @ResponseStatus(HttpStatus.OK)

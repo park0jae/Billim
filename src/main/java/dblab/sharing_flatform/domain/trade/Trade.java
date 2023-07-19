@@ -64,9 +64,8 @@ public class Trade {
 
     public void addReview(Review review) {
         if (this.review == null) {
-            this.review = review;
-            renderMember.addReview(review);
             this.writtenReview = true;
+            this.review = review;
         }
     }
 
@@ -74,10 +73,11 @@ public class Trade {
         this.tradeComplete = value;
     }
 
-    public void deleteReview(Review review){
-        renderMember.getReviews().remove(review);
-        this.writtenReview = false;
-        this.review = null;
+    public void deleteReview(){
+        if (this.review != null) {
+            this.review = null;
+            this.writtenReview = false;
+        }
     }
 }
 

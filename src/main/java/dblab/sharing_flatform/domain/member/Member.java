@@ -28,39 +28,22 @@ public class Member {
 
     @Column(nullable = false, updatable = false)
     private String username;
-
     private String password;
-
     private String phoneNumber;
-
     @Embedded
     @Nullable
     private Address address;
-
     private String provider;
-
     private String introduce;
-
     private double rating;
 
     // roles -> 기본전략 : 지연로딩
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<MemberRole> roles = new ArrayList<>();
 
-    // post
-    @OneToMany(mappedBy = "member")
-    private List<Post> posts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member")
-    private List<LikePost> likePosts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member")
-    private List<Review> reviews;
-
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "profile_image_id")
     private ProfileImage profileImage;
-
 
     public Member(String username, String password, String phoneNumber, Address address, String provider,  List<Role> roles, List<Post> posts) {
         this.username = username;
@@ -68,41 +51,14 @@ public class Member {
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.provider = provider;
-        this.reviews = new ArrayList<>();
         this.rating = 0;
         this.profileImage = null;
-
-        initPosts(posts);
         addRoles(roles);
-    }
-
-    public void calculateTotalStarRating(double rating){
-        this.rating = Math.round(((this.rating + rating) / (double) reviews.size()) * 10) / 10.0;
-    }
-
-    public void addReview(Review review){
-        reviews.add(review);
-        review.addMember(this);
-    }
-
-    public void deleteReview(Review review){
-        reviews.remove(review);
     }
 
     private void addRoles(List<Role> roles) {
         List<MemberRole> roleList = roles.stream().map(role -> new MemberRole(this, role)).collect(Collectors.toList());
         this.roles = roleList;
-    }
-
-    private void initPosts(List<Post> posts) {
-        if (!posts.isEmpty()) {
-            posts.stream().forEach(
-                p -> {
-                    posts.add(p);
-                    p.initMember(this);
-                }
-            );
-        }
     }
 
     public String updateMember(MemberUpdateRequestDto memberUpdateRequestDto, String encodedPassword){

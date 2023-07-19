@@ -2,6 +2,7 @@ package dblab.sharing_flatform.service.member;
 
 
 import dblab.sharing_flatform.domain.member.Member;
+import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.member.MemberDto;
 import dblab.sharing_flatform.dto.member.MemberPrivateDto;
 import dblab.sharing_flatform.dto.member.MemberProfileDto;
@@ -9,8 +10,10 @@ import dblab.sharing_flatform.dto.member.crud.read.request.MemberPagingCondition
 import dblab.sharing_flatform.dto.member.crud.read.response.PagedMemberListDto;
 import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
 import dblab.sharing_flatform.dto.member.crud.update.OAuthMemberUpdateRequestDto;
+import dblab.sharing_flatform.dto.post.PostDto;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.repository.member.MemberRepository;
+import dblab.sharing_flatform.repository.post.PostRepository;
 import dblab.sharing_flatform.service.file.MemberFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -28,6 +33,7 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final PostRepository postRepository;
     private final MemberFileService postFileService;
 
     public MemberPrivateDto readMyInfo(String username){
@@ -39,7 +45,8 @@ public class MemberService {
     }
 
     public MemberProfileDto readMemberProfile(String username) {
-        return MemberProfileDto.toDto(memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new));
+        List<Post> posts = postRepository.findAllWithMemberByUsername(username);
+        return MemberProfileDto.toDto(memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new), PostDto.toDtoList(posts));
     }
 
     public PagedMemberListDto readAll(MemberPagingCondition cond) {

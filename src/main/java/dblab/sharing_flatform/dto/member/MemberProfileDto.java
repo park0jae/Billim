@@ -26,8 +26,13 @@ public class MemberProfileDto {
     private double rating;
     private List<PostDto> posts;
 
-    public static MemberProfileDto toDto(Member member) {
+    public static MemberProfileDto toDto(Member member, List<PostDto> postDtoList) {
         return new MemberProfileDto(
-                ProfileImageDto.toDto(member.getProfileImage()), member.getUsername(), member.getIntroduce(), member.getRoles().get(0).getRole().getRoleType(), member.getRating(), PostDto.toDtoList(member.getPosts()));
+                ProfileImageDto.toDto(member.getProfileImage()),
+                member.getUsername(),
+                member.getIntroduce(),
+                member.getRoles().get(0).getRole().getRoleType(),
+                member.getRating(),
+                postDtoList);
     }
 }

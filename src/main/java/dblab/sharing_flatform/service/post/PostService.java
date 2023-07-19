@@ -153,7 +153,9 @@ public class PostService {
     }
 
     private void likeUpOrDown(Member member, Post post) {
-        List<LikePost> likePosts = post.getLikePosts();
+
+        List<LikePost> likePosts = likePostRepository.findAllByPostId(post.getId());
+
         Optional<LikePost> likePost = validateAlreadyLikeUp(member, likePosts);
 
         if (likePost.isPresent()) {

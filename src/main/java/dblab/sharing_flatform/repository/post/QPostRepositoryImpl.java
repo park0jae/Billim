@@ -1,15 +1,11 @@
 package dblab.sharing_flatform.repository.post;
 
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import dblab.sharing_flatform.domain.post.Post;
-import dblab.sharing_flatform.domain.post.QPost;
 import dblab.sharing_flatform.dto.post.PostDto;
 import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -18,10 +14,7 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
-import java.sql.Driver;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 import static com.querydsl.core.types.Projections.constructor;
 import static dblab.sharing_flatform.domain.post.QPost.post;

@@ -105,7 +105,6 @@ public class ReviewRepositoryTest {
 
         // then
         assertThat(reviewRepository.count()).isEqualTo(1);
-        assertThat(reviewRepository.findById(member.getReviews().get(0).getId()).get().getContent()).isEqualTo("테스트 리뷰입니다.");
         assertThat(reviewRepository.findById(trade.getReview().getId()).get().getContent()).isEqualTo("테스트 리뷰입니다.");
     }
 
@@ -128,13 +127,12 @@ public class ReviewRepositoryTest {
         reviewInit();
 
         // when
-        trade.deleteReview(review);
+        trade.deleteReview();
         reviewRepository.delete(review);
         clear();
 
         // then
         assertThat(reviewRepository.count()).isEqualTo(0);
-        assertThat(member.getReviews().size()).isEqualTo(0);
         assertThat(trade.getReview()).isNull();
     }
 
