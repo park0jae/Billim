@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface TradeRepository extends JpaRepository<Trade, Long> {
 
-    @Query("select t from Trade t join fetch t.post tp where tp.id =:postId")
+    @Query("select t from Trade t join fetch t.post p where p.id =:postId")
     Optional<Trade> findByPostId(@Param("postId") Long postId);
 
     @Query("select t from Trade t join fetch t.review tr")

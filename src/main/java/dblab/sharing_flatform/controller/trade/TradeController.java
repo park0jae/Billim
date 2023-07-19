@@ -19,7 +19,6 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/trade")
 public class TradeController {
-
     private final TradeService tradeService;
 
     @ApiOperation(value = "Post ID로 Trade 생성", notes = "게시글 ID로 Trade를 생성합니다.")
@@ -32,6 +31,7 @@ public class TradeController {
 
     @ApiOperation(value = "Trade ID로 Trade 완료", notes = "거래 ID로 Trade를 완료합니다.")
     @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public Response completeTrade(@PathVariable Long id){
         return Response.success(tradeService.completeTrade(id));
     }
@@ -49,7 +49,6 @@ public class TradeController {
     public Response findAllTrade(){
         return Response.success(tradeService.findAllTrade());
     }
-
 
     @ApiOperation(value = "Trade ID로 거래를 취소", notes = "Trade ID로 거래를 조회합니다.")
     @DeleteMapping("/{id}")

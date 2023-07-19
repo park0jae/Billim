@@ -9,6 +9,7 @@ import dblab.sharing_flatform.exception.auth.LoginFailureException;
 import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
 import dblab.sharing_flatform.exception.comment.CommentNotFoundException;
 import dblab.sharing_flatform.exception.comment.RootCommentNotFoundException;
+import dblab.sharing_flatform.exception.guard.GuardException;
 import dblab.sharing_flatform.exception.image.NoExtException;
 import dblab.sharing_flatform.exception.image.UnSupportExtException;
 import dblab.sharing_flatform.exception.member.DuplicateUsernameException;
@@ -179,7 +180,6 @@ public class ExceptionAdvisor {
         return Response.failure(404, "상위 댓글이 존재하지 않습니다.");
     }
 
-
     // trade
     @ExceptionHandler(TradeNotFoundException.class)
     public Response TradeNotFoundException(TradeNotFoundException e) {
@@ -217,6 +217,11 @@ public class ExceptionAdvisor {
         return Response.failure(409, "해당 거래에 대한 리뷰가 이미 존재합니다.");
     }
 
-
+    // Guard Exception
+    @ExceptionHandler(GuardException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response guardException(GuardException e) {
+        return Response.failure(400, "비정상적인 접근입니다.");
+    }
 
 }

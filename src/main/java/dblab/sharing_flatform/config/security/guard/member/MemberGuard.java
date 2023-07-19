@@ -3,6 +3,7 @@ package dblab.sharing_flatform.config.security.guard.member;
 import dblab.sharing_flatform.config.security.guard.Guard;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.exception.auth.AccessDeniedException;
+import dblab.sharing_flatform.exception.guard.GuardException;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.config.security.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class MemberGuard extends Guard {
 
     @Override
     protected boolean isResourceOwner(Long id) {
-        Member member = memberRepository.findById(id).orElseThrow(AccessDeniedException::new);
+        Member member = memberRepository.findById(id).orElseThrow(GuardException::new);
         Long memberId = Long.valueOf(SecurityUtil.getCurrentUserId().get());
 
         return memberId.equals(id);

@@ -4,8 +4,10 @@ import dblab.sharing_flatform.config.security.util.SecurityUtil;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.review.Review;
 import dblab.sharing_flatform.domain.trade.Trade;
+import dblab.sharing_flatform.dto.review.ReviewDto;
 import dblab.sharing_flatform.dto.review.crud.create.ReviewRequestDto;
 import dblab.sharing_flatform.dto.review.crud.create.ReviewResponseDto;
+import dblab.sharing_flatform.dto.review.crud.read.request.ReviewPagingCondition;
 import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.review.ExistReviewException;
@@ -16,6 +18,7 @@ import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.review.ReviewRepository;
 import dblab.sharing_flatform.repository.trade.TradeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +29,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ReviewService {
-
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
     private final TradeRepository tradeRepository;
@@ -57,8 +59,8 @@ public class ReviewService {
     }
 
     @Transactional
-    public void deleteReview(Long id){
-        Trade trade = tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new);
+    public void deleteReview(Long tradeId){
+        Trade trade = tradeRepository.findById(tradeId).orElseThrow(TradeNotFoundException::new);
         Review review = reviewRepository.findById(trade.getReview().getId()).orElseThrow(ReviewNotFoundException::new);
 
         memberRepository.findById(trade.getRenderMember().getId()).orElseThrow(MemberNotFoundException::new).deleteReview(review);
@@ -70,13 +72,11 @@ public class ReviewService {
         return reviewRepository.findAll().stream().map(review -> ReviewResponseDto.toDto(review)).collect(Collectors.toList());
     }
 
-    public List<ReviewResponseDto> findCurrentUserReviews(){
-        String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        return reviewRepository.findAllByMember(username).stream().map(review -> ReviewResponseDto.toDto(review)).collect(Collectors.toList());
+    public List<ReviewResponseDto> findCurrentUserReviews(Long memberId){
+        return reviewRepository.findAllWithMemberByMemberId(memberId).stream().map(review -> ReviewResponseDto.toDto(review)).collect(Collectors.toList());
     }
 
-    public List<ReviewResponseDto> findReviewsById(Long id){
-        Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
-        return reviewRepository.findAllByMember(member.getUsername()).stream().map(review -> ReviewResponseDto.toDto(review)).collect(Collectors.toList());
+    public Page<ReviewDto> findAllReviewsByUsername(ReviewPagingCondition cond){
+        return reviewRepository.findAllByUsername(cond);
     }
 }

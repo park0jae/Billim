@@ -136,7 +136,7 @@ class PostRepositoryTest {
         PostPagingCondition cond = new PostPagingCondition(0, 10, "category1", "title");
 
         //when
-        Page<PostDto> result = postRepository.findAllBySearch(cond);
+        Page<PostDto> result = postRepository.findAllByCategoryAndTitle(cond);
 
         //then
         assertThat(result.getTotalElements()).isEqualTo(1);

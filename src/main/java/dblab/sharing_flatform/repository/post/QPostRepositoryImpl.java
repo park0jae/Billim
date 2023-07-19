@@ -29,6 +29,7 @@ import static dblab.sharing_flatform.domain.post.QPost.post;
 
 @Repository
 public class QPostRepositoryImpl extends QuerydslRepositorySupport implements QPostRepository {
+
     private final JPAQueryFactory query;
 
     public QPostRepositoryImpl(JPAQueryFactory query) {

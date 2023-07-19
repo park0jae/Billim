@@ -3,6 +3,7 @@ package dblab.sharing_flatform.domain.post;
 import dblab.sharing_flatform.domain.base.BaseTime;
 import dblab.sharing_flatform.domain.category.Category;
 import dblab.sharing_flatform.domain.image.PostImage;
+import dblab.sharing_flatform.domain.likepost.LikePost;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.embedded.item.Item;
 import dblab.sharing_flatform.domain.trade.Trade;
@@ -65,9 +66,8 @@ public class Post extends BaseTime {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostImage> postImages;
 
-    @OneToMany
-    @JoinColumn(name = "post_id")
-    private List<Member> likeMembers = new ArrayList<>();
+    @OneToMany(mappedBy = "post")
+    private List<LikePost> likePosts = new ArrayList<>();
 
     public Post(String title, String content, Category category, Item item, List<PostImage> postImages, Member member ,Trade trade) {
         this.title = title;

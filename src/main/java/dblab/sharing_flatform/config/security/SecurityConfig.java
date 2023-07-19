@@ -53,6 +53,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtExceptionFilter, JwtFilter.class)
                 .userDetailsService(memberDetailsService) // 시큐리티 UserDetailsService
 
+
                 .authorizeRequests() // 권한이 필요한 요청
                 .antMatchers("/home", "/sign-up", "/login").permitAll() // 홈, 회원가입, 로그인 요청은 권한 필요X
                 .antMatchers("/swagger-uri/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll() // swagger page
@@ -85,10 +86,10 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.DELETE, "/trade/{id}").access("@tradeGuard.check(#id)")
 
                 // 리뷰 조회, 작성, 삭제 - 소유주 , ADMIN
-                .antMatchers(HttpMethod.GET, "/review/{id}").hasAnyAuthority("ADMIN", "MANAGER", "USER")
-                .antMatchers(HttpMethod.GET, "/review").access("@reviewGuard.check(#id)")
-                .antMatchers(HttpMethod.POST, "/review/{id}").access("@reviewGuard.check(#id)")
-                .antMatchers(HttpMethod.DELETE, "/review/{id}").access("@reviewGuard.check(#id)")
+                .antMatchers(HttpMethod.GET, "/review/all").hasAnyAuthority("ADMIN", "MANAGER") // 모든 리뷰 조회
+                .antMatchers(HttpMethod.GET, "/review").hasAnyAuthority("ADMIN", "MANAGER", "USER")
+                .antMatchers(HttpMethod.POST, "/review/{tradeId}").access("@reviewGuard.check(#tradeId)")
+                .antMatchers(HttpMethod.DELETE, "/review/{tradeId}").access("@reviewGuard.check(#tradeId)")
 
 
                 .and()

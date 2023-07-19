@@ -1,6 +1,8 @@
 package dblab.sharing_flatform.config.security.jwt.filter;
 
 import dblab.sharing_flatform.exception.ValidateTokenException;
+import dblab.sharing_flatform.exception.auth.AccessDeniedException;
+import dblab.sharing_flatform.exception.guard.GuardException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -21,6 +23,9 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (ValidateTokenException e) {
             response.sendRedirect("/exception/invalid-token");
+            return;
+        } catch (GuardException e) {
+            response.sendRedirect("/exception/guard");
             return;
         }
     }

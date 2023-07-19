@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -149,14 +150,23 @@ public class PostService {
     }
 
     private void likeUpOrDown(Member member, Post post) {
-        if (post.getLikeMembers().contains(member)) {
+        List<LikePost> likePosts = post.getLikePosts();
+        Optional<LikePost> likePost = validateAlreadyLikeUp(member, likePosts);
+
+        if (likePost.isPresent()) {
             post.likeDown();
-            post.getLikeMembers().remove(member);
+            likePosts.remove(likePost.get());
             likePostRepository.deleteByMemberIdAndPostId(member.getId(), post.getId());
         } else {
             post.likeUp();
-            post.getLikeMembers().add(member);
+            likePosts.add(new LikePost(member, post));
             likePostRepository.save(new LikePost(member, post));
         }
+    }
+
+    private Optional<LikePost> validateAlreadyLikeUp(Member member, List<LikePost> likePosts) {
+        return likePosts.stream()
+                .filter(lp -> lp.getMember().equals(member))
+                .findFirst();
     }
 }

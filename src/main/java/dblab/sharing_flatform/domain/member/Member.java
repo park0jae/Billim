@@ -2,6 +2,7 @@ package dblab.sharing_flatform.domain.member;
 
 import dblab.sharing_flatform.domain.embedded.address.Address;
 import dblab.sharing_flatform.domain.image.ProfileImage;
+import dblab.sharing_flatform.domain.likepost.LikePost;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.review.Review;
 import dblab.sharing_flatform.domain.role.Role;
@@ -51,11 +52,15 @@ public class Member {
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
+    private List<LikePost> likePosts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
     private List<Review> reviews;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "profile_image_id")
     private ProfileImage profileImage;
+
 
     public Member(String username, String password, String phoneNumber, Address address, String provider,  List<Role> roles, List<Post> posts) {
         this.username = username;
