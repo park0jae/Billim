@@ -97,5 +97,4 @@ public class PostServiceTest {
         assertThat(result.getTitle()).isEqualTo("업데이트 타이틀");
     }
 
-
 }

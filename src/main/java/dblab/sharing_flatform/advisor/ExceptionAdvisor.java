@@ -194,10 +194,8 @@ public class ExceptionAdvisor {
     @ExceptionHandler(ExistTradeException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public Response ExistTradeException(ExistTradeException e) {
-        return Response.failure(409, "해당 거래가 이미 진행되었습니다.");
+        return Response.failure(409, "해당 거래가 이미 진행중입니다.");
     }
-
-
 
     // review
     @ExceptionHandler(ImpossibleWriteReviewException.class)
