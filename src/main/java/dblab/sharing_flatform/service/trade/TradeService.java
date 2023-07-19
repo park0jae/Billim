@@ -39,13 +39,7 @@ public class TradeService {
         Member borrower = memberRepository.findByUsername(tradeRequestDto.getBorrowerName()).orElseThrow(MemberNotFoundException::new);
         Member render = memberRepository.findByUsername(tradeRequestDto.getRenderName()).orElseThrow(MemberNotFoundException::new);
 
-        tradeRepository.findByPostId(id).ifPresent(e -> {
-            throw new ExistTradeException();
-        });
-
-        if (render.getUsername().equals(borrower.getUsername())) {
-            throw new ImpossibleCreateTradeException();
-        }
+        validateCreateTrade(id, borrower, render);
 
         Trade trade = tradeRepository.save(
                 new Trade(render,
@@ -75,5 +69,14 @@ public class TradeService {
     public void deleteTrade(Long id) {
         Trade trade = tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new);
         tradeRepository.delete(trade);
+    }
+
+    private void validateCreateTrade(Long id, Member borrower, Member render) {
+        tradeRepository.findByPostId(id).ifPresent(e -> {
+            throw new ExistTradeException();
+        });
+        if (render.getUsername().equals(borrower.getUsername())) {
+            throw new ImpossibleCreateTradeException();
+        }
     }
 }
