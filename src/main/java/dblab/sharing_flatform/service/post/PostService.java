@@ -7,6 +7,7 @@ import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.item.crud.create.ItemCreateRequestDto;
 import dblab.sharing_flatform.dto.post.PostDto;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
+import dblab.sharing_flatform.dto.post.crud.create.PostCreateResponseDto;
 import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
 import dblab.sharing_flatform.dto.post.crud.read.response.PagedPostListDto;
 import dblab.sharing_flatform.dto.post.crud.read.response.PostReadResponseDto;
@@ -62,16 +63,18 @@ public class PostService {
 
     // create
     @Transactional
-    public void create(PostCreateRequestDto requestDto) {
+    public PostCreateResponseDto create(PostCreateRequestDto requestDto) {
         List<PostImage> postImages = getImages(requestDto);
 
-        postRepository.save(new Post(requestDto.getTitle(),
+        Post post = postRepository.save(new Post(requestDto.getTitle(),
                 requestDto.getContent(),
                 categoryRepository.findByName(requestDto.getCategoryName()).orElseThrow(CategoryNotFoundException::new),
                 requestDto.getItemCreateRequestDto() != null ? ItemCreateRequestDto.toEntity(requestDto.getItemCreateRequestDto()) : null,
                 postImages,
                 memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new),
                 null));
+
+        return PostCreateResponseDto.toDto(post);
     }
 
     @Transactional

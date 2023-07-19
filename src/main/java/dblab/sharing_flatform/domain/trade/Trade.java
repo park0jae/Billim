@@ -65,17 +65,19 @@ public class Trade {
     public void addReview(Review review) {
         if (this.review == null) {
             this.review = review;
+            renderMember.addReview(review);
+            this.writtenReview = true;
         }
     }
 
     public void isTradeComplete(boolean value){
         this.tradeComplete = value;
     }
-    public void isWrittenReview(boolean value){
-        this.writtenReview = value;
-        if(value == false){
-            this.review = null;
-        }
+
+    public void deleteReview(Review review){
+        renderMember.getReviews().remove(review);
+        this.writtenReview = false;
+        this.review = null;
     }
 }
 

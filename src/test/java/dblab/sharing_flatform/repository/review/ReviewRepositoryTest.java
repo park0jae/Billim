@@ -1,14 +1,15 @@
-package dblab.sharing_flatform.repository.trade;
+package dblab.sharing_flatform.repository.review;
 
 import dblab.sharing_flatform.config.querydsl.QuerydslConfig;
 import dblab.sharing_flatform.domain.category.Category;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
+import dblab.sharing_flatform.domain.review.Review;
 import dblab.sharing_flatform.domain.trade.Trade;
-import dblab.sharing_flatform.exception.trade.TradeNotFoundException;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
+import dblab.sharing_flatform.repository.trade.TradeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import org.springframework.context.annotation.Import;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import java.time.LocalDate;
 
 import static dblab.sharing_flatform.factory.category.CategoryFactory.createCategory;
@@ -28,8 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @Import(QuerydslConfig.class)
-public class TradeRepositoryTest {
-
+public class ReviewRepositoryTest {
     @PersistenceContext
     EntityManager em;
 
@@ -45,11 +44,16 @@ public class TradeRepositoryTest {
     @Autowired
     CategoryRepository categoryRepository;
 
+    @Autowired
+    ReviewRepository reviewRepository;
+
     Post post;
     Trade trade;
     Member member;
     Member borrowerMember;
     Category category;
+    Review review;
+
 
     @BeforeEach
     public void beforeEach(){
@@ -57,10 +61,11 @@ public class TradeRepositoryTest {
         tradeRepository.deleteAll();
         memberRepository.deleteAll();
         categoryRepository.deleteAll();
+        reviewRepository.deleteAll();
     }
 
     // 멤버에 대한 글 하나가 만들어 진거임.
-    public void tradeInit(){
+    public void reviewInit(){
         // 대여자
         member = createRenderMember();
         memberRepository.save(member);
@@ -85,60 +90,56 @@ public class TradeRepositoryTest {
         trade = new Trade(member, borrowerMember, LocalDate.now(), LocalDate.now(), post);
         tradeRepository.save(trade);
         clear();
-    }
 
-    @Test
-    public void tradeSaveTest(){
-        // given
-        tradeInit();
-
-        // then
-        assertThat(tradeRepository.count()).isEqualTo(1);
-        assertThat(postRepository.findById(post.getId()).get().getTrade().getId()).isEqualTo(trade.getId());
-
-    }
-
-    @Test
-    public void deleteCascadePost() {
-        //given
-        tradeInit();
-
-        // when
-        postRepository.delete(post);
+        // 리뷰 생성
+        review = new Review("테스트 리뷰입니다.", 4.5, member, borrowerMember);
+        trade.addReview(review);
+        reviewRepository.save(review);
         clear();
+    }
+
+    @Test
+    public void reviewSaveTest(){
+        // given
+        reviewInit();
 
         // then
-        assertThat(tradeRepository.findAll().size()).isEqualTo(0);
+        assertThat(reviewRepository.count()).isEqualTo(1);
+        assertThat(reviewRepository.findById(member.getReviews().get(0).getId()).get().getContent()).isEqualTo("테스트 리뷰입니다.");
+        assertThat(reviewRepository.findById(trade.getReview().getId()).get().getContent()).isEqualTo("테스트 리뷰입니다.");
     }
 
     @Test
     public void deleteCascadeMember(){
         //given
-        tradeInit();
+        reviewInit();
 
         // when
         memberRepository.delete(member);
         clear();
 
         // then
-        assertThat(tradeRepository.count()).isEqualTo(0);
+        assertThat(reviewRepository.count()).isEqualTo(0);
     }
 
     @Test
-    public void findTradeByPostId(){
-        //given
-        tradeInit();
+    public void deleteReviewTest(){
+        // given
+        reviewInit();
 
         // when
-        Trade findTrade = tradeRepository.findByPostId(post.getId()).orElseThrow(TradeNotFoundException::new);
+        trade.deleteReview(review);
+        reviewRepository.delete(review);
+        clear();
 
         // then
-        assertThat(findTrade.getPost().getId()).isEqualTo(post.getId());
+        assertThat(reviewRepository.count()).isEqualTo(0);
+        assertThat(member.getReviews().size()).isEqualTo(0);
+        assertThat(trade.getReview()).isNull();
     }
 
     public void clear(){
         em.flush();
         em.clear();
     }
-
 }
