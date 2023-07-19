@@ -25,6 +25,7 @@ import dblab.sharing_flatform.exception.review.ReviewNotFoundException;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
 import dblab.sharing_flatform.exception.trade.ExistTradeException;
 import dblab.sharing_flatform.exception.trade.ImpossibleCreateTradeException;
+import dblab.sharing_flatform.exception.trade.TradeNotCompleteException;
 import dblab.sharing_flatform.exception.trade.TradeNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -171,26 +172,36 @@ public class ExceptionAdvisor {
 
     // comment
     @ExceptionHandler(CommentNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response commentNotFoundException(CommentNotFoundException e) {
         return Response.failure(404, "존재하지 않는 댓글입니다.");
     }
 
     @ExceptionHandler(RootCommentNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response rootCommentNotFoundException(RootCommentNotFoundException e) {
         return Response.failure(404, "상위 댓글이 존재하지 않습니다.");
     }
 
     // trade
-    @ExceptionHandler(TradeNotFoundException.class)
-    public Response TradeNotFoundException(TradeNotFoundException e) {
-        return Response.failure(404, "거래 내역이 존재하지 않습니다.");
+    @ExceptionHandler(TradeNotCompleteException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response tradeNotCompleteException(TradeNotCompleteException e) {
+        return Response.failure(400, "완료되지 않은 거래에 대해서는 리뷰 작성이 불가능합니다. 거래를 완료해주세요.");
     }
 
     @ExceptionHandler(ImpossibleCreateTradeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Response ImpossibleCreateTradeException(ImpossibleCreateTradeException e) {
+    public Response impossibleCreateTradeException(ImpossibleCreateTradeException e) {
         return Response.failure(400, "거래를 시작할 수 없습니다.");
     }
+
+    @ExceptionHandler(TradeNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response tradeNotFoundException(TradeNotFoundException e) {
+        return Response.failure(404, "거래 내역이 존재하지 않습니다.");
+    }
+
     @ExceptionHandler(ExistTradeException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public Response ExistTradeException(ExistTradeException e) {
@@ -200,18 +211,19 @@ public class ExceptionAdvisor {
     // review
     @ExceptionHandler(ImpossibleWriteReviewException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Response ImpossibleWriteReviewException(ImpossibleWriteReviewException e) {
-        return Response.failure(400, "리뷰 작성이 불가능합니다. 거래를 완료해주세요.");
+    public Response impossibleWriteReviewException(ImpossibleWriteReviewException e) {
+        return Response.failure(400, "해당 거래에 대해 리뷰를 작성할 권한이 없습니다.");
     }
 
     @ExceptionHandler(ReviewNotFoundException.class)
-    public Response ReviewNotFoundException(ReviewNotFoundException e) {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response reviewNotFoundException(ReviewNotFoundException e) {
         return Response.failure(404, "리뷰가 존재하지 않습니다.");
     }
 
     @ExceptionHandler(ExistReviewException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public Response ExistReviewException(ExistReviewException e) {
+    public Response existReviewException(ExistReviewException e) {
         return Response.failure(409, "해당 거래에 대한 리뷰가 이미 존재합니다.");
     }
 

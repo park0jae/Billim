@@ -48,7 +48,8 @@ public class ReviewController {
     @PostMapping("/{tradeId}")
     @ResponseStatus(HttpStatus.CREATED)
     public Response writeReview(@PathVariable Long tradeId, @RequestBody ReviewRequestDto reviewRequestDto){
-        return Response.success(reviewService.writeReview(reviewRequestDto, tradeId));
+        String memberId = SecurityUtil.getCurrentUserId().orElseThrow(AccessDeniedException::new);
+        return Response.success(reviewService.writeReview(reviewRequestDto, tradeId, Long.valueOf(memberId)));
     }
 
     @ApiOperation(value = "거래에 대해 작성한 리뷰 삭제", notes = "현재 로그인한 유저에게 작성된 리뷰를 조회합니다.")

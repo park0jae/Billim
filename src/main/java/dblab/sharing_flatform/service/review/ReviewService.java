@@ -13,6 +13,7 @@ import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.review.ExistReviewException;
 import dblab.sharing_flatform.exception.review.ImpossibleWriteReviewException;
 import dblab.sharing_flatform.exception.review.ReviewNotFoundException;
+import dblab.sharing_flatform.exception.trade.TradeNotCompleteException;
 import dblab.sharing_flatform.exception.trade.TradeNotFoundException;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.review.ReviewRepository;
@@ -34,22 +35,16 @@ public class ReviewService {
     private final TradeRepository tradeRepository;
 
     @Transactional
-    public ReviewResponseDto writeReview(ReviewRequestDto reviewRequestDto, Long id){
-        Trade trade = tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new);
+    public ReviewResponseDto writeReview(ReviewRequestDto reviewRequestDto, Long tradeId, Long memberId){
+        Trade trade = tradeRepository.findById(tradeId).orElseThrow(TradeNotFoundException::new);
 
-        if (trade.isTradeComplete() == false || !SecurityUtil.getCurrentUsername().get().equals(trade.getBorrowerMember().getUsername())) {
-            throw new ImpossibleWriteReviewException();
-        }
-        if (trade.isWrittenReview()) {
-            throw new ExistReviewException();
-        }
+        validate(memberId, trade);
 
         Review review = new Review(reviewRequestDto.getContent(),
                 reviewRequestDto.getStarRating(),
                 memberRepository.findByUsername(trade.getRenderMember().getUsername()).orElseThrow(MemberNotFoundException::new),
                 memberRepository.findByUsername(trade.getBorrowerMember().getUsername()).orElseThrow(MemberNotFoundException::new)
                 );
-
         reviewRepository.save(review);
         trade.addReview(review);
 
@@ -76,4 +71,19 @@ public class ReviewService {
     public Page<ReviewDto> findAllReviewsByUsername(ReviewPagingCondition cond){
         return reviewRepository.findAllByUsername(cond);
     }
+
+    private void validate(Long memberId, Trade trade) {
+        if (!memberId.equals(trade.getBorrowerMember().getId())) {
+            throw new ImpossibleWriteReviewException();
+        }
+
+        if (trade.isTradeComplete() == false) {
+            throw new TradeNotCompleteException();
+        }
+
+        if (trade.isWrittenReview()) {
+            throw new ExistReviewException();
+        }
+    }
+
 }
