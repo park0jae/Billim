@@ -37,20 +37,19 @@ public class ReviewService {
     @Transactional
     public ReviewResponseDto writeReview(ReviewRequestDto reviewRequestDto, Long tradeId, Long memberId){
         Trade trade = tradeRepository.findById(tradeId).orElseThrow(TradeNotFoundException::new);
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        Member writeMember = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        Member reviewerMember = memberRepository.findById(trade.getRenderMember().getId()).orElseThrow(MemberNotFoundException::new);
 
         validate(memberId, trade);
 
         Review review = new Review(reviewRequestDto.getContent(),
                 reviewRequestDto.getStarRating(),
-                member,
-                memberRepository.findById(trade.getRenderMember().getId()).orElseThrow(MemberNotFoundException::new));
+                writeMember,
+                reviewerMember);
 
         reviewRepository.save(review);
         trade.addReview(review);
-
-        // member Rating 계산
-        member.calculateTotalStarRating(reviewRequestDto.getStarRating(), reviewRepository.countByMemberId(trade.getRenderMember().getId()));
+        reviewerMember.calculateTotalStarRating(reviewRequestDto.getStarRating(), reviewRepository.countByMemberId(trade.getRenderMember().getId()));
 
         return ReviewResponseDto.toDto(review);
     }
