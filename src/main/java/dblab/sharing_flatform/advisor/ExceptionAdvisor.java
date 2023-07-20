@@ -223,7 +223,7 @@ public class ExceptionAdvisor {
 
     @ExceptionHandler(ExistReviewException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public Response existReviewException(ExistReviewException e) {
+    public Response ExistReviewException(ExistReviewException e) {
         return Response.failure(409, "해당 거래에 대한 리뷰가 이미 존재합니다.");
     }
 

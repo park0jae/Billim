@@ -4,6 +4,7 @@ import dblab.sharing_flatform.domain.image.PostImage;
 import dblab.sharing_flatform.domain.likepost.LikePost;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
+import dblab.sharing_flatform.domain.trade.Trade;
 import dblab.sharing_flatform.dto.item.crud.create.ItemCreateRequestDto;
 import dblab.sharing_flatform.dto.post.PostDto;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
@@ -65,13 +66,13 @@ public class PostService {
     public PostCreateResponseDto create(PostCreateRequestDto requestDto) {
         List<PostImage> postImages = getImages(requestDto);
 
-        Post post = postRepository.save(new Post(requestDto.getTitle(),
-                requestDto.getContent(),
+        Post post = new Post(requestDto.getTitle(), requestDto.getContent(),
                 categoryRepository.findByName(requestDto.getCategoryName()).orElseThrow(CategoryNotFoundException::new),
                 requestDto.getItemCreateRequestDto() != null ? ItemCreateRequestDto.toEntity(requestDto.getItemCreateRequestDto()) : null,
                 postImages,
-                memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new),
-                null));
+                memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new), null);
+
+        postRepository.save(post);
 
         return PostCreateResponseDto.toDto(post);
     }

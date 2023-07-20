@@ -97,5 +97,4 @@ public class Member {
         this.rating = Math.round(((this.rating + rating) / (double) reviewNum) * 10) / 10.0;
     }
 
-
 }

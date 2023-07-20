@@ -17,6 +17,7 @@ import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.review.ReviewRepository;
 import dblab.sharing_flatform.repository.trade.TradeRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+@Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
@@ -36,20 +39,20 @@ public class ReviewService {
     @Transactional
     public ReviewResponseDto writeReview(ReviewRequestDto reviewRequestDto, Long tradeId, Long memberId){
         Trade trade = tradeRepository.findById(tradeId).orElseThrow(TradeNotFoundException::new);
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        Member writeMember = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        Member reviewerMember = memberRepository.findById(trade.getRenderMember().getId()).orElseThrow(MemberNotFoundException::new);
 
         validate(memberId, trade);
 
         Review review = new Review(reviewRequestDto.getContent(),
                 reviewRequestDto.getStarRating(),
-                member,
-                memberRepository.findById(trade.getRenderMember().getId()).orElseThrow(MemberNotFoundException::new));
+                writeMember,
+                reviewerMember);
 
         reviewRepository.save(review);
         trade.addReview(review);
+        reviewerMember.calculateTotalStarRating(reviewRequestDto.getStarRating(), reviewRepository.countByMemberId(trade.getRenderMember().getId()));
 
-        // member Rating 계산
-        member.calculateTotalStarRating(reviewRequestDto.getStarRating(), reviewRepository.countByMemberId(memberId));
         return ReviewResponseDto.toDto(review);
     }
 
@@ -76,7 +79,7 @@ public class ReviewService {
     }
 
     private void validate(Long memberId, Trade trade) {
-        if (!memberId.equals(trade.getBorrowerMember().getId())) {
+        if (!memberId.equals(trade.getBorrowerMember().getId()) || trade.isTradeComplete() == false) {
             throw new ImpossibleWriteReviewException();
         }
 

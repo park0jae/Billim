@@ -61,6 +61,7 @@ public class Post extends BaseTime {
     private Member member;
 
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Nullable
     private Trade trade;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
