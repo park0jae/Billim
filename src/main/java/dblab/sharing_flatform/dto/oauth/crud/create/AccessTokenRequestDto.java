@@ -1,6 +1,5 @@
 package dblab.sharing_flatform.dto.oauth.crud.create;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
 @Getter

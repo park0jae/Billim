@@ -17,7 +17,6 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 import static com.querydsl.core.types.Projections.constructor;
-import static dblab.sharing_flatform.domain.post.QPost.post;
 import static dblab.sharing_flatform.domain.review.QReview.review;
 
 @Repository

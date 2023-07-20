@@ -1,6 +1,5 @@
 package dblab.sharing_flatform.service.review;
 
-import dblab.sharing_flatform.config.security.util.SecurityUtil;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.review.Review;
 import dblab.sharing_flatform.domain.trade.Trade;
@@ -8,7 +7,6 @@ import dblab.sharing_flatform.dto.review.ReviewDto;
 import dblab.sharing_flatform.dto.review.crud.create.ReviewRequestDto;
 import dblab.sharing_flatform.dto.review.crud.create.ReviewResponseDto;
 import dblab.sharing_flatform.dto.review.crud.read.request.ReviewPagingCondition;
-import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.review.ExistReviewException;
 import dblab.sharing_flatform.exception.review.ImpossibleWriteReviewException;
