@@ -9,19 +9,19 @@ import java.util.List;
 public class MemberFactory {
 
     public static Member createMember() {
-        return new Member("username", "password", "phoneNum", createAddress(), "None", List.of(), List.of());
+        return new Member("username", "password", "phoneNum", createAddress(), "None", List.of());
     }
 
     public static Member createMemberWithRoles(List<Role> roles) {
-        return new Member("username", "password", "phoneNum", createAddress(),"None", roles, List.of());
+        return new Member("username", "password", "phoneNum", createAddress(),"None", roles);
     }
 
     public static Member createSendMember() {
-        return new Member("sender", "", "", createAddress(), "None",List.of(), List.of());
+        return new Member("sender", "", "", createAddress(), "None",List.of());
     }
 
     public static Member createReceiveMember() {
-        return new Member("receiver", "", "", createAddress(), "None",List.of(), List.of());
+        return new Member("receiver", "", "", createAddress(), "None",List.of());
     }
 
     public static Address createAddress() {
@@ -29,11 +29,11 @@ public class MemberFactory {
     }
 
     public static Member createRenderMember() {
-        return new Member("빌려주는사람", "", "", createAddress(), "None", List.of(), List.of());
+        return new Member("빌려주는사람", "", "", createAddress(), "None", List.of());
     }
 
     public static Member createBorrowerMember() {
-        return new Member("빌리는사람", "", "", createAddress(), "None", List.of(), List.of());
+        return new Member("빌리는사람", "", "", createAddress(), "None", List.of());
     }
 
 }
