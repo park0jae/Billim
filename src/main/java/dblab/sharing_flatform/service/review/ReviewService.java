@@ -17,6 +17,7 @@ import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.review.ReviewRepository;
 import dblab.sharing_flatform.repository.trade.TradeRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -48,7 +50,8 @@ public class ReviewService {
         trade.addReview(review);
 
         // member Rating 계산
-        member.calculateTotalStarRating(reviewRequestDto.getStarRating(), reviewRepository.countByMemberId(memberId));
+        member.calculateTotalStarRating(reviewRequestDto.getStarRating(), reviewRepository.countByMemberId(trade.getRenderMember().getId()));
+
         return ReviewResponseDto.toDto(review);
     }
 
