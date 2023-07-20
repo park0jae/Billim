@@ -6,8 +6,6 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.ArrayList;
-import java.util.List;
 
 @AllArgsConstructor
 @Data

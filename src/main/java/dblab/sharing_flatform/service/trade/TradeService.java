@@ -1,9 +1,6 @@
 package dblab.sharing_flatform.service.trade;
 
-
-import dblab.sharing_flatform.config.security.util.SecurityUtil;
 import dblab.sharing_flatform.domain.member.Member;
-import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.trade.Trade;
 import dblab.sharing_flatform.dto.trade.crud.create.TradeRequestDto;
 import dblab.sharing_flatform.dto.trade.crud.create.TradeResponseDto;
@@ -21,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j

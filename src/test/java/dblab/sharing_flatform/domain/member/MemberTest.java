@@ -35,25 +35,12 @@ class MemberTest {
         Address address = new Address("TestCity", "TestDistrict", "TestStreet", "TestZipcode");
 
         //when
-        member.updateMember(new MemberUpdateRequestDto(member.getPassword(), phoneNumber, address, introduce, null), member.getPassword());
+        member.updateMember(new MemberUpdateRequestDto(password, phoneNumber, address, introduce, null), password);
 
         //then
+        assertThat(member.getPassword()).isEqualTo(password);
         assertThat(member.getPhoneNumber()).isEqualTo(phoneNumber);
         assertThat(member.getAddress()).isEqualTo(address);
         assertThat(member.getIntroduce()).isEqualTo(introduce);
-    }
-    
-    @Test  
-    public void initPostsTest() throws Exception {
-        // given
-        Member member = createMember();
-
-        // when
-        List<Post> posts = member.getPosts();
-
-        // then
-        posts.stream().forEach(p ->
-                Assertions.assertThat(p.getMember()).isEqualTo(member));
-
     }
 }

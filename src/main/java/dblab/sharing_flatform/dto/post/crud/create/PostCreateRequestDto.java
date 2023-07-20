@@ -1,7 +1,6 @@
 package dblab.sharing_flatform.dto.post.crud.create;
 
 import dblab.sharing_flatform.dto.item.crud.create.ItemCreateRequestDto;
-import dblab.sharing_flatform.dto.trade.crud.create.TradeRequestDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;

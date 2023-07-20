@@ -2,9 +2,6 @@ package dblab.sharing_flatform.domain.member;
 
 import dblab.sharing_flatform.domain.embedded.address.Address;
 import dblab.sharing_flatform.domain.image.ProfileImage;
-import dblab.sharing_flatform.domain.likepost.LikePost;
-import dblab.sharing_flatform.domain.post.Post;
-import dblab.sharing_flatform.domain.review.Review;
 import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
 import dblab.sharing_flatform.dto.member.crud.update.OAuthMemberUpdateRequestDto;

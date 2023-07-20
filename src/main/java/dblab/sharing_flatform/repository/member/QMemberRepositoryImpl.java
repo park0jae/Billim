@@ -18,7 +18,6 @@ import java.util.List;
 
 import static com.querydsl.core.types.Projections.constructor;
 import static dblab.sharing_flatform.domain.member.QMember.member;
-import static dblab.sharing_flatform.domain.post.QPost.post;
 
 @Repository
 public class QMemberRepositoryImpl extends QuerydslRepositorySupport implements QMemberRepository {

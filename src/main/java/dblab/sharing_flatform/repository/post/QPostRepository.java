@@ -3,10 +3,7 @@ package dblab.sharing_flatform.repository.post;
 import dblab.sharing_flatform.dto.post.PostDto;
 import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
 import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 
 public interface QPostRepository {
 
