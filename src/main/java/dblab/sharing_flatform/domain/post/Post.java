@@ -3,14 +3,11 @@ package dblab.sharing_flatform.domain.post;
 import dblab.sharing_flatform.domain.base.BaseTime;
 import dblab.sharing_flatform.domain.category.Category;
 import dblab.sharing_flatform.domain.image.PostImage;
-import dblab.sharing_flatform.domain.likepost.LikePost;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.embedded.item.Item;
-import dblab.sharing_flatform.domain.trade.Trade;
 import dblab.sharing_flatform.dto.item.crud.update.ItemUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateResponseDto;
-import dblab.sharing_flatform.helper.PostImageHelper;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,11 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.lang.Nullable;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static dblab.sharing_flatform.helper.PostImageHelper.*;
 
@@ -60,21 +55,16 @@ public class Post extends BaseTime {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
-    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Nullable
-    private Trade trade;
-
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostImage> postImages;
 
-    public Post(String title, String content, Category category, Item item, List<PostImage> postImages, Member member ,Trade trade) {
+    public Post(String title, String content, Category category, Item item, List<PostImage> postImages, Member member) {
         this.title = title;
         this.content = content;
         this.likes = 0;
         this.category = category;
         this.item = item;
         this.member = member;
-        this.trade = trade;
         this.postImages = new ArrayList<>();
 
         addImages(postImages, this.postImages, this);
@@ -101,9 +91,4 @@ public class Post extends BaseTime {
         this.likes --;
     }
 
-    public void addTrade(Trade trade){
-        if (this.trade == null) {
-            this.trade = trade;
-        }
-    }
 }

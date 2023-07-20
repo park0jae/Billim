@@ -30,8 +30,8 @@ public class MemberController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Response currentUser(){
-        String currentUsername = SecurityUtil.getCurrentUsername().get();
-        MemberPrivateDto currentMember = memberService.readMyInfo(currentUsername);
+        String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
+        MemberPrivateDto currentMember = memberService.readMyInfo(username);
         return Response.success(currentMember);
     }
 
@@ -79,8 +79,8 @@ public class MemberController {
     @PatchMapping("/oauth")
     @ResponseStatus(HttpStatus.OK)
     public Response updateOAuthMember(@Valid @ModelAttribute OAuthMemberUpdateRequestDto requestDto){
-        String currentUserId = SecurityUtil.getCurrentUserId().orElseThrow(AccessDeniedException::new);
-        MemberPrivateDto updateMember = memberService.oauthMemberUpdate(Long.valueOf(currentUserId), requestDto);
+        Long id = Long.valueOf(SecurityUtil.getCurrentUserId().orElseThrow(AccessDeniedException::new));
+        MemberPrivateDto updateMember = memberService.oauthMemberUpdate(id, requestDto);
         return Response.success(updateMember);
     }
 

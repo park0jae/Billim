@@ -66,11 +66,12 @@ public class PostService {
     public PostCreateResponseDto create(PostCreateRequestDto requestDto) {
         List<PostImage> postImages = getImages(requestDto);
 
-        Post post = new Post(requestDto.getTitle(), requestDto.getContent(),
+        Post post = new Post(requestDto.getTitle(),
+                requestDto.getContent(),
                 categoryRepository.findByName(requestDto.getCategoryName()).orElseThrow(CategoryNotFoundException::new),
                 requestDto.getItemCreateRequestDto() != null ? ItemCreateRequestDto.toEntity(requestDto.getItemCreateRequestDto()) : null,
                 postImages,
-                memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new), null);
+                memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new));
 
         postRepository.save(post);
 

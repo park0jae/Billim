@@ -21,7 +21,7 @@ public class CommentCreateRequestDto {
 
     @ApiModelProperty(hidden = true)
     @Null
-    private String username;
+    private Long memberId;
 
     @ApiModelProperty(value = "게시글 ID", notes = "게시글 ID을 입력해주세요", required = true, example = "1")
     @NotNull(message = "게시글 ID를 입력해주세요.")
