@@ -3,7 +3,6 @@ package dblab.sharing_flatform.service.member;
 
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
-import dblab.sharing_flatform.dto.member.MemberDto;
 import dblab.sharing_flatform.dto.member.MemberPrivateDto;
 import dblab.sharing_flatform.dto.member.MemberProfileDto;
 import dblab.sharing_flatform.dto.member.crud.read.request.MemberPagingCondition;
@@ -17,7 +16,6 @@ import dblab.sharing_flatform.repository.post.PostRepository;
 import dblab.sharing_flatform.service.file.MemberFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

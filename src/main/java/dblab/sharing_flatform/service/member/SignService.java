@@ -51,8 +51,7 @@ public class SignService {
                 requestDto.getPhoneNumber(),
                 requestDto.getAddress(),
                 "None",
-                List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)),
-                List.of());
+                List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)));
 
         memberRepository.save(member);
     }
@@ -68,8 +67,7 @@ public class SignService {
                     null,
                     null,
                     requestDto.getProvider(),
-                    List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)),
-                    List.of());
+                    List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)));
             memberRepository.save(member);
         }
     }
