@@ -77,7 +77,7 @@ public class ReviewService {
     }
 
     private void validate(Long memberId, Trade trade) {
-        if (!memberId.equals(trade.getBorrowerMember().getId())) {
+        if (!memberId.equals(trade.getBorrowerMember().getId()) || trade.isTradeComplete() == false) {
             throw new ImpossibleWriteReviewException();
         }
 

@@ -40,13 +40,4 @@ public class Review {
         this.reviewerMember = reviewerMember;
     }
 
-//    public void addMember(Member member) {
-//        member.calculateTotalStarRating(this.starRating);
-//    }
-//
-//    public void calculateTotalStarRating(double rating){
-//        this.rating = Math.round(((this.rating + rating) / (double) reviews.size()) * 10) / 10.0;
-//    }
-
-
 }
