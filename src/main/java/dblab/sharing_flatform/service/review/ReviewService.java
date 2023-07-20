@@ -24,10 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
 @RequiredArgsConstructor
+@Service
 @Transactional(readOnly = true)
 public class ReviewService {
+
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
     private final TradeRepository tradeRepository;

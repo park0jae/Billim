@@ -12,13 +12,11 @@ class MessageTest {
 
     @BeforeEach
     void beforeEach() {
-        Message message = createMessage();
+        message = createMessage();
     }
 
     @Test
     void deleteBySenderTest() {
-        // given
-        Message message = createMessage();
         // when
         message.deleteBySender();
 
@@ -28,8 +26,6 @@ class MessageTest {
 
     @Test
     void deleteByReceiverTest() {
-        // given
-        Message message = createMessage();
         // when
         message.deleteByReceiver();
 
@@ -39,8 +35,6 @@ class MessageTest {
 
     @Test
     public void isNotDeletableTest() throws Exception {
-        //given
-        Message message = createMessage();
         // then
         assertThat(message.isDeletable()).isFalse();
     }
@@ -48,7 +42,6 @@ class MessageTest {
     @Test
     void isDeletableTest() {
         // given
-        Message message = createMessage();
         message.deleteBySender();
         message.deleteByReceiver();
 
