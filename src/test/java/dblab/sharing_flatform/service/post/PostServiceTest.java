@@ -53,7 +53,7 @@ public class PostServiceTest {
 
     @BeforeEach
     public void beforeEach(){
-        post = PostFactory.createPost();
+        post = PostFactory.creatPostWithMemberRole();
         member = post.getMember();
         category = post.getCategory();
     }

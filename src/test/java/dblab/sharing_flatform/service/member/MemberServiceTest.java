@@ -63,10 +63,10 @@ public class MemberServiceTest {
         Address address = new Address("TestCity", "TestDistrict", "TestStreet", "TestZipcode");
         MemberUpdateRequestDto memberUpdateRequestDto = new MemberUpdateRequestDto("updatePass1!", "updatedPN", address, "hi~", null);
 
-        given(memberRepository.findById(member.getId())).willReturn(Optional.of(member));
+        given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
 
         // when
-        MemberPrivateDto updateMember = memberService.update(member.getId(), memberUpdateRequestDto);
+        MemberPrivateDto updateMember = memberService.update(member.getUsername(), memberUpdateRequestDto);
 
         // then
         assertThat(updateMember.getPhoneNumber()).isEqualTo("updatedPN");
