@@ -27,7 +27,7 @@ public class PostController {
 
     private final PostService postService;
 
-    @ApiOperation(value = "게시글 검색 -> 목록 조회", notes = "검색조건에 따라 페이징하여 조회합니다.")
+    @ApiOperation(value = "게시글 검색", notes = "검색조건에 따라 페이징하여 조회합니다.")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Response readAll(@Valid PostPagingCondition cond) {
@@ -35,19 +35,18 @@ public class PostController {
     }
 
     @ApiOperation(value = "게시글 단건 조회", notes = "게시글 ID로 게시글을 조회합니다.")
-    @GetMapping("/{id}")
+    @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response read(@PathVariable Long id) {
-        return Response.success(postService.read(id));
+    public Response read(@ApiParam(value = "조회할 게시글 id", required = true) @PathVariable Long postId) {
+        return Response.success(postService.read(postId));
     }
 
-    @ApiOperation(value ="좋아요 누른 게시글 전체 조회", notes = "해당 번호의 게시글에 좋아요 남기기/좋아요 취소")
+    @ApiOperation(value ="본인의 좋아요 누른 게시글 전체 조회", notes = "현재 사용자가 좋아요 누른 게시글을 전체 조회합니다.")
     @GetMapping("/like")
     @ResponseStatus(HttpStatus.OK)
     public Response readAllLikePost() {
-        String id = SecurityUtil.getCurrentUserId().get();
-        System.out.println("id = " + id);
-        return Response.success(postService.readAllLikePost(Long.valueOf(id)));
+        Long memberId = Long.valueOf(SecurityUtil.getCurrentUserId().orElseThrow(AccessDeniedException::new));
+        return Response.success(postService.readAllLikePost(memberId));
     }
 
     @ApiOperation(value = "게시글 생성", notes = "게시글을 생성합니다.")
@@ -60,27 +59,27 @@ public class PostController {
     }
 
     @ApiOperation(value = "게시글 삭제", notes = "해당 번호의 게시글을 삭제한다.")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response delete(@ApiParam(value = "삭제할 게시글 id", required = true) @PathVariable Long id) {
-        postService.delete(id);
+    public Response delete(@ApiParam(value = "삭제할 게시글 id", required = true) @PathVariable Long postId) {
+        postService.delete(postId);
         return Response.success();
     }
 
     @ApiOperation(value = "게시글 수정", notes = "해당 번호의 게시글을 수정한다.")
-    @PatchMapping("/{id}")
+    @PatchMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response update(@ApiParam(value = "수정할 게시글 id", required = true) @PathVariable Long id,
+    public Response update(@ApiParam(value = "수정할 게시글 id", required = true) @PathVariable Long postId,
                            @Valid @ModelAttribute PostUpdateRequestDto postUpdateRequestDto) {
-        return Response.success(postService.update(id, postUpdateRequestDto));
+        return Response.success(postService.update(postId, postUpdateRequestDto));
     }
 
     @ApiOperation(value = "게시글 좋아요/좋아요 취소", notes = "해당 번호의 게시글에 좋아요 남기기/좋아요 취소")
-    @PostMapping("/like/{id}")
+    @PostMapping("/like/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response likeUp(@ApiParam(value = "좋아요할 게시글 id", required = true) @PathVariable Long id) {
+    public Response likeUp(@ApiParam(value = "좋아요할 게시글 id", required = true) @PathVariable Long postId) {
         String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        postService.like(id, username);
+        postService.like(postId, username);
         return Response.success();
     }
 

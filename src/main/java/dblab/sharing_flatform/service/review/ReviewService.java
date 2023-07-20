@@ -37,12 +37,12 @@ public class ReviewService {
     private final TradeRepository tradeRepository;
 
     @Transactional
-    public ReviewResponseDto writeReview(ReviewRequestDto reviewRequestDto, Long tradeId, Long memberId){
+    public ReviewResponseDto writeReview(ReviewRequestDto reviewRequestDto, Long tradeId, String username){
         Trade trade = tradeRepository.findById(tradeId).orElseThrow(TradeNotFoundException::new);
-        Member writeMember = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        Member writeMember = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
         Member reviewerMember = memberRepository.findById(trade.getRenderMember().getId()).orElseThrow(MemberNotFoundException::new);
 
-        validate(memberId, trade);
+        validate(username, trade);
 
         Review review = new Review(reviewRequestDto.getContent(),
                 reviewRequestDto.getStarRating(),
@@ -70,16 +70,16 @@ public class ReviewService {
         return reviewRepository.findAll().stream().map(review -> ReviewResponseDto.toDto(review)).collect(Collectors.toList());
     }
 
-    public List<ReviewResponseDto> findCurrentUserReviews(Long memberId){
-        return reviewRepository.findAllWithMemberByMemberId(memberId).stream().map(review -> ReviewResponseDto.toDto(review)).collect(Collectors.toList());
+    public List<ReviewResponseDto> findCurrentUserReviews(String username){
+        return reviewRepository.findAllWithMemberByMemberId(username).stream().map(review -> ReviewResponseDto.toDto(review)).collect(Collectors.toList());
     }
 
     public Page<ReviewDto> findAllReviewsByUsername(ReviewPagingCondition cond){
         return reviewRepository.findAllByUsername(cond);
     }
 
-    private void validate(Long memberId, Trade trade) {
-        if (!memberId.equals(trade.getBorrowerMember().getId()) || trade.isTradeComplete() == false) {
+    private void validate(String username, Trade trade) {
+        if (username.equals(trade.getBorrowerMember().getUsername())) {
             throw new ImpossibleWriteReviewException();
         }
 

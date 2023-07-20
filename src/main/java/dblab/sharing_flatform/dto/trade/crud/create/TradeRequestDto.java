@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class TradeRequestDto {
 
     @Null
-    private Long renderId;
+    private String renderName;
 
     private String borrowerName;
 

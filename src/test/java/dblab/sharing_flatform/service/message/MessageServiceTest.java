@@ -89,7 +89,7 @@ public class MessageServiceTest {
         given(memberRepository.findById(receiveMember.getId())).willReturn(Optional.of(receiveMember));
 
         // When
-        List<MessageDto> sendMessageToMembers = messageService.findSendMessageToMember(sendMember.getUsername(), receiveMember.getId());
+        List<MessageDto> sendMessageToMembers = messageService.findMessageMemberToMember(sendMember.getUsername(), receiveMember.getUsername());
 
         // Then
         assertThat(sendMessageToMembers).isNotNull();
@@ -103,7 +103,7 @@ public class MessageServiceTest {
         given(memberRepository.findById(sendMember.getId())).willReturn(Optional.of(sendMember));
 
         // When
-        List<MessageDto> receiveMessageByMembers = messageService.findReceiveMessageByMember(receiveMember.getUsername(), receiveMember.getId());
+        List<MessageDto> receiveMessageByMembers = messageService.findMessageMemberToMember(receiveMember.getUsername(), sendMember.getUsername());
 
         // Then
         assertThat(receiveMessageByMembers).isNotNull();

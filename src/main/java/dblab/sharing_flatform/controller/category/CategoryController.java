@@ -35,7 +35,6 @@ public class CategoryController {
         return Response.success(categoryService.create(categoryCreateRequestDto));
     }
 
-
     @ApiOperation(value = "카테고리 삭제", notes = "카테고리를 삭제 / ADMIN 전용")
     @DeleteMapping("/{categoryName}")
     @ResponseStatus(HttpStatus.OK)
