@@ -7,14 +7,12 @@ import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateResponseDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateResponseDto;
-import dblab.sharing_flatform.factory.category.CategoryFactory;
-import dblab.sharing_flatform.factory.member.MemberFactory;
 import dblab.sharing_flatform.factory.post.PostFactory;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
+import dblab.sharing_flatform.repository.role.RoleRepository;
 import dblab.sharing_flatform.service.file.PostFileService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,6 +43,9 @@ public class PostServiceTest {
 
     @Mock
     private PostFileService postFileService;
+
+    @Mock
+    private RoleRepository roleRepository;
 
     Post post;
     Member member;

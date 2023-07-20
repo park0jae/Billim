@@ -8,7 +8,6 @@ import static dblab.sharing_flatform.factory.review.ReviewFactory.*;
 
 public class ReviewTest {
 
-
     @Test
     public void createReviewTest() throws Exception {
         //given
