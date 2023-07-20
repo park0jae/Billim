@@ -26,61 +26,53 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @ApiOperation(value = "내 정보 조회", notes = "현재 로그인한 회원 정보를 조회합니다.")
+    @ApiOperation(value = "전체 회원 조회", notes = "전체 회원을 조회합니다. (username 검색)")
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    public Response readAll(@Valid MemberPagingCondition cond) {
+        return Response.success(memberService.readAll(cond));
+    }
+
+    @ApiOperation(value = "나의 개인 정보 조회", notes = "현재 로그인한 회원 정보를 조회합니다.")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Response currentUser(){
+    public Response currentUser() {
         String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
         MemberPrivateDto currentMember = memberService.readMyInfo(username);
         return Response.success(currentMember);
     }
 
     @ApiOperation(value = "회원 프로필 정보 조회", notes = "회원의 프로필 정보를 조회합니다.")
-    @GetMapping("/profile")
+    @GetMapping("/profile/{username}")
     @ResponseStatus(HttpStatus.OK)
-    public Response findMemberProfile(@RequestParam String username){
+    public Response findMemberProfile(@ApiParam(name = "검색할 사용자 아이디", required = true) @PathVariable String username) {
         MemberProfileDto memberInfo = memberService.readMemberProfile(username);
         return Response.success(memberInfo);
     }
 
-    @ApiOperation(value = "특정 사용자 조회", notes = "ADMIN 권한이 있는 경우 특정 사용자를 조회한다.")
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Response findMemberByAdmin(@ApiParam(name="조회할 사용자 아이디" , required = true) @PathVariable Long id){
-        MemberPrivateDto memberInfo = memberService.readMemberByIdOnlyAdmin(id);
-        return Response.success(memberInfo);
-    }
-
-    @ApiOperation(value = "전체 회원 조회", notes = "전체 회원을 조회합니다. (username 검색)")
-    @GetMapping("/search")
-    @ResponseStatus(HttpStatus.OK)
-    public Response readAll(@Valid MemberPagingCondition cond){
-        return Response.success(memberService.readAll(cond));
-    }
-
     @ApiOperation(value = "회원 삭제", notes = "관리자 또는 본인인 경우 사용자를 삭제한다.")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{username}")
     @ResponseStatus(HttpStatus.OK)
-    public Response deleteMember(@ApiParam(name = "삭제할 사용자 아이디", required = true) @PathVariable Long id){
-        memberService.delete(id);
+    public Response deleteMember(@ApiParam(name = "삭제할 사용자의 username", required = true) @PathVariable String username) {
+        memberService.delete(username);
         return Response.success();
     }
 
     @ApiOperation(value = "회원 정보 수정", notes = "본인인 경우 정보를 수정한다.")
-    @PatchMapping("/{id}")
+    @PatchMapping("/{username}")
     @ResponseStatus(HttpStatus.OK)
-    public Response updateMember(@ApiParam(name = "수정할 사용자 아이디", required = true) @PathVariable Long id,
-                                 @Valid @ModelAttribute MemberUpdateRequestDto memberUpdateRequestDto){
-        MemberPrivateDto updateMember = memberService.update(id, memberUpdateRequestDto);
+    public Response updateMember(@ApiParam(name = "수정할 회원의 username", required = true) @PathVariable String username,
+                                 @Valid @ModelAttribute MemberUpdateRequestDto memberUpdateRequestDto) {
+        MemberPrivateDto updateMember = memberService.update(username, memberUpdateRequestDto);
         return Response.success(updateMember);
     }
 
     @ApiOperation(value = "OAuth 회원 추가 정보 등록(필수) / 수정 ", notes = "OAuth2 유저 최초 로그인 시 OAuth 회원 본인의 정보를 등록합니다. / OAuth2 회원의 정보를 수정합니다.")
-    @PatchMapping("/oauth")
+    @PatchMapping("/update/oauth")
     @ResponseStatus(HttpStatus.OK)
-    public Response updateOAuthMember(@Valid @ModelAttribute OAuthMemberUpdateRequestDto requestDto){
-        Long id = Long.valueOf(SecurityUtil.getCurrentUserId().orElseThrow(AccessDeniedException::new));
-        MemberPrivateDto updateMember = memberService.oauthMemberUpdate(id, requestDto);
+    public Response updateOAuthMember(@Valid @ModelAttribute OAuthMemberUpdateRequestDto requestDto) {
+        String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
+        MemberPrivateDto updateMember = memberService.oauthMemberUpdate(username, requestDto);
         return Response.success(updateMember);
     }
 

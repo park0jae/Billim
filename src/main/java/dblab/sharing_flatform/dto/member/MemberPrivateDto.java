@@ -1,5 +1,6 @@
 package dblab.sharing_flatform.dto.member;
 
+import dblab.sharing_flatform.domain.embedded.address.Address;
 import dblab.sharing_flatform.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,8 @@ public class MemberPrivateDto {
 
     private String phoneNumber;
 
+    private Address address;
+
     private double totalRating;
 
     public static MemberPrivateDto toDto(Member member) {
@@ -27,6 +30,7 @@ public class MemberPrivateDto {
                 member.getUsername(),
                 member.getPassword(),
                 member.getPhoneNumber(),
+                member.getAddress(),
                 member.getRating());
     }
 }

@@ -38,10 +38,6 @@ public class MemberService {
         return MemberPrivateDto.toDto(memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new));
     }
 
-    public MemberPrivateDto readMemberByIdOnlyAdmin(Long id){
-        return MemberPrivateDto.toDto(memberRepository.findById(id).orElseThrow(MemberNotFoundException::new));
-    }
-
     public MemberProfileDto readMemberProfile(String username) {
         List<Post> posts = postRepository.findAllWithMemberByUsername(username);
         return MemberProfileDto.toDto(memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new), PostDto.toDtoList(posts));
@@ -52,21 +48,21 @@ public class MemberService {
     }
 
     @Transactional
-    public void delete(Long id){
-        memberRepository.delete(memberRepository.findById(id).orElseThrow(MemberNotFoundException::new));
+    public void delete(String username){
+        memberRepository.delete(memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new));
     }
 
     @Transactional
-    public MemberPrivateDto update(Long id, MemberUpdateRequestDto requestDto){
-        Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
+    public MemberPrivateDto update(String username, MemberUpdateRequestDto requestDto){
+        Member member = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
         memberUpdate(requestDto, member);
 
         return MemberPrivateDto.toDto(member);
     }
 
     @Transactional
-    public MemberPrivateDto oauthMemberUpdate(Long id, OAuthMemberUpdateRequestDto requestDto){
-        Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
+    public MemberPrivateDto oauthMemberUpdate(String username, OAuthMemberUpdateRequestDto requestDto){
+        Member member = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
         oAuthMemberUpdate(requestDto, member);
 
         return MemberPrivateDto.toDto(member);

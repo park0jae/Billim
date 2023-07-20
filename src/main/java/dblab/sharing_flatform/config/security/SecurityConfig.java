@@ -61,35 +61,35 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, "/member/search").permitAll()
                 .antMatchers(HttpMethod.GET, "/member/profile").permitAll()
                 .antMatchers(HttpMethod.PATCH, "/member/oauth").permitAll()
-                .antMatchers(HttpMethod.GET, "/member/{id}").hasAuthority("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/member/{id}").access("@memberGuard.check(#id)")
-                .antMatchers(HttpMethod.PATCH, "/member/{id}").access("@memberGuard.check(#id)")
+                .antMatchers(HttpMethod.GET, "/member/{id}").access("@memberGuard.check(#memberId)")
+                .antMatchers(HttpMethod.DELETE, "/member/{memberId}").access("@memberGuard.check(#memberId)")
+                .antMatchers(HttpMethod.PATCH, "/member/{memberId}").access("@memberGuard.check(#memberId)")
 
                 // 카테고리 생성,삭제 - ADMIN
                 .antMatchers(HttpMethod.DELETE, "/category/**").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/category/**").hasAuthority("ADMIN")
 
                 // 메세지 삭제 - 소유주, ADMIN
-                .antMatchers(HttpMethod.DELETE, "/message/send/{id}").access("@sendMessageGuard.check(#id)")
-                .antMatchers(HttpMethod.DELETE, "/message/receive/{id}").access("@receiveMessageGuard.check(#id)")
+                .antMatchers(HttpMethod.DELETE, "/message/send/{messageId}").access("@sendMessageGuard.check(#messsageId)")
+                .antMatchers(HttpMethod.DELETE, "/message/receive/{messageId}").access("@receiveMessageGuard.check(#messsageId)")
 
                 // 게시글 생성, 수정 , 삭제 - 소유주, ADMIN
-                .antMatchers(HttpMethod.DELETE, "/post/{id}").access("@postGuard.check(#id)")
-                .antMatchers(HttpMethod.PATCH, "/post/{id}").access("@postGuard.check(#id)")
+                .antMatchers(HttpMethod.DELETE, "/post/{postId}").access("@postGuard.check(#postId)")
+                .antMatchers(HttpMethod.PATCH, "/post/{postId}").access("@postGuard.check(#postId)")
 
                 // 댓글 삭제 - 소유주 , ADMIN
-                .antMatchers(HttpMethod.DELETE, "/reply/{id}").access("@commentGuard.check(#id)")
+                .antMatchers(HttpMethod.DELETE, "/comment/{commentId}").access("@commentGuard.check(#commentId)")
 
                 // 거래 생성, 취소 - 소유주 , ADMIN
-                .antMatchers(HttpMethod.POST, "/trade/{id}").access("@postGuard.check(#id)")
-                .antMatchers(HttpMethod.PATCH, "/trade/{id}").access("@tradeGuard.check(#id)")
-                .antMatchers(HttpMethod.DELETE, "/trade/{id}").access("@tradeGuard.check(#id)")
+                .antMatchers(HttpMethod.POST, "/trade/{postId}").access("@postGuard.check(#postId)")
+                .antMatchers(HttpMethod.PATCH, "/trade/{postId}").access("@tradeGuard.check(#postId)")
+                .antMatchers(HttpMethod.DELETE, "/trade/{postId}").access("@tradeGuard.check(#postId)")
 
                 // 리뷰 조회, 작성, 삭제 - 소유주 , ADMIN
-                .antMatchers(HttpMethod.GET, "/review/all").hasAnyAuthority("ADMIN", "MANAGER") // 모든 리뷰 조회
-                .antMatchers(HttpMethod.GET, "/review").hasAnyAuthority("ADMIN", "MANAGER", "USER")
                 .antMatchers(HttpMethod.POST, "/review/{tradeId}").access("@reviewGuard.check(#tradeId)")
                 .antMatchers(HttpMethod.DELETE, "/review/{tradeId}").access("@reviewGuard.check(#tradeId)")
+                .antMatchers(HttpMethod.GET, "/review/all").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.GET, "/review").hasAnyAuthority("ADMIN", "MANAGER", "USER")
 
 
                 .and()
