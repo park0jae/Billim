@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long>, QReviewRepository {
     @Query("select r from Review r join fetch r.member rm where rm.username =:username")
-    List<Review> findAllWithMemberByMemberId(@Param("memberId") String memberId);
+    List<Review> findAllWithMemberByMemberId(@Param("username") String username);
 
     @Query("select count(r) from Review r where r.reviewerMember.id =:memberId")
     Long countByMemberId(@Param("memberId") Long memberId);

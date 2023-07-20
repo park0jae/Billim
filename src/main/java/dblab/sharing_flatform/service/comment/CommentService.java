@@ -29,14 +29,11 @@ public class CommentService {
 
     // create
     @Transactional
-    public Long create(CommentCreateRequestDto requestDto) {
-        Post post = postRepository.findById(requestDto.getPostId()).orElseThrow(PostNotFoundException::new);
-        Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(MemberNotFoundException::new);
-
+    public Long create(Long postId, CommentCreateRequestDto requestDto) {
         Comment comment = commentRepository.save(new Comment(requestDto.getContent(),
                 requestDto.getParentCommentId() == null ? true : false,
-                post,
-                member,
+                postRepository.findById(postId).orElseThrow(PostNotFoundException::new),
+                memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(MemberNotFoundException::new),
                 requestDto.getParentCommentId() == null ? null : commentRepository.findById(requestDto.getParentCommentId()).orElseThrow(RootCommentNotFoundException::new)));
 
         return comment.getId();

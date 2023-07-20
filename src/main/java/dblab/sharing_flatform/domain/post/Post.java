@@ -79,7 +79,6 @@ public class Post extends BaseTime {
         }
 
         Map<String, List<PostImage>> m = updateImage(requestDto, this.postImages, this);
-
         return PostUpdateResponseDto.toDto(requestDto, this, m);
     }
 

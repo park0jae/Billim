@@ -37,13 +37,14 @@ public class TradeService {
 
         validateCreateTrade(id, borrower, render);
 
-        Trade trade = tradeRepository.save(
-                new Trade(render,
-                        borrower,
+        Trade trade = new Trade(render, borrower,
                         tradeRequestDto.getStartDate(),
                         tradeRequestDto.getEndDate(),
-                        postRepository.findById(id).orElseThrow(PostNotFoundException::new)));
+                        postRepository.findById(id).orElseThrow(PostNotFoundException::new));
+
+        tradeRepository.save(trade);
         return TradeResponseDto.toDto(trade);
+
     }
 
     @Transactional

@@ -35,7 +35,7 @@ public class CommentController {
     public Response create(@ApiParam(value = "Post ID", required = true) @PathVariable Long postId,
             @Valid @RequestBody CommentCreateRequestDto requestDto) {
         requestDto.setUsername(SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new));
-        return Response.success(commentService.create(requestDto));
+        return Response.success(commentService.create(postId, requestDto));
     }
 
     @ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제합니다.")
