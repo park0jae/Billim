@@ -11,6 +11,10 @@ import java.util.List;
 
 public class MemberFactory {
     public static Member createMember() {
+        return new Member("username", "password", "phoneNum", createAddress(), "None", List.of());
+    }
+
+    public static Member createMemberWithRole() {
         return new Member("username", "password", "phoneNum", createAddress(), "None", List.of(new Role(RoleType.USER)));
     }
 

@@ -54,10 +54,10 @@ public class TradeServiceTest {
     @Test
     public void createTradeTest(){
         // Given
-        TradeRequestDto tradeRequestDto = new TradeRequestDto(renderMember.getId(), borrowerMember.getUsername(), LocalDate.now(), LocalDate.now());
+        TradeRequestDto tradeRequestDto = new TradeRequestDto(renderMember.getUsername(), borrowerMember.getUsername(), LocalDate.now(), LocalDate.now());
 
         given(memberRepository.findByUsername(tradeRequestDto.getBorrowerName())).willReturn(Optional.of(borrowerMember));
-        given(memberRepository.findById(tradeRequestDto.getRenderId())).willReturn(Optional.of(renderMember));
+        given(memberRepository.findByUsername(tradeRequestDto.getRenderName())).willReturn(Optional.of(renderMember));
 
         given(postRepository.findById(trade.getPost().getId())).willReturn(Optional.of(post));
 

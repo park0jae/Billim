@@ -82,31 +82,17 @@ public class MessageServiceTest {
         assertThat(receiveMessages).isNotNull();
     }
 
-
     @Test
-    public void findSendMessageToMemberTest(){
+    public void findMessageMemberToMemberTest(){
         // Given
-        given(memberRepository.findById(receiveMember.getId())).willReturn(Optional.of(receiveMember));
+        given(memberRepository.findByUsername(receiveMember.getUsername())).willReturn(Optional.of(receiveMember));
+        given(messageRepository.findAllBySendAndReceiverMembers(sendMember.getUsername(), receiveMember.getUsername())).willReturn(List.of());
 
         // When
-        List<MessageDto> sendMessageToMembers = messageService.findMessageMemberToMember(sendMember.getUsername(), receiveMember.getUsername());
+        List<MessageDto> result = messageService.findMessageMemberToMember(sendMember.getUsername(), receiveMember.getUsername());
 
         // Then
-        assertThat(sendMessageToMembers).isNotNull();
-    }
-
-    @Test
-    public void findReceiveMessageByMember(){
-        // Given
-        Message message = new Message("content", receiveMember, sendMember);
-
-        given(memberRepository.findById(sendMember.getId())).willReturn(Optional.of(sendMember));
-
-        // When
-        List<MessageDto> receiveMessageByMembers = messageService.findMessageMemberToMember(receiveMember.getUsername(), sendMember.getUsername());
-
-        // Then
-        assertThat(receiveMessageByMembers).isNotNull();
+        assertThat(result).isNotNull();
     }
 
     @Test

@@ -88,9 +88,7 @@ public class PostService {
     @Transactional
     public PostUpdateResponseDto update(Long id, PostUpdateRequestDto requestDto) {
         Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
-        System.out.println("requestDto = " + requestDto);
         PostUpdateResponseDto responseDto = post.updatePost(requestDto);
-
 
         updateImagesToServer(requestDto, responseDto);
 
