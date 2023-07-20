@@ -3,13 +3,15 @@ package dblab.sharing_flatform.factory.member;
 import dblab.sharing_flatform.domain.embedded.address.Address;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.role.Role;
+import dblab.sharing_flatform.domain.role.RoleType;
+import dblab.sharing_flatform.repository.role.RoleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 public class MemberFactory {
-
     public static Member createMember() {
-        return new Member("username", "password", "phoneNum", createAddress(), "None", List.of());
+        return new Member("username", "password", "phoneNum", createAddress(), "None", List.of(new Role(RoleType.USER)));
     }
 
     public static Member createMemberWithRoles(List<Role> roles) {

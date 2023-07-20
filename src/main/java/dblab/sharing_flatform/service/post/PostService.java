@@ -4,6 +4,7 @@ import dblab.sharing_flatform.domain.image.PostImage;
 import dblab.sharing_flatform.domain.likepost.LikePost;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
+import dblab.sharing_flatform.domain.trade.Trade;
 import dblab.sharing_flatform.dto.item.crud.create.ItemCreateRequestDto;
 import dblab.sharing_flatform.dto.post.PostDto;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
@@ -87,7 +88,9 @@ public class PostService {
     @Transactional
     public PostUpdateResponseDto update(Long id, PostUpdateRequestDto requestDto) {
         Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        System.out.println("requestDto = " + requestDto);
         PostUpdateResponseDto responseDto = post.updatePost(requestDto);
+
 
         updateImagesToServer(requestDto, responseDto);
 

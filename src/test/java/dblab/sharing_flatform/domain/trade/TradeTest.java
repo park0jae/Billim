@@ -16,13 +16,9 @@ public class TradeTest {
     public void createTradeTest(){
 
         // given
-        Post post = createPost();
         Trade trade = createTrade();
 
-        // when
-        trade.addPost(post);
-
         // then
-        Assertions.assertThat(post.getTrade()).isEqualTo(trade);
+        Assertions.assertThat(trade.getRenderMember().getUsername()).isEqualTo("빌려주는사람");
     }
 }

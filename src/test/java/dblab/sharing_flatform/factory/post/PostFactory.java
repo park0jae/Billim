@@ -13,15 +13,15 @@ import static dblab.sharing_flatform.factory.member.MemberFactory.createMember;
 
 public class PostFactory {
     public static Post createPost() {
-        return new Post("title", "content", createCategory(), createItem(), List.of(), createMember(), null);
+        return new Post("title", "content", createCategory(), createItem(), List.of(), createMember());
     }
 
     public static Post createPost(List<PostImage> postImages) {
-        return new Post("title", "content", createCategory(), createItem(), postImages, createMember(), null);
+        return new Post("title", "content", createCategory(), createItem(), postImages, createMember());
     }
 
     public static Post createPost(Category category, Member member) {
-        return new Post("title", "content", category, createItem(), List.of(), member, null);
+        return new Post("title", "content", category, createItem(), List.of(), member);
     }
 
 

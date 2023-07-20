@@ -94,8 +94,7 @@ public class TradeRepositoryTest {
 
         // then
         assertThat(tradeRepository.count()).isEqualTo(1);
-        assertThat(postRepository.findById(post.getId()).get().getTrade().getId()).isEqualTo(trade.getId());
-
+        assertThat(postRepository.findById(post.getId()).get().getId()).isEqualTo(trade.getPost().getId());
     }
 
     @Test
