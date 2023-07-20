@@ -60,8 +60,8 @@ public class SecurityConfig {
 
                 .antMatchers(HttpMethod.GET, "/member/search").permitAll()
                 .antMatchers(HttpMethod.GET, "/member/profile").permitAll()
-                .antMatchers(HttpMethod.PATCH, "/member/oauth").permitAll()
-                .antMatchers(HttpMethod.GET, "/member/{id}").access("@memberGuard.check(#memberId)")
+                .antMatchers(HttpMethod.PATCH, "/member/update/oauth").permitAll()
+                .antMatchers(HttpMethod.GET, "/member/{memberId}").access("@memberGuard.check(#memberId)")
                 .antMatchers(HttpMethod.DELETE, "/member/{memberId}").access("@memberGuard.check(#memberId)")
                 .antMatchers(HttpMethod.PATCH, "/member/{memberId}").access("@memberGuard.check(#memberId)")
 

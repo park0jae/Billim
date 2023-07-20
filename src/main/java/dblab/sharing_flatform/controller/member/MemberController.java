@@ -75,5 +75,4 @@ public class MemberController {
         MemberPrivateDto updateMember = memberService.oauthMemberUpdate(username, requestDto);
         return Response.success(updateMember);
     }
-
 }
