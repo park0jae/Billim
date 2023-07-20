@@ -54,13 +54,9 @@ public class Trade {
         this.endDate = endDate;
         this.tradeComplete = false;
         this.writtenReview = false;
-        addPost(post);
+        this.post = post;
     }
 
-    public void addPost(Post post){
-        this.post = post;
-        post.addTrade(this);
-    }
 
     public void addReview(Review review) {
         if (this.review == null) {

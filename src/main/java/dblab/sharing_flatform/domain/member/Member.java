@@ -34,7 +34,6 @@ public class Member {
     private String introduce;
     private Double rating;
 
-    // roles -> 기본전략 : 지연로딩
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<MemberRole> roles = new ArrayList<>();
 

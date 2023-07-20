@@ -31,7 +31,7 @@ public class CommentService {
     @Transactional
     public Long create(CommentCreateRequestDto requestDto) {
         Post post = postRepository.findById(requestDto.getPostId()).orElseThrow(PostNotFoundException::new);
-        Member member = memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(MemberNotFoundException::new);
+        Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(MemberNotFoundException::new);
 
         Comment comment = commentRepository.save(new Comment(requestDto.getContent(),
                 requestDto.getParentCommentId() == null ? true : false,

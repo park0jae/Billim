@@ -34,7 +34,7 @@ public class CommentController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Response create(@Valid @RequestBody CommentCreateRequestDto requestDto) {
-        requestDto.setUsername(SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new));;
+        requestDto.setMemberId(Long.valueOf(SecurityUtil.getCurrentUserId().orElseThrow(AccessDeniedException::new)));
         return Response.success(commentService.create(requestDto));
     }
 
