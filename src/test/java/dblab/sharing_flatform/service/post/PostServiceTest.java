@@ -56,7 +56,7 @@ public class PostServiceTest {
     @Test
     public void createPostTest(){
         // Given
-        PostCreateRequestDto postCreateRequestDto = new PostCreateRequestDto("테스트 타이틀", "테스트 내용",  category.getName(), List.of(), null, member.getUsername());
+        PostCreateRequestDto postCreateRequestDto = new PostCreateRequestDto(member.getUsername(),"테스트 타이틀", "테스트 내용",  category.getName(), List.of(), null);
 
         given(categoryRepository.findByName(postCreateRequestDto.getCategoryName())).willReturn(Optional.of(category));
         given(memberRepository.findByUsername(postCreateRequestDto.getUsername())).willReturn(Optional.of(member));
