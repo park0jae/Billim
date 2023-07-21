@@ -122,6 +122,19 @@ public class ReviewRepositoryTest {
     }
 
     @Test
+    public void deleteCascadeBorrowerMember(){
+        //given
+        reviewInit();
+
+        // when
+        memberRepository.delete(borrowerMember);
+        clear();
+
+        // then
+        assertThat(reviewRepository.count()).isEqualTo(0);
+    }
+
+    @Test
     public void deleteReviewTest(){
         // given
         reviewInit();

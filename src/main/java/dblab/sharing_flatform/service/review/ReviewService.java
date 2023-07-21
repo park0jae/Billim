@@ -39,15 +39,15 @@ public class ReviewService {
     @Transactional
     public ReviewResponseDto writeReview(ReviewRequestDto reviewRequestDto, Long tradeId, String username){
         Trade trade = tradeRepository.findById(tradeId).orElseThrow(TradeNotFoundException::new);
-        Member writeMember = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
-        Member reviewerMember = memberRepository.findById(trade.getRenderMember().getId()).orElseThrow(MemberNotFoundException::new);
+        Member reviewerMember = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
+        Member member = memberRepository.findById(trade.getRenderMember().getId()).orElseThrow(MemberNotFoundException::new);
 
         validate(username, trade);
 
         Review review = new Review(reviewRequestDto.getContent(),
                 reviewRequestDto.getStarRating(),
-                writeMember,
-                reviewerMember);
+                reviewerMember,
+                member);
 
         reviewRepository.save(review);
         trade.addReview(review);
@@ -79,7 +79,7 @@ public class ReviewService {
     }
 
     private void validate(String username, Trade trade) {
-        if (username.equals(trade.getBorrowerMember().getUsername())) {
+        if (username.equals(trade.getRenderMember().getUsername())) {
             throw new ImpossibleWriteReviewException();
         }
 
