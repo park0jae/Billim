@@ -12,8 +12,8 @@ import javax.persistence.Embedded;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
 
-@Data
 @ApiModel(value = "회원 정보 수정 요청")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberUpdateRequestDto {

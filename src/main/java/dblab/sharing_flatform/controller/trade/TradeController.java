@@ -22,26 +22,26 @@ public class TradeController {
     private final TradeService tradeService;
 
     @ApiOperation(value = "Post ID로 Trade 생성", notes = "게시글 ID로 Trade를 생성합니다.")
-    @PostMapping("/{id}")
+    @PostMapping("/{postId}")
     @ResponseStatus(HttpStatus.CREATED)
     public Response createTrade(@Valid @RequestBody TradeRequestDto tradeRequestDto,
-                                @ApiParam(value = "Post ID", required = true) @PathVariable Long id) {
+                                @ApiParam(value = "Post ID", required = true) @PathVariable Long postId) {
         tradeRequestDto.setRenderName(SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new));
-        return Response.success(tradeService.createTrade(tradeRequestDto, id));
+        return Response.success(tradeService.createTrade(tradeRequestDto, postId));
     }
 
     @ApiOperation(value = "Trade ID로 Trade의 거래완료", notes = "거래 ID로 Trade의 거래를 완료합니다.")
-    @PatchMapping("/{id}")
+    @PatchMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response completeTrade(@ApiParam(value = "완료할 Trade ID", required = true) @PathVariable Long id){
-        return Response.success(tradeService.completeTrade(id));
+    public Response completeTrade(@ApiParam(value = "완료할 Trade ID", required = true) @PathVariable Long postId){
+        return Response.success(tradeService.completeTrade(postId));
     }
 
     @ApiOperation(value = "Trade ID로 거래를 조회", notes = "Trade ID로 거래를 조회합니다.")
-    @GetMapping("/{id}")
+    @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response findTradeById(@ApiParam(value = "조회할 Trade ID", required = true) @PathVariable Long id){
-        return Response.success(tradeService.findTradeById(id));
+    public Response findTradeById(@ApiParam(value = "조회할 Trade ID", required = true) @PathVariable Long postId){
+        return Response.success(tradeService.findTradeById(postId));
     }
 
     @ApiOperation(value = "Trade 전체 조회", notes = "모든 Trade를 조회합니다 / ADMIN 전용")
@@ -52,10 +52,10 @@ public class TradeController {
     }
 
     @ApiOperation(value = "Trade ID로 거래를 삭제", notes = "Trade ID로 거래를 삭제합니다.")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response cancelByRender(@ApiParam(value = "삭제 Trade ID", required = true) @PathVariable Long id){
-        tradeService.deleteTrade(id);
+    public Response cancelByRender(@ApiParam(value = "삭제 Trade ID", required = true) @PathVariable Long postId){
+        tradeService.deleteTrade(postId);
         return Response.success();
     }
 }
