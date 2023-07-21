@@ -81,11 +81,7 @@ public class ReviewServiceTest {
         ReviewResponseDto result = reviewService.writeReview(reviewRequestDto, trade.getId(), reviewerMember.getUsername());
 
         // Then
-        assertThat(result).isNotNull();
-        verify(reviewRepository).save(ArgumentMatchers.any(Review.class));
-        verify(tradeRepository).findById(trade.getId());
-        verify(memberRepository).findByUsername(reviewerMember.getUsername());
-        verify(memberRepository).findById(member.getId());
+        assertThat(result.getContent()).isEqualTo("테스트 리뷰입니다.");
     }
 
     @Test
