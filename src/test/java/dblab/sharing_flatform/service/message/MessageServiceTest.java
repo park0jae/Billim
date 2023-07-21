@@ -44,7 +44,7 @@ public class MessageServiceTest {
     @Test
     public void sendMessageTest() {
         // Given
-        MessageCreateRequestDto messageCreateRequestDto = new MessageCreateRequestDto("HelloWorld","receiver","sender");
+        MessageCreateRequestDto messageCreateRequestDto = new MessageCreateRequestDto("sender", "HelloWorld","receiver");
 
         given(memberRepository.findByUsername("sender")).willReturn(Optional.of(sendMember));
         given(memberRepository.findByUsername("receiver")).willReturn(Optional.of(receiveMember));
