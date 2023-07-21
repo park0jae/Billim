@@ -1,5 +1,6 @@
 package dblab.sharing_flatform.dto.comment;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,10 +11,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
+@ApiModel(value = "댓글 생성 요청")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentCreateRequestDto {
+
     @ApiModelProperty(hidden = true)
     @Null
     private String username;

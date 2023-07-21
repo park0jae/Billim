@@ -33,8 +33,8 @@ public class CategoryService {
     }
 
     @Transactional
-    public void delete(String name) {
-        categoryRepository.delete(categoryRepository.findByName(name).orElseThrow(CategoryNotFoundException::new));
+    public void delete(String categoryName) {
+        categoryRepository.delete(categoryRepository.findByName(categoryName).orElseThrow(CategoryNotFoundException::new));
     }
 
 

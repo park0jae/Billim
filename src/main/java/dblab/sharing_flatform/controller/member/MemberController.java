@@ -51,18 +51,19 @@ public class MemberController {
     }
 
     @ApiOperation(value = "회원 삭제", notes = "관리자 또는 본인인 경우 사용자를 삭제한다.")
-    @DeleteMapping("/{username}")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
-    public Response deleteMember(@ApiParam(name = "삭제할 사용자의 username", required = true) @PathVariable String username) {
+    public Response deleteMember() {
+        String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
         memberService.delete(username);
         return Response.success();
     }
 
-    @ApiOperation(value = "회원 정보 수정", notes = "본인인 경우 정보를 수정한다.")
-    @PatchMapping("/{username}")
+    @ApiOperation(value = "자신의 회원 정보 수정", notes = "본인인 경우 정보를 수정한다.")
+    @PatchMapping
     @ResponseStatus(HttpStatus.OK)
-    public Response updateMember(@ApiParam(name = "수정할 회원의 username", required = true) @PathVariable String username,
-                                 @Valid @ModelAttribute MemberUpdateRequestDto memberUpdateRequestDto) {
+    public Response updateMember(@Valid @ModelAttribute MemberUpdateRequestDto memberUpdateRequestDto) {
+        String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
         MemberPrivateDto updateMember = memberService.update(username, memberUpdateRequestDto);
         return Response.success(updateMember);
     }

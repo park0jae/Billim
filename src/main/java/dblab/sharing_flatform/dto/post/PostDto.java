@@ -27,7 +27,8 @@ public class PostDto {
     public static PostDto toDto(Post post) {
         return new PostDto(post.getId(),
                 post.getTitle(),
-                post.getMember().getUsername(), post.getCreatedTime());
+                post.getMember().getUsername(),
+                post.getCreatedTime());
     }
 
     public static List<PostDto> toDtoList(List<Post> posts) {

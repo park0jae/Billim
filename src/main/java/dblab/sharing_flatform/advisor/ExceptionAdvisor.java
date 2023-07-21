@@ -119,7 +119,6 @@ public class ExceptionAdvisor {
         return Response.failure(404, "회원을 찾을 수 없습니다.");
     }
 
-
     // role
     @ExceptionHandler(RoleNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -141,7 +140,6 @@ public class ExceptionAdvisor {
     public Response messageNotFoundException(MessageNotFoundException e) {
         return Response.failure(404, "메시지를 찾을 수 없습니다.");
     }
-
 
     // post
     @ExceptionHandler(PostNotFoundException.class)

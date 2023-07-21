@@ -27,7 +27,6 @@ public class CategoryController {
         return Response.success(categoryService.readAll());
     }
 
-
     @ApiOperation(value = "카테고리 생성", notes = "카테고리를 생성 / ADMIN 전용")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -42,5 +41,4 @@ public class CategoryController {
         categoryService.delete(categoryName);
         return Response.success();
     }
-
 }

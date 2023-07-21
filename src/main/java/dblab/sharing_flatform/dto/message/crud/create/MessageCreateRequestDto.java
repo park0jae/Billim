@@ -16,7 +16,6 @@ import javax.validation.constraints.Null;
 @NoArgsConstructor
 public class MessageCreateRequestDto {
 
-
     @ApiModelProperty(hidden = true)
     @Null
     private String sendMember;

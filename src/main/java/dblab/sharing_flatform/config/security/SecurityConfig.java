@@ -61,11 +61,9 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, "/member/search").permitAll()
                 .antMatchers(HttpMethod.GET, "/member/profile").permitAll()
                 .antMatchers(HttpMethod.PATCH, "/member/update/oauth").permitAll()
-                .antMatchers(HttpMethod.GET, "/member/{memberId}").access("@memberGuard.check(#memberId)")
-                .antMatchers(HttpMethod.DELETE, "/member/{memberId}").access("@memberGuard.check(#memberId)")
-                .antMatchers(HttpMethod.PATCH, "/member/{memberId}").access("@memberGuard.check(#memberId)")
+//                .antMatchers(HttpMethod.GET, "/member/{memberId}").access("@memberGuard.check(#memberId)")
 
-                // 카테고리 생성,삭제 - ADMIN
+                // 카테고리 생성, 삭제 - ADMIN
                 .antMatchers(HttpMethod.DELETE, "/category/**").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/category/**").hasAuthority("ADMIN")
 
