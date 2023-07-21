@@ -61,7 +61,7 @@ public class MemberServiceTest {
         // given
         Member member = createMember();
         Address address = new Address("TestCity", "TestDistrict", "TestStreet", "TestZipcode");
-        MemberUpdateRequestDto memberUpdateRequestDto = new MemberUpdateRequestDto("updatePass1!", "updatedPN", address, "hi~", null);
+        MemberUpdateRequestDto memberUpdateRequestDto = new MemberUpdateRequestDto(member.getUsername(),"updatePass1!", "updatedPN", address, "hi~", null);
 
         given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
 
