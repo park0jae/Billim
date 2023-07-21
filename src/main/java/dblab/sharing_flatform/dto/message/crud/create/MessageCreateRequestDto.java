@@ -16,13 +16,14 @@ import javax.validation.constraints.Null;
 @NoArgsConstructor
 public class MessageCreateRequestDto {
 
-    @ApiModelProperty(value = "메세지 내용", notes = "메세지 내용을 입력해주세요.", required = true)
-    @NotBlank(message = "내용을 입력해주세요.")
-    private String content;
 
     @ApiModelProperty(hidden = true)
     @Null
     private String sendMember;
+
+    @ApiModelProperty(value = "메세지 내용", notes = "메세지 내용을 입력해주세요.", required = true)
+    @NotBlank(message = "내용을 입력해주세요.")
+    private String content;
 
     @ApiModelProperty(value = "수신자 이름", notes = "수신자 이름을 입력해주세요", required = true)
     @NotBlank(message = "수신자 이름을 입력해주세요.")
