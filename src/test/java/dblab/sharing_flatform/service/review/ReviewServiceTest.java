@@ -82,7 +82,6 @@ public class ReviewServiceTest {
 
         // Then
         assertThat(result).isNotNull();
-
         verify(reviewRepository).save(ArgumentMatchers.any(Review.class));
         verify(tradeRepository).findById(trade.getId());
         verify(memberRepository).findByUsername(reviewerMember.getUsername());
