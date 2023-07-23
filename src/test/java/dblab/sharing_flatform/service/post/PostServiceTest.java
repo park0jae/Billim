@@ -13,6 +13,7 @@ import dblab.sharing_flatform.dto.post.crud.read.response.PostReadResponseDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateResponseDto;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
+import dblab.sharing_flatform.factory.category.CategoryFactory;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
 import dblab.sharing_flatform.repository.likepost.LikePostRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
@@ -30,7 +31,10 @@ import org.springframework.data.domain.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static dblab.sharing_flatform.factory.category.CategoryFactory.*;
+import static dblab.sharing_flatform.factory.category.CategoryFactory.createCategoryWithName;
 import static dblab.sharing_flatform.factory.item.ItemFactory.*;
 import static dblab.sharing_flatform.factory.member.MemberFactory.*;
 import static dblab.sharing_flatform.factory.post.PostFactory.*;
@@ -156,6 +160,52 @@ public class PostServiceTest {
         PostDto postDto2 = result.getPostList().get(1);
         assertThat(postDto2.getTitle()).isEqualTo("title 2");
         assertThat(postDto2.getUsername()).isEqualTo(member.getUsername());
+    }
+
+    @Test
+    @DisplayName("제목 조건에 따른 글 조회 테스트")
+    public void readAllPostByTitleTest() {
+        // Given
+        List<Post> posts = new ArrayList<>();
+        posts.add(new Post("title 1", "post 1", category, createItem(), List.of(), member));
+        posts.add(new Post("title 2", "post 2", category, createItem(), List.of(), member));
+
+        PostPagingCondition cond = new PostPagingCondition(0, 10, null, "title 1");
+
+        // 이 부분을 변경하여 title이 "title 1"인 포스트만 가져오도록 하세요.
+        given(postRepository.findAllByCategoryAndTitle(cond)).willReturn(new PageImpl<>(List.of(PostDto.toDto(posts.get(0))), PageRequest.of(cond.getPage(), cond.getSize()), 1));
+
+        // When
+        PagedPostListDto result = postService.readAll(cond);
+
+        // Then
+        assertThat(result.getPostList()).hasSize(1);
+
+        PostDto postDto1 = result.getPostList().get(0);
+        assertThat(postDto1.getTitle()).isEqualTo("title 1");
+        assertThat(postDto1.getUsername()).isEqualTo(member.getUsername());
+    }
+
+    @Test
+    @DisplayName("카테고리 이름에 따른 글 조회 테스트")
+    public void readAllPostByCategoryTest(){
+        List<Post> posts = new ArrayList<>();
+        posts.add(new Post("title 1", "post 1", createCategoryWithName("category 1"), createItem(), List.of(), member));
+        posts.add(new Post("title 2", "post 2", createCategoryWithName("category 2"), createItem(), List.of(), member));
+
+        PostPagingCondition cond = new PostPagingCondition(0, 10, "category 1", null);
+
+        given(postRepository.findAllByCategoryAndTitle(cond)).willReturn(new PageImpl<>(List.of(PostDto.toDto(posts.get(0))), PageRequest.of(cond.getPage(), cond.getSize()), 1));
+
+        // When
+        PagedPostListDto result = postService.readAll(cond);
+
+        // Then
+        assertThat(result.getPostList()).hasSize(1);
+
+        PostDto postDto1 = result.getPostList().get(0);
+        assertThat(postDto1.getTitle()).isEqualTo("title 1");
+        assertThat(postDto1.getUsername()).isEqualTo(member.getUsername());
     }
 
     @Test
