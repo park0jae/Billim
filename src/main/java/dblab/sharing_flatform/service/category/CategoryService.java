@@ -26,9 +26,11 @@ public class CategoryService {
     public Long create(CategoryCreateRequestDto requestDto) {
         if (requestDto.getParentCategoryName() != null) {
             Category parentCategory = categoryRepository.findByName(requestDto.getParentCategoryName()).orElseThrow(CategoryNotFoundException::new);
-            return categoryRepository.save(CategoryCreateRequestDto.toEntity(requestDto, parentCategory)).getId();
+            Category category = categoryRepository.save(CategoryCreateRequestDto.toEntity(requestDto, parentCategory));
+            return category.getId();
         } else {
-            return categoryRepository.save(CategoryCreateRequestDto.toEntity(requestDto, null)).getId();
+            Category category = categoryRepository.save(CategoryCreateRequestDto.toEntity(requestDto, null));
+            return category.getId();
         }
     }
 

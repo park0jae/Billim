@@ -1,38 +1,48 @@
 package dblab.sharing_flatform.service.post;
 
 import dblab.sharing_flatform.domain.category.Category;
+import dblab.sharing_flatform.domain.likepost.LikePost;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
-import dblab.sharing_flatform.domain.review.Review;
+import dblab.sharing_flatform.dto.post.PostDto;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateResponseDto;
+import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
+import dblab.sharing_flatform.dto.post.crud.read.response.PagedPostListDto;
+import dblab.sharing_flatform.dto.post.crud.read.response.PostReadResponseDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateResponseDto;
-import dblab.sharing_flatform.factory.member.MemberFactory;
-import dblab.sharing_flatform.factory.post.PostFactory;
+import dblab.sharing_flatform.exception.post.PostNotFoundException;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
+import dblab.sharing_flatform.repository.likepost.LikePostRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
+import dblab.sharing_flatform.service.file.PostFileService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static dblab.sharing_flatform.factory.item.ItemFactory.*;
+import static dblab.sharing_flatform.factory.member.MemberFactory.*;
+import static dblab.sharing_flatform.factory.post.PostFactory.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class PostServiceTest {
 
     @InjectMocks
     private PostService postService;
-
     @Mock
     private PostRepository postRepository;
 
@@ -41,6 +51,10 @@ public class PostServiceTest {
 
     @Mock
     private CategoryRepository categoryRepository;
+    @Mock
+    private PostFileService postFileService;
+    @Mock
+    private LikePostRepository likePostRepository;
 
     Post post;
     Member member;
@@ -48,12 +62,13 @@ public class PostServiceTest {
 
     @BeforeEach
     public void beforeEach(){
-        post = PostFactory.creatPostWithMemberRole();
+        post = creatPostWithMemberRole();
         member = post.getMember();
         category = post.getCategory();
     }
 
     @Test
+    @DisplayName("글 생성 테스트")
     public void createPostTest(){
         // Given
         PostCreateRequestDto postCreateRequestDto = new PostCreateRequestDto(member.getUsername(),"테스트 타이틀", "테스트 내용",  category.getName(), List.of(), null);
@@ -64,22 +79,11 @@ public class PostServiceTest {
         // when
         PostCreateResponseDto result = postService.create(postCreateRequestDto);
 
-        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(post.getId());
     }
 
     @Test
-    public void deletePostTest(){
-        // Given
-        given(postRepository.findById(post.getId())).willReturn(Optional.of(post));
-
-        // When
-        postService.delete(post.getId());
-
-        // Then
-        assertThat(postRepository.count()).isEqualTo(0);
-    }
-
-    @Test
+    @DisplayName("글 수정 테스트")
     public void updatePostTest(){
         // Given
         PostUpdateRequestDto postUpdateRequestDto = new PostUpdateRequestDto("업데이트 타이틀", "업데이트 내용", null, null, null);
@@ -91,5 +95,115 @@ public class PostServiceTest {
 
         // Then
         assertThat(result.getTitle()).isEqualTo("업데이트 타이틀");
+    }
+
+    @Test
+    @DisplayName("글 삭제 테스트")
+    public void deletePostTest(){
+        // Given
+        given(postRepository.findById(post.getId())).willReturn(Optional.of(post));
+
+        // When
+        postService.delete(post.getId());
+
+        // Then
+        verify(postRepository).delete(post);
+    }
+
+    @Test
+    @DisplayName("아이디로 글 조회 테스트")
+    public void readPostTest(){
+        // Given
+        given(postRepository.findById(post.getId())).willReturn(Optional.of(post));
+
+        // When
+        PostReadResponseDto result = postService.read(post.getId());
+
+        // Then
+        assertThat(result.getTitle()).isEqualTo("title");
+    }
+
+    @Test
+    @DisplayName("전체 글 조회")
+    public void readAllPostTest(){
+        // Given
+        List<Post> posts = new ArrayList<>();
+        List<PostDto> postDtoList = new ArrayList<>();
+
+        posts.add(new Post("title 1", "post 1", category, createItem(), List.of(), member));
+        posts.add(new Post("title 2", "post 2", category, createItem(), List.of(), member));
+
+        postDtoList.add(PostDto.toDto(posts.get(0)));
+        postDtoList.add(PostDto.toDto(posts.get(1)));
+
+        PostPagingCondition cond = new PostPagingCondition(0,10, null, null);
+
+        Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize(), Sort.by("post_id").ascending());
+        Page<PostDto> resultPage = new PageImpl<>(postDtoList, pageable, posts.size());
+
+        given(postRepository.findAllByCategoryAndTitle(cond)).willReturn(resultPage);
+
+        // When
+        PagedPostListDto result = postService.readAll(cond);
+
+        // Then
+        assertThat(result.getPostList()).hasSize(2);
+
+        PostDto postDto1 = result.getPostList().get(0);
+        assertThat(postDto1.getTitle()).isEqualTo("title 1");
+        assertThat(postDto1.getUsername()).isEqualTo(member.getUsername());
+
+        PostDto postDto2 = result.getPostList().get(1);
+        assertThat(postDto2.getTitle()).isEqualTo("title 2");
+        assertThat(postDto2.getUsername()).isEqualTo(member.getUsername());
+    }
+
+    @Test
+    @DisplayName("글 좋아요 누르기 테스트")
+    public void likeUpPostTest(){
+        // Given
+        post = new Post("new Post", "새 글입니다.", category, createItem(), List.of(), createMember());
+        List<LikePost> likePosts = new ArrayList<>();
+
+        given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
+        given(postRepository.findById(post.getId())).willReturn(Optional.of(post));
+
+        given(likePostRepository.findAllByPostId(post.getId())).willReturn(likePosts);
+
+        // When
+        postService.like(post.getId(), member.getUsername());
+
+        // Then
+        assertThat(likePosts.get(0).getMember()).isEqualTo(member);
+    }
+
+    @Test
+    @DisplayName("글 좋아요 취소 테스트")
+    public void likeDownPostTest(){
+        // Given
+        List<LikePost> likePosts = new ArrayList<>();
+        LikePost likePost = new LikePost(member, post);
+        likePosts.add(likePost);
+
+        given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
+        given(postRepository.findById(post.getId())).willReturn(Optional.of(post));
+
+        given(likePostRepository.findAllByPostId(post.getId())).willReturn(likePosts);
+
+        // When
+        postService.like(post.getId(), member.getUsername());
+
+        // Then
+        verify(likePostRepository).deleteByMemberIdAndPostId(member.getId(), post.getId());
+    }
+    @Test
+    @DisplayName("글 존재 X, 예외 테스트")
+    public void postNotFoundExceptionTest(){
+        // Given
+        Long postId = 100L;
+        given(postRepository.findById(postId)).willReturn(Optional.empty());
+
+        // When & Then
+        assertThatThrownBy(() -> postService.read(postId)).isInstanceOf(PostNotFoundException.class);
     }
 }
