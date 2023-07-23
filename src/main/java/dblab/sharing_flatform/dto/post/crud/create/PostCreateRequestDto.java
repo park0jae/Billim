@@ -46,6 +46,4 @@ public class PostCreateRequestDto {
     @Nullable
     private ItemCreateRequestDto itemCreateRequestDto;
 
-
-
 }

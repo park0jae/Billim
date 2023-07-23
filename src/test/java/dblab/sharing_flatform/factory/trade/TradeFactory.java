@@ -14,4 +14,13 @@ public class TradeFactory {
     public static Trade createTrade(){
         return new Trade(createRenderMember(), createBorrowerMember(), LocalDate.now(), LocalDate.now(), createPost());
     }
+
+    public static Trade createTradeReverse(){
+        return new Trade(createBorrowerMember(), createRenderMember(), LocalDate.now(), LocalDate.now(), createPost());
+    }
+
+    public static Trade createTradeEqualMember(){
+        return new Trade(createRenderMember(), createRenderMember(), LocalDate.now(), LocalDate.now(), createPost());
+    }
+
 }
