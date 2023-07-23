@@ -19,6 +19,7 @@ public class CategoryService {
 
     public List<CategoryDto> readAll() {
         List<Category> categoryList = categoryRepository.findAllOrderByParentIdAscNullsFirstCategoryIdAsc();
+
         return CategoryDto.toList(categoryList);
     }
 

@@ -2,10 +2,23 @@ package dblab.sharing_flatform.service.member;
 
 import dblab.sharing_flatform.domain.embedded.address.Address;
 import dblab.sharing_flatform.domain.member.Member;
+import dblab.sharing_flatform.domain.post.Post;
+import dblab.sharing_flatform.dto.member.MemberDto;
 import dblab.sharing_flatform.dto.member.MemberPrivateDto;
+import dblab.sharing_flatform.dto.member.MemberProfileDto;
+import dblab.sharing_flatform.dto.member.crud.read.request.MemberPagingCondition;
+import dblab.sharing_flatform.dto.member.crud.read.response.PagedMemberListDto;
 import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
+import dblab.sharing_flatform.dto.post.PostDto;
+import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
+import dblab.sharing_flatform.dto.post.crud.read.response.PagedPostListDto;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
+import dblab.sharing_flatform.factory.category.CategoryFactory;
+import dblab.sharing_flatform.factory.item.ItemFactory;
+import dblab.sharing_flatform.factory.post.PostFactory;
 import dblab.sharing_flatform.repository.member.MemberRepository;
+import dblab.sharing_flatform.repository.post.PostRepository;
+import dblab.sharing_flatform.repository.post.QPostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,11 +26,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-import static dblab.sharing_flatform.factory.member.MemberFactory.createMember;
+import static dblab.sharing_flatform.factory.category.CategoryFactory.*;
+import static dblab.sharing_flatform.factory.item.ItemFactory.createItem;
+import static dblab.sharing_flatform.factory.member.MemberFactory.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
@@ -32,6 +52,9 @@ public class MemberServiceTest {
     MemberRepository memberRepository;
 
     @Mock
+    PostRepository postRepository;
+
+    @Mock
     PasswordEncoder passwordEncoder;
 
     Member member;
@@ -41,7 +64,7 @@ public class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("회원 정보 가져오기 테스트")
+    @DisplayName("본인 정보 가져오기 테스트")
     public void getMemberInfoTest() throws Exception {
         //given
         given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
@@ -51,6 +74,47 @@ public class MemberServiceTest {
 
         //then
         assertThat(memberInfo.getUsername()).isEqualTo("username");
+    }
+
+    @Test
+    @DisplayName("회원 정보 가져오기 테스트")
+    public void readMemberProfileTest(){
+        // Given
+        List<Post> posts = new ArrayList<>();
+        member = createMemberWithRole();
+        posts.add(new Post("title", "content", createCategory(), createItem(), List.of(), member));
+
+        given(postRepository.findAllWithMemberByUsername(member.getUsername())).willReturn(posts);
+        given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
+
+        // Then
+        MemberProfileDto result = memberService.readMemberProfile(member.getUsername());
+
+        // When
+        assertThat(result.getUsername()).isEqualTo("username");
+        assertThat(result.getPosts().get(0).getUsername()).isEqualTo(member.getUsername());
+    }
+
+    @Test
+    @DisplayName("회원 이름 조건 검색 테스트")
+    public void findAllBySearchTest(){
+        // Given
+
+        List<Member> members = new ArrayList<>();
+        members.add(createMemberWithRole());
+        members.add(createRenderMember());
+
+        MemberPagingCondition cond = new MemberPagingCondition(0, 10, "username");
+
+        given(memberRepository.findAllBySearch(cond)).willReturn(new PageImpl<>(List.of(MemberDto.toDto(members.get(0))), PageRequest.of(cond.getPage(), cond.getSize()),1));
+
+        // When
+        Page<MemberDto> result = memberRepository.findAllBySearch(cond);
+
+        // Then
+        assertThat(result.getContent()).hasSize(1);
+        MemberDto memberDto = result.getContent().get(0);
+        assertThat(memberDto.getUsername()).isEqualTo("username");
     }
 
     @Test
@@ -90,5 +154,7 @@ public class MemberServiceTest {
         // When & Then
         assertThatThrownBy(() -> memberService.readMyInfo(username)).isInstanceOf(MemberNotFoundException.class);
     }
+
+
 
 }
