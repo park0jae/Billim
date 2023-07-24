@@ -17,6 +17,12 @@ public class MemberDto {
     private String username;
     private RoleType memberRoles;
 
+    public MemberDto(Long id, String username, Member member) {
+        this.id = id;
+        this.username = username;
+        this.memberRoles = member.getRoles().get(0).getRole().getRoleType();
+    }
+
     public static MemberDto toDto(Member member) {
         return new MemberDto(member.getId(), member.getUsername(), member.getRoles().get(0).getRole().getRoleType());
     }

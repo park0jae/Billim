@@ -89,6 +89,11 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, "/review/all").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET, "/review").hasAnyAuthority("ADMIN", "MANAGER", "USER")
 
+                // 신고 조회, 삭제
+                .antMatchers(HttpMethod.DELETE, "/report/{reportId}").access("@reportGuard.check(#reportId)")
+                .antMatchers(HttpMethod.GET, "/report").hasAnyAuthority("ADMIN")
+
+
 
                 .and()
                 //OAuth 2.0 기반 인증을 처리하기위해 Provider와의 연동을 지원
