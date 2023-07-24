@@ -11,6 +11,7 @@ import dblab.sharing_flatform.repository.category.CategoryRepository;
 import dblab.sharing_flatform.repository.image.PostImageRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -88,6 +89,7 @@ class PostRepositoryTest {
     }
 
     @Test
+    @DisplayName("카테고리 삭제 -> 게시글 삭제 By cascade")
     public void deleteCascadeCategory() throws Exception {
         // given
         postInit();
@@ -102,6 +104,7 @@ class PostRepositoryTest {
 
 
     @Test
+    @DisplayName("회원 삭제 -> 게시글 삭제 By cascade")
     public void deleteCascadeMember() throws Exception {
         //given
         postInit();
@@ -115,6 +118,7 @@ class PostRepositoryTest {
     }
 
     @Test
+    @DisplayName("게시글 with 이미지 저장 -> Image 저장 By cascade")
     public void persistImageCascadePost() throws Exception {
         //given
         List<PostImage> postImages = new ArrayList<>();
@@ -128,7 +132,8 @@ class PostRepositoryTest {
         assertThat(postImageRepository.findAll().size()).isEqualTo(2);
     }
 
-    @Test  
+    @Test
+    @DisplayName("게시글 검색")
     public void findAllBySearchTest() throws Exception {
         //given
         postInit();

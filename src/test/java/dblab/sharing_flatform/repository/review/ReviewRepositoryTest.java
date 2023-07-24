@@ -11,6 +11,7 @@ import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
 import dblab.sharing_flatform.repository.trade.TradeRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -99,6 +100,7 @@ public class ReviewRepositoryTest {
     }
 
     @Test
+    @DisplayName("리뷰 저장")
     public void reviewSaveTest(){
         // given
         reviewInit();
@@ -109,6 +111,7 @@ public class ReviewRepositoryTest {
     }
 
     @Test
+    @DisplayName("회원 삭제 -> 회원이 받은 리뷰 삭제 By cascade")
     public void deleteCascadeMember(){
         //given
         reviewInit();
@@ -122,6 +125,7 @@ public class ReviewRepositoryTest {
     }
 
     @Test
+    @DisplayName("회원 삭제 -> 회원이 작성한 리뷰 삭제 By cascade")
     public void deleteCascadeBorrowerMember(){
         //given
         reviewInit();
@@ -135,6 +139,7 @@ public class ReviewRepositoryTest {
     }
 
     @Test
+    @DisplayName("리뷰 삭제")
     public void deleteReviewTest(){
         // given
         reviewInit();

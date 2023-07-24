@@ -9,6 +9,7 @@ import dblab.sharing_flatform.factory.post.PostFactory;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -68,6 +69,7 @@ class CommentRepositoryTest {
     }
 
     @Test
+    @DisplayName("Post ID로 게시글 댓글 계층형 조회")
     public void findAllByPostIdTest() throws Exception {
         // given
         // 1		NULL

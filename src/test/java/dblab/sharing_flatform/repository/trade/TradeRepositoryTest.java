@@ -10,6 +10,7 @@ import dblab.sharing_flatform.repository.category.CategoryRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -88,6 +89,7 @@ public class TradeRepositoryTest {
     }
 
     @Test
+    @DisplayName("거래 조회")
     public void tradeSaveTest(){
         // given
         tradeInit();
@@ -98,6 +100,7 @@ public class TradeRepositoryTest {
     }
 
     @Test
+    @DisplayName("게시글 삭제 -> 거래 삭제 by cascade")
     public void deleteCascadePost() {
         //given
         tradeInit();
@@ -111,6 +114,7 @@ public class TradeRepositoryTest {
     }
 
     @Test
+    @DisplayName("회원 삭제 -> 거래 삭제 by cascade")
     public void deleteCascadeMember(){
         //given
         tradeInit();
@@ -124,6 +128,7 @@ public class TradeRepositoryTest {
     }
 
     @Test
+    @DisplayName("Post Id에 대한 거래 조회")
     public void findTradeByPostId(){
         //given
         tradeInit();

@@ -1,6 +1,7 @@
 package dblab.sharing_flatform.domain.post;
 
 import dblab.sharing_flatform.domain.image.PostImage;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class PostTest {
 
     @Test
+    @DisplayName("게시글 저장")
     public void createPostTest() throws Exception {
         //given
         Post post = createPost();
@@ -23,6 +25,7 @@ class PostTest {
     }
 
     @Test
+    @DisplayName("PostImage -> Post 다대일 매핑")
     public void addImagesTest() throws Exception {
         //given
         Post post = createPost();

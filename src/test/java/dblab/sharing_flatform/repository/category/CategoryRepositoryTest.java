@@ -3,6 +3,7 @@ package dblab.sharing_flatform.repository.category;
 import dblab.sharing_flatform.config.querydsl.QuerydslConfig;
 import dblab.sharing_flatform.domain.category.Category;
 import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -28,6 +29,7 @@ class CategoryRepositoryTest {
     @PersistenceContext EntityManager em;
 
     @Test
+    @DisplayName("카테고리 생성")
     void createAndReadTest() {
         // given
         Category category = createCategory();
@@ -40,6 +42,7 @@ class CategoryRepositoryTest {
     }
 
     @Test
+    @DisplayName("카테고리 조회")
     void readAllTest() {
         // given
         List<Category> categories = List.of("name1", "name2", "name3").stream().map(n -> createCategoryWithName(n)).collect(Collectors.toList());
@@ -53,6 +56,7 @@ class CategoryRepositoryTest {
     }
 
     @Test
+    @DisplayName("부모 카테고리 삭제 -> 자식 카테고리 삭제 By cascade")
     void deleteCascadeTest() {
         // given
         Category category1 = categoryRepository.save(createCategoryWithName("category1"));
@@ -71,6 +75,7 @@ class CategoryRepositoryTest {
     }
 
     @Test
+    @DisplayName("카테고리 계층형 조회")
     void findAllWithParentOrderByParentIdAscNullsFirstCategoryIdAscTest() {
         // given
         // 1		NULL

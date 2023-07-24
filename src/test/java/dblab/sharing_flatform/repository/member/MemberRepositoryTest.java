@@ -8,6 +8,7 @@ import dblab.sharing_flatform.domain.role.RoleType;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
 import dblab.sharing_flatform.repository.role.RoleRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -41,6 +42,7 @@ public class MemberRepositoryTest {
     }
 
     @Test
+    @DisplayName("Username으로 회원 조회")
     public void findByUsernameTest(){
         // given
         Member member = createMember();
@@ -55,6 +57,7 @@ public class MemberRepositoryTest {
     }
 
     @Test
+    @DisplayName("Username으로 회원 및 Role 조회")
     public void findOneWithRolesByUsernameTest(){
 
         // given
@@ -78,6 +81,7 @@ public class MemberRepositoryTest {
 
 
     @Test
+    @DisplayName("회원 생성 -> MemberRole 생성 By cascade")
     public void cascadeCreateMemberToMemberRoleTest(){
         // given
         List<RoleType> roleTypes = List.of(RoleType.ADMIN, RoleType.MANAGER, RoleType.USER);
@@ -98,6 +102,7 @@ public class MemberRepositoryTest {
     }
 
     @Test
+    @DisplayName("회원 삭제 -> MemberRole 삭제 By cascade")
     public void cascadeDeleteMemberToMemberRoleTest(){
         // given
         List<RoleType> roleTypes = List.of(RoleType.ADMIN, RoleType.MANAGER, RoleType.USER);
@@ -121,6 +126,7 @@ public class MemberRepositoryTest {
     }
 
     @Test
+    @DisplayName("중복 회원 검사")
     public void existsByUsernameTest() {
         // given
         Member member = createMember();
