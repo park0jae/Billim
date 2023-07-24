@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class EmitterRepositoryImpl implements EmitterRepository{
 
-    // 동시성 고려
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
     private final Map<String, Object> eventCache = new ConcurrentHashMap<>();
 
@@ -28,14 +27,14 @@ public class EmitterRepositoryImpl implements EmitterRepository{
     }
 
     @Override
-    public Map<String, SseEmitter> findAllEmitterStarsWithByMemberId(String memberId) {
+    public Map<String, SseEmitter> findAllEmitterStartsWithByMemberId(String memberId) {
         return emitters.entrySet().stream()
                 .filter(entry -> entry.getKey().startsWith(memberId))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     @Override
-    public Map<String, Object> findAllEventCacheStarsWithByMemberId(String memberId) {
+    public Map<String, Object> findAllEventCacheStartsWithByMemberId(String memberId) {
         return eventCache.entrySet().stream()
                 .filter(entry -> entry.getKey().startsWith(memberId))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -47,7 +46,7 @@ public class EmitterRepositoryImpl implements EmitterRepository{
     }
 
     @Override
-    public void deleteAllEmitterStarsWithId(String memberId) {
+    public void deleteAllEmitterStartsWithId(String memberId) {
         emitters.forEach((key, emitter) -> {
             if(key.startsWith(memberId)){
                 emitters.remove(key);
@@ -56,12 +55,13 @@ public class EmitterRepositoryImpl implements EmitterRepository{
     }
 
     @Override
-    public void deleteAllEventCacheStarsWithId(String memberId) {
+    public void deleteAllEventCacheStartsWithId(String memberId) {
         eventCache.forEach((key, emitter) -> {
             if(key.startsWith(memberId)){
                 eventCache.remove(key);
             }
         });
     }
+
 
 }

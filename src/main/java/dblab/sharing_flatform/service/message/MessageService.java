@@ -38,6 +38,7 @@ public class MessageService {
         messageRepository.save(message);
 
         NotificationRequestDto notificationRequestDto = new NotificationRequestDto("새로운 메시지 도착", String.valueOf(NotificationType.MESSAGE), requestDto.getReceiveMember());
+
         eventPublisher.publishEvent(notificationRequestDto);
 
         return MessageDto.toDto(message);

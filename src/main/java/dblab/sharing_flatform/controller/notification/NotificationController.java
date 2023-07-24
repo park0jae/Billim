@@ -23,4 +23,5 @@ public class NotificationController {
         String memberId = SecurityUtil.getCurrentUserId().orElseThrow(AccessDeniedException::new);
         return notificationService.subscribe(Long.valueOf(memberId), lastEventId);
     }
+
 }
