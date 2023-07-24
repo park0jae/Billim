@@ -9,6 +9,7 @@ import dblab.sharing_flatform.factory.post.PostFactory;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import javax.persistence.PersistenceContext;
 
 import java.util.List;
 
-import static dblab.sharing_flatform.factory.comment.CommentFactory.createReply;
+import static dblab.sharing_flatform.factory.comment.CommentFactory.createComment;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -51,9 +52,8 @@ class CommentRepositoryTest {
         em.flush();
         em.clear();
     }
-
-    @Transactional
-    public void init() {
+    @BeforeEach
+    public void beforeEach() {
         post = PostFactory.createPost();
         member = post.getMember();
         category = post.getCategory();
@@ -80,15 +80,14 @@ class CommentRepositoryTest {
         // 6		NULL
         // 7		6
         // 8		NULL
-        init();
-        Comment comment1 = commentRepository.save(createReply(post, member, null));
-        Comment comment2 = commentRepository.save(createReply(post, member, comment1));
-        Comment comment3 = commentRepository.save(createReply(post, member, null));
-        Comment comment4 = commentRepository.save(createReply(post, member, null));
-        Comment comment5 = commentRepository.save(createReply(post, member, comment1));
-        Comment comment6 = commentRepository.save(createReply(post, member, null));
-        Comment comment7 = commentRepository.save(createReply(post, member, comment6));
-        Comment comment8 = commentRepository.save(createReply(post, member, null));
+        Comment comment1 = commentRepository.save(createComment(post, member, null));
+        Comment comment2 = commentRepository.save(createComment(post, member, comment1));
+        Comment comment3 = commentRepository.save(createComment(post, member, null));
+        Comment comment4 = commentRepository.save(createComment(post, member, null));
+        Comment comment5 = commentRepository.save(createComment(post, member, comment1));
+        Comment comment6 = commentRepository.save(createComment(post, member, null));
+        Comment comment7 = commentRepository.save(createComment(post, member, comment6));
+        Comment comment8 = commentRepository.save(createComment(post, member, null));
         clear();
 
         //when
@@ -114,4 +113,49 @@ class CommentRepositoryTest {
         assertThat(result.size()).isEqualTo(8);
     }
 
+    @Test
+    @DisplayName("회원 삭제 -> 작성한 댓글 삭제 By cascade")
+    public void deleteCascadeOnMemberTest() throws Exception {
+        //given
+        commentRepository.save(createComment(post, member, null));
+        clear();
+
+        //when
+        memberRepository.delete(member);
+        clear();
+
+        //then
+        assertThat(commentRepository.count()).isZero();
+    }
+
+    @Test
+    @DisplayName("게시글 삭제 -> 작성한 댓글 삭제 By cascade")
+    public void deleteCascadeOnPostTest() throws Exception {
+        //given
+        commentRepository.save(createComment(post, member, null));
+        clear();
+
+        //when
+        postRepository.delete(post);
+        clear();
+
+        //then
+        assertThat(commentRepository.count()).isZero();
+    }
+
+    @Test
+    @DisplayName("부모 댓글 삭제 -> 하위 댓글 삭제 By cascade")
+    public void deleteCascadeOnParentCommentTest() throws Exception {
+        //given
+        Comment parent = commentRepository.save(createComment(post, member, null));
+        commentRepository.save(createComment(post, member, parent));
+        clear();
+
+        //when
+        commentRepository.delete(parent);
+        clear();
+
+        //then
+        assertThat(commentRepository.count()).isZero();
+    }
 }

@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static dblab.sharing_flatform.factory.member.MemberFactory.createReceiveMember;
+import static dblab.sharing_flatform.factory.member.MemberFactory.createSendMember;
 import static dblab.sharing_flatform.factory.message.MessageFactory.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
@@ -43,8 +45,8 @@ public class MessageServiceTest {
 
     @BeforeEach
     public void beforeEach(){
-        receiveMember = MemberFactory.createReceiveMember();
-        sendMember = MemberFactory.createSendMember();
+        receiveMember = createReceiveMember();
+        sendMember = createSendMember();
         message = createMessageWithMeber(receiveMember, sendMember);
     }
 
