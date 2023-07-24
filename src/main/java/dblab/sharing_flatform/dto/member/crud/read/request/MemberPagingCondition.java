@@ -7,8 +7,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
 public class MemberPagingCondition {
 
     @NotNull(message = "페이지 번호를 입력해주세요.")

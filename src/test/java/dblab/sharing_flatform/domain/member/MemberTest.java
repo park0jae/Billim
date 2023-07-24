@@ -4,6 +4,7 @@ import dblab.sharing_flatform.domain.embedded.address.Address;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MemberTest {
 
     @Test
+    @DisplayName("회원 저장")
     public void createMemberTest() throws Exception {
         //given
         Member member = createMember();
@@ -25,6 +27,7 @@ class MemberTest {
     }
 
     @Test
+    @DisplayName("회원 정보 수정")
     public void updateMemberTest() throws Exception {
         //given
         Member member = createMember();

@@ -8,6 +8,7 @@ import dblab.sharing_flatform.factory.message.MessageFactory;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -49,6 +50,7 @@ public class MessageRepositoryTest {
     }
 
     @Test
+    @DisplayName("송신 메시지 조회")
     public void findAllBySendMemberTest() {
         // given
         String senderName = message.getSendMember().getUsername();
@@ -64,6 +66,7 @@ public class MessageRepositoryTest {
     }
 
     @Test
+    @DisplayName("수신 메시지 조회")
     public void findAllByReceiverMemberTest(){
         // given
         String receiverName = message.getReceiveMember().getUsername();
@@ -78,6 +81,7 @@ public class MessageRepositoryTest {
     }
 
     @Test
+    @DisplayName("특정 회원이 특정 회원에게 보낸 메시지 전체 조회")
     public void findAllBySendAndReceiverMembersTest(){
         // given
         messageRepository.save(message);
