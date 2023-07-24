@@ -4,6 +4,7 @@ import dblab.sharing_flatform.config.security.details.MemberDetails;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.domain.role.RoleType;
+import dblab.sharing_flatform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_flatform.exception.auth.IllegalAuthenticationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,7 +36,7 @@ public class SecurityUtil {
             MemberDetails memberDetails = (MemberDetails) authentication.getPrincipal();
             return Optional.ofNullable(memberDetails.getUsername());
         } else if (authentication.getPrincipal() instanceof String) {
-            return Optional.ofNullable((String) authentication.getPrincipal());
+            throw new AuthenticationEntryPointException();
         }
 
         throw new IllegalAuthenticationException();
@@ -43,17 +44,16 @@ public class SecurityUtil {
 
     public static Optional<String> getCurrentUserId(){
         Authentication authentication = getAuthenticationFromContext();
-
         if(authentication == null){
             log.info("No Authentication Found");
             return Optional.empty();
         }
         Object principal = authentication.getPrincipal();
-        if(principal instanceof MemberDetails){
+        if (principal instanceof MemberDetails) {
             MemberDetails memberDetails = (MemberDetails) principal;
             return Optional.ofNullable(memberDetails.getId());
-        }else if (principal instanceof String) {
-            return Optional.ofNullable(principal.toString());
+        } else if (principal instanceof String) {
+            throw new AuthenticationEntryPointException();
         }
 
         throw new IllegalAuthenticationException();

@@ -1,6 +1,7 @@
 package dblab.sharing_flatform.controller.notification;
 
 import dblab.sharing_flatform.config.security.util.SecurityUtil;
+import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.service.notification.NotificationService;
 import io.swagger.annotations.ApiOperation;
@@ -17,11 +18,19 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @ApiOperation(value = "알림 구독", notes = "알림을 구독한다.")
-    @GetMapping(value = "/subscribe", produces = "text/event-stream")
+    @GetMapping(value = "/subscribe/on", produces = "text/event-stream")
     @ResponseStatus(HttpStatus.OK)
-    public SseEmitter subscribe(@RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
-        String memberId = SecurityUtil.getCurrentUserId().orElseThrow(AccessDeniedException::new);
-        return notificationService.subscribe(Long.valueOf(memberId), lastEventId);
+    public SseEmitter subscribeOn(@RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
+        Long memberId = Long.valueOf(SecurityUtil.getCurrentUserId().orElseThrow(AccessDeniedException::new));
+        return notificationService.subscribeOn(memberId, lastEventId);
     }
 
+    @ApiOperation(value = "알림 구독 취소", notes = "알림을 구독 취소한다.")
+    @GetMapping(value = "/subscribe/off")
+    @ResponseStatus(HttpStatus.OK)
+    public Response subscribeOff() {
+        Long memberId = Long.valueOf(SecurityUtil.getCurrentUserId().orElseThrow(AccessDeniedException::new));
+        notificationService.subscribeOff(memberId);
+        return Response.success();
+    }
 }

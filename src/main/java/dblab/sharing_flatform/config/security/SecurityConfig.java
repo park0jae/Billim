@@ -94,7 +94,6 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, "/report").hasAnyAuthority("ADMIN")
 
 
-
                 .and()
                 //OAuth 2.0 기반 인증을 처리하기위해 Provider와의 연동을 지원
                 .oauth2Login()
