@@ -12,6 +12,7 @@ import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.notification.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -26,7 +27,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class NotificationService {
 
-    private static final Long DEFAULT_TIMEOUT = 60L * 100 * 60;
+    private static final Long DEFAULT_TIMEOUT = 60L * 100 * 60L;
     private final EmitterRepositoryImpl emitterRepository;
     private final NotificationRepository notificationRepository;
     private final MemberRepository memberRepository;
@@ -60,6 +61,7 @@ public class NotificationService {
             }
         }
     }
+
 
     public void send(NotificationRequestDto requestDto){
         Member receiver = memberRepository.findByUsername(requestDto.getReceiver()).orElseThrow(MemberNotFoundException::new);

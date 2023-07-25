@@ -1,5 +1,6 @@
 package dblab.sharing_flatform.domain.notification;
 
+import dblab.sharing_flatform.domain.base.BaseTime;
 import dblab.sharing_flatform.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Notification {
+public class Notification extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notification_id")

@@ -44,7 +44,7 @@ public class MessageService {
 
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartsWithByMemberId(String.valueOf(receiver.getId()));
         if(!emitters.isEmpty()){
-            NotificationRequestDto notificationRequestDto = new NotificationRequestDto("새로운 메시지 도착", String.valueOf(NotificationType.MESSAGE), requestDto.getReceiveMember());
+            NotificationRequestDto notificationRequestDto = new NotificationRequestDto(requestDto.getSendMember() + "님으로부터 새로운 메시지 도착", String.valueOf(NotificationType.MESSAGE), requestDto.getReceiveMember());
             eventPublisher.publishEvent(notificationRequestDto);
         }
 
