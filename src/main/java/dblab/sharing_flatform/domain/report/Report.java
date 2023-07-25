@@ -6,6 +6,8 @@ import dblab.sharing_flatform.domain.post.Post;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -26,6 +28,7 @@ public class Report {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reporter_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member reporter;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,11 +39,11 @@ public class Report {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    public Report(ReportType reportType, String content, Member reporter, Member reported, Post post) {
+    public Report(ReportType reportType, String content, Member reporter, Post post, Member reported) {
         this.reportType = reportType;
         this.content = content;
         this.reporter = reporter;
-        this.reported = reported;
         this.post = post;
+        this.reported = reported;
     }
 }

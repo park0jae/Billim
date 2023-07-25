@@ -31,7 +31,6 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final MemberRepository memberRepository;
 
-    @Transactional
     public SseEmitter subscribe(Long memberId, String lastEventId){
         // 현재 회원의 id와 lastEvent ID로 고유의 emitter를 생성함.
         String emitterId = makeTimeIncludeId(memberId); // emitterId = memberId_currentTime
@@ -50,7 +49,6 @@ public class NotificationService {
         return emitter;
     }
 
-    @Transactional
     public void unSubscribe(Long memberId){
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartsWithByMemberId(String.valueOf(memberId));
         Iterator<Map.Entry<String, SseEmitter>> iterator = emitters.entrySet().iterator();

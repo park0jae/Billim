@@ -54,8 +54,7 @@ public class PostController {
     @ResponseStatus(HttpStatus.CREATED)
     public Response create(@Valid @ModelAttribute PostCreateRequestDto postCreateRequestDto) {
         postCreateRequestDto.setUsername(SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new));
-        postService.create(postCreateRequestDto);
-        return Response.success();
+        return Response.success(postService.create(postCreateRequestDto));
     }
 
     @ApiOperation(value = "게시글 삭제", notes = "해당 번호의 게시글을 삭제한다.")

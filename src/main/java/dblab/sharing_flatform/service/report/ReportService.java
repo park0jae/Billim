@@ -27,13 +27,12 @@ public class ReportService {
 
     @Transactional
     public void create(ReportCreateRequestDto requestDto) {
-        Post post = postRepository.findById(requestDto.getPostId()).orElseThrow(PostNotFoundException::new);
-
+        Post post = postRepository.findById(requestDto.getPostId()).orElse(null);
         reportRepository.save(new Report(
                 requestDto.getReportType(), requestDto.getContent(),
                 memberRepository.findByUsername(requestDto.getReporterName()).orElseThrow(MemberNotFoundException::new),
-                post.getMember(),
-                post));
+                post,
+                post == null ? null : post.getMember()));
     }
 
     @Transactional

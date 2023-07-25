@@ -4,5 +4,5 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum ReportType {
-    USER_REPORT, POST_REPORT, ETC;
+    POST_REPORT, BUG;
 }
