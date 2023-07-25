@@ -31,14 +31,17 @@ public class MessageService {
 
     @Transactional
     public MessageDto sendMessage(MessageCreateRequestDto requestDto) {
+        Member receiver = memberRepository.findByUsername(requestDto.getReceiveMember()).orElseThrow(MemberNotFoundException::new);
         Message message = new Message(requestDto.getContent(),
-                memberRepository.findByUsername(requestDto.getReceiveMember()).orElseThrow(MemberNotFoundException::new),
+                receiver,
                 memberRepository.findByUsername(requestDto.getSendMember()).orElseThrow(MemberNotFoundException::new));
 
         messageRepository.save(message);
 
-        NotificationRequestDto notificationRequestDto = new NotificationRequestDto("새로운 메시지 도착", String.valueOf(NotificationType.MESSAGE), requestDto.getReceiveMember());
-        eventPublisher.publishEvent(notificationRequestDto);
+        if (receiver.isSubscribe()) {
+            NotificationRequestDto notificationRequestDto = new NotificationRequestDto("새로운 메시지 도착", String.valueOf(NotificationType.MESSAGE), requestDto.getReceiveMember());
+            eventPublisher.publishEvent(notificationRequestDto);
+        }
 
         return MessageDto.toDto(message);
     }

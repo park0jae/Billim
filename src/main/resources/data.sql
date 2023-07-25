@@ -6,13 +6,13 @@ values ('ADMIN'),
 
 -- MEMBER // password : 1q2w3e4r!!
 INSERT INTO MEMBER
-(username, password, city, district, street, zip_code, introduce, phone_number, profile_image_id, provider, rating)
+(username, password, city, district, street, zip_code, introduce, phone_number, profile_image_id, provider, rating, subscribe)
 values
-    ('admin123', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', '서울시', '관악구', '신림동', '56-1', '안녕하세요 ADMIN입니다.', '011-3124-3678', null, null, 0),
-    ('manager123', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', '서울시', '강북구', '미아동', '56-3', '안녕하세요 MANAGER입니다.', '011-1311-5478', null, null, 0),
-    ('user123', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', '서울시', '광진구', '화양동', '620-1', '안녕하세요 USER입니다. 잘부탁드립니다.', '011-3134-7623', null, null, 0),
-    ('kdo6301', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', '전주시', '덕진구', '금암동', '709-4', '안녕하세요 김동웅입니다. 잘부탁드립니다.', '012-6606-3323', null, null, 0),
-    ('okvv26', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', '전주시', '덕진구', '금암동', '709-3', '안녕하세요 박영재입니다. 잘부탁드립니다.', '011-3134-7623', null, null, 0);
+    ('admin123', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', '서울시', '관악구', '신림동', '56-1', '안녕하세요 ADMIN입니다.', '011-3124-3678', null, null, 0, false),
+    ('manager123', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', '서울시', '강북구', '미아동', '56-3', '안녕하세요 MANAGER입니다.', '011-1311-5478', null, null, 0,false),
+    ('user123', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', '서울시', '광진구', '화양동', '620-1', '안녕하세요 USER입니다. 잘부탁드립니다.', '011-3134-7623', null, null, 0,false),
+    ('kdo6301', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', '전주시', '덕진구', '금암동', '709-4', '안녕하세요 김동웅입니다. 잘부탁드립니다.', '012-6606-3323', null, null, 0,false),
+    ('okvv26', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', '전주시', '덕진구', '금암동', '709-3', '안녕하세요 박영재입니다. 잘부탁드립니다.', '011-3134-7623', null, null, 0,false);
 
 -- MEMBER_ROLE
 INSERT INTO MEMBER_ROLE (member_id, role_id)
