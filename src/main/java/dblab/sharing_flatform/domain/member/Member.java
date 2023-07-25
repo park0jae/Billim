@@ -35,8 +35,6 @@ public class Member {
     private String introduce;
     private Double rating;
 
-    private boolean subscribe = false;
-
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<MemberRole> roles = new ArrayList<>();
 
@@ -97,10 +95,6 @@ public class Member {
 
     public void calculateTotalStarRating(Double rating, Long reviewNum) {
         this.rating = Math.round(((this.rating + rating) / (double) reviewNum) * 10) / 10.0;
-    }
-
-    public void subscribe(boolean subscribe) {
-        this.subscribe = subscribe;
     }
 
 }

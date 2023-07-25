@@ -8,6 +8,7 @@ import dblab.sharing_flatform.dto.message.MessageDto;
 import dblab.sharing_flatform.dto.notification.crud.create.NotificationRequestDto;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.message.MessageNotFoundException;
+import dblab.sharing_flatform.repository.emitter.EmitterRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.message.MessageRepository;
 import dblab.sharing_flatform.service.notification.NotificationService;
@@ -16,8 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +31,7 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final EmitterRepository emitterRepository;
 
     @Transactional
     public MessageDto sendMessage(MessageCreateRequestDto requestDto) {
@@ -38,7 +42,8 @@ public class MessageService {
 
         messageRepository.save(message);
 
-        if (receiver.isSubscribe()) {
+        Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartsWithByMemberId(String.valueOf(receiver.getId()));
+        if(!emitters.isEmpty()){
             NotificationRequestDto notificationRequestDto = new NotificationRequestDto("새로운 메시지 도착", String.valueOf(NotificationType.MESSAGE), requestDto.getReceiveMember());
             eventPublisher.publishEvent(notificationRequestDto);
         }
