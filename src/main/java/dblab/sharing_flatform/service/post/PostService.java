@@ -3,8 +3,10 @@ package dblab.sharing_flatform.service.post;
 import dblab.sharing_flatform.domain.image.PostImage;
 import dblab.sharing_flatform.domain.likepost.LikePost;
 import dblab.sharing_flatform.domain.member.Member;
+import dblab.sharing_flatform.domain.notification.NotificationType;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.item.crud.create.ItemCreateRequestDto;
+import dblab.sharing_flatform.dto.notification.crud.create.NotificationRequestDto;
 import dblab.sharing_flatform.dto.post.PostDto;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateResponseDto;
@@ -19,17 +21,21 @@ import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
+import dblab.sharing_flatform.repository.emitter.EmitterRepository;
 import dblab.sharing_flatform.repository.likepost.LikePostRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
 import dblab.sharing_flatform.service.file.PostFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -44,6 +50,8 @@ public class PostService {
     private final CategoryRepository categoryRepository;
     private final PostFileService postFileService;
     private final LikePostRepository likePostRepository;
+    private final EmitterRepository emitterRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public PagedPostListDto readAll(PostPagingCondition cond) {
         return PagedPostListDto.toDto(postRepository.findAllByCategoryAndTitle(cond));
@@ -166,6 +174,12 @@ public class PostService {
             post.likeUp();
             likePosts.add(new LikePost(member, post));
             likePostRepository.save(new LikePost(member, post));
+            Member writeMember = memberRepository.findByUsername(post.getMember().getUsername()).orElseThrow(MemberNotFoundException::new);
+            Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartsWithByMemberId(String.valueOf(writeMember.getId()));
+            if(!emitters.isEmpty()){
+                NotificationRequestDto notificationRequestDto = new NotificationRequestDto(member.getUsername() + "님이 좋아요를 눌렀습니다.", String.valueOf(NotificationType.LIKE), writeMember.getUsername());
+                eventPublisher.publishEvent(notificationRequestDto);
+            }
         }
     }
 
