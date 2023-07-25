@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -30,7 +32,7 @@ public class NotificationService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public SseEmitter subscribeOn(Long memberId, String lastEventId){
+    public SseEmitter subscribe(Long memberId, String lastEventId){
         Member member = memberRepository.findById(memberId).orElseThrow(AuthenticationEntryPointException::new);
         member.subscribe(true);
 
@@ -52,18 +54,24 @@ public class NotificationService {
     }
 
     @Transactional
-    public void subscribeOff(Long memberId){
+    public void unSubscribe(Long memberId){
         Member member = memberRepository.findById(memberId).orElseThrow(AuthenticationEntryPointException::new);
         if (member.isSubscribe() == true) {
             member.subscribe(false);
         }
+        Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartsWithByMemberId(String.valueOf(memberId));
+        Iterator<Map.Entry<String, SseEmitter>> iterator = emitters.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, SseEmitter> entry = iterator.next();
+            if (entry.getKey().startsWith(String.valueOf(memberId))){
+                entry.getValue().complete();
+                iterator.remove();
+            }
+        }
     }
 
-
     public void send(NotificationRequestDto requestDto){
-        log.info("DID");
         Member receiver = memberRepository.findByUsername(requestDto.getReceiver()).orElseThrow(MemberNotFoundException::new);
-        log.info("DID2");
 
         // 알림 생성
         Notification notification = notificationRepository.save(
