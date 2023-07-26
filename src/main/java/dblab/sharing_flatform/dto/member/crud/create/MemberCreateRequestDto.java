@@ -43,6 +43,8 @@ public class MemberCreateRequestDto {
     @Embedded
     private Address address;
 
-
+    @ApiModelProperty(value = "EmailAuthKey", notes = "인증번호를 입력해주세요.", required = true, example = "I35l2W4")
+    @NotBlank(message = "인증번호를 입력해주세요.")
+    private String authKey;
 
 }

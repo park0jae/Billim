@@ -17,6 +17,6 @@ public interface MailService {
     String createKey();
 
     // 메일 발송
-    String sendSimpleMessage(String to) throws Exception;
+    void sendSimpleMessage(String to) throws Exception;
 
 }

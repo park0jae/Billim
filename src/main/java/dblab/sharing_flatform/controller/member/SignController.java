@@ -33,7 +33,6 @@ import java.io.UnsupportedEncodingException;
 @RequiredArgsConstructor
 public class SignController {
     private final SignService signService;
-
     private final MemberService memberService;
     private final OAuthService oAuthService;
     private final NaverMailService naverMailService;
@@ -42,7 +41,7 @@ public class SignController {
     @PostMapping("/sign-up")
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public Response signup(@Valid @RequestBody MemberCreateRequestDto memberCreateRequestDto){
+    public Response signup(@Valid @ModelAttribute MemberCreateRequestDto memberCreateRequestDto){
         signService.signUp(memberCreateRequestDto);
         return Response.success();
     }
@@ -51,7 +50,7 @@ public class SignController {
     @PostMapping("/login")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public Response login(@Valid @RequestBody LoginRequestDto loginRequestDto){
+    public Response login(@Valid @ModelAttribute LoginRequestDto loginRequestDto){
         LogInResponseDto logInResponseDto = signService.login(loginRequestDto);
         return Response.success(logInResponseDto);
     }
@@ -66,8 +65,8 @@ public class SignController {
     @ResponseBody
     @PostMapping("/mail")
     public Response mailConfirm(@RequestParam(name = "email") String email)  {
-        String code = naverMailService.sendSimpleMessage(email);
-        return Response.success(code);
+        naverMailService.sendSimpleMessage(email);
+        return Response.success();
     }
 
     @ApiOperation(value = "카카오 로그인", notes = "OAuth2.0 카카오로 소셜 로그인을 진행합니다.")

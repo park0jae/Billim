@@ -1,18 +1,22 @@
 package dblab.sharing_flatform.service.member;
 
 import dblab.sharing_flatform.config.security.jwt.support.TokenProvider;
+import dblab.sharing_flatform.domain.emailAuth.EmailAuth;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.role.RoleType;
 import dblab.sharing_flatform.dto.member.crud.create.OAuth2MemberCreateRequestDto.OAuth2MemberCreateRequestDto;
 import dblab.sharing_flatform.dto.member.login.LogInResponseDto;
 import dblab.sharing_flatform.dto.member.login.LoginRequestDto;
 import dblab.sharing_flatform.dto.member.crud.create.MemberCreateRequestDto;
+import dblab.sharing_flatform.exception.auth.EmailAuthNotEqualsException;
+import dblab.sharing_flatform.exception.auth.EmailAuthNotFoundException;
 import dblab.sharing_flatform.exception.auth.LoginFailureException;
 import dblab.sharing_flatform.exception.member.AlreadyExistsMemberException;
 import dblab.sharing_flatform.exception.member.DuplicateNicknameException;
 import dblab.sharing_flatform.exception.member.DuplicateUsernameException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
+import dblab.sharing_flatform.repository.emailAuth.EmailAuthRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.role.RoleRepository;
 import dblab.sharing_flatform.config.security.util.SecurityUtil;
@@ -42,11 +46,13 @@ public class SignService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final EmailAuthRepository emailAuthRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Transactional
     public void signUp(MemberCreateRequestDto requestDto){
         validateDuplicateUsernameAndNickname(requestDto);
+        validateEmailAuthKey(requestDto);
 
         Member member = new Member(requestDto.getUsername(),
                 passwordEncoder.encode(requestDto.getPassword()),
@@ -57,6 +63,7 @@ public class SignService {
                 List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)));
 
         memberRepository.save(member);
+        emailAuthRepository.deleteByEmail(requestDto.getUsername());
     }
 
     @Transactional
@@ -76,14 +83,6 @@ public class SignService {
         return LogInResponseDto.toDto(jwt);
     }
 
-    private void validateDuplicateUsernameAndNickname(MemberCreateRequestDto requestDto) {
-        if (memberRepository.existsByUsername(requestDto.getUsername())) {
-            throw new DuplicateUsernameException();
-        } else if (memberRepository.existsByNickname(requestDto.getNickname())) {
-            throw new DuplicateNicknameException();
-        }
-    }
-
     public LogInResponseDto login(LoginRequestDto requestDto) {
         Member member = memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(MemberNotFoundException::new);
 
@@ -95,11 +94,8 @@ public class SignService {
     }
 
     private String jwtLoginRequest(LoginRequestDto requestDto) {
-
-
         UsernamePasswordAuthenticationToken authenticationToken
                 = new UsernamePasswordAuthenticationToken(requestDto.getUsername(), requestDto.getPassword());
-
         try {
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
@@ -110,6 +106,21 @@ public class SignService {
             return jwt;
         } catch (BadCredentialsException e) {
             throw new LoginFailureException();
+        }
+    }
+
+    private void validateDuplicateUsernameAndNickname(MemberCreateRequestDto requestDto) {
+        if (memberRepository.existsByUsername(requestDto.getUsername())) {
+            throw new DuplicateUsernameException();
+        } else if (memberRepository.existsByNickname(requestDto.getNickname())) {
+            throw new DuplicateNicknameException();
+        }
+    }
+
+    private void validateEmailAuthKey(MemberCreateRequestDto requestDto) {
+        EmailAuth emailAuth = emailAuthRepository.findByEmail(requestDto.getUsername()).orElseThrow(EmailAuthNotFoundException::new);
+        if (!emailAuth.getKey().equals(requestDto.getAuthKey())) {
+            throw new EmailAuthNotEqualsException();
         }
     }
 }
