@@ -5,13 +5,10 @@ import dblab.sharing_flatform.dto.member.login.LoginRequestDto;
 import dblab.sharing_flatform.dto.member.crud.create.MemberCreateRequestDto;
 import dblab.sharing_flatform.dto.oauth.crud.create.AccessTokenRequestDto;
 import dblab.sharing_flatform.dto.response.Response;
-<<<<<<< HEAD
-=======
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.oauth.OAuthUserNotFoundException;
 import dblab.sharing_flatform.exception.oauth.SocialAgreementException;
 import dblab.sharing_flatform.service.mail.NaverMailService;
->>>>>>> ed14658ce3d76f7f866d9f9fb87ef69b52c40ea9
 import dblab.sharing_flatform.service.member.MemberService;
 import dblab.sharing_flatform.service.member.SignService;
 import dblab.sharing_flatform.service.oauth.OAuthService;
@@ -36,11 +33,8 @@ import java.io.UnsupportedEncodingException;
 public class SignController {
     private final SignService signService;
     private final OAuthService oAuthService;
-<<<<<<< HEAD
-=======
     private final MemberService memberService;
     private final NaverMailService naverMailService;
->>>>>>> ed14658ce3d76f7f866d9f9fb87ef69b52c40ea9
 
     @ApiOperation(value = "일반 회원가입", notes = "일반 회원가입을 한다.") // 2
     @PostMapping("/sign-up")
