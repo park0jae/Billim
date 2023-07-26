@@ -14,9 +14,9 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class NaverMailService implements MailService{
 
-    private final JavaMailSender emailSender; // MailConfig에서 등록해둔 Bean을 autowired하여 사용하기
+    private final JavaMailSender emailSender;
 
-    private String ePw; // 사용자가 메일로 받을 인증번호
+    private String ePw;
 
     @Override
     public MimeMessage creatMessage(String to) throws MessagingException, UnsupportedEncodingException {
@@ -25,11 +25,11 @@ public class NaverMailService implements MailService{
 
         MimeMessage message = emailSender.createMimeMessage();
 
-        message.addRecipients(MimeMessage.RecipientType.TO, to); // 메일 받을 사용자
-        message.setSubject("[뭐든빌리개]" + "Sharing-Platform 회원가입 인증코드 입니다."); // 이메일 제목
+        message.addRecipients(MimeMessage.RecipientType.TO, to);
+        message.setSubject("[뭐든빌리개]" + "Sharing-Platform 회원가입 인증코드 입니다.");
 
         String msgg = "";
-        // msgg += "<img src=../resources/static/image/emailheader.jpg />"; // header image
+        // msgg += "<img src=../resources/static/image/emailheader.jpg />";
         msgg += "<h1>안녕하세요</h1>";
         msgg += "<h1>대여 서비스 플랫폼 뭐든빌리개 입니다</h1>";
         msgg += "<br>";
@@ -39,12 +39,12 @@ public class NaverMailService implements MailService{
         msgg += "<div align='center' style='border:1px solid black'>";
         msgg += "<h3 style='color:blue'>회원가입 인증코드 입니다</h3>";
         msgg += "<div style='font-size:130%'>";
-        msgg += "<strong>" + ePw + "</strong></div><br/>" ; // 메일에 인증번호 ePw 넣기
+        msgg += "<strong>" + ePw + "</strong></div><br/>" ;
         msgg += "</div>";
         // msgg += "<img src=../resources/static/image/emailfooter.jpg />"; // footer image
 
-        message.setText(msgg, "utf-8", "html"); // 메일 내용, charset타입, subtype
-        // 보내는 사람의 이메일 주소, 보내는 사람 이름
+        message.setText(msgg, "utf-8", "html");
+
         message.setFrom(new InternetAddress("zerozae0926@naver.com", "SharingPlatform_Admin"));
 
         return message;
@@ -52,8 +52,8 @@ public class NaverMailService implements MailService{
 
     @Override
     public String createKey() {
-        int leftLimit = 48; // numeral '0'
-        int rightLimit = 122; // letter 'z'
+        int leftLimit = 48;
+        int rightLimit = 122;
         int targetStringLength = 10;
         Random random = new Random();
         String key = random.ints(leftLimit, rightLimit + 1)
@@ -66,9 +66,8 @@ public class NaverMailService implements MailService{
 
     @Override
     public String sendSimpleMessage(String to) {
-        ePw = createKey(); // 랜덤 인증코드 생성
-
-        MimeMessage message = null; // "to" 로 메일 발송
+        ePw = createKey();
+        MimeMessage message = null;
 
         try {
             message = creatMessage(to);
@@ -78,12 +77,12 @@ public class NaverMailService implements MailService{
             throw new RuntimeException(e);
         }
 
-        try { // 예외처리
+        try {
             emailSender.send(message);
         } catch (Exception e) {
             throw new IllegalArgumentException();
         }
 
-        return ePw; // 메일로 사용자에게 보낸 인증코드를 서버로 반환! 인증코드 일치여부를 확인하기 위함
+        return ePw;
     }
 }
