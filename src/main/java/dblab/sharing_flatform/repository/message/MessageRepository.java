@@ -18,7 +18,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     @Query("select m from Message m " +
             "join fetch m.sendMember sm " +
             "join fetch m.receiveMember rm " +
-            "where sm.username = :senderName and rm.nickname = :receiverName")
-    List<Message> findAllBySendAndReceiverMembers(@Param("senderName") String senderName, @Param("receiverName") String receiverName);
+            "where sm.username = :sendUserName and rm.nickname = :receiverNickname")
+    List<Message> findAllBySendAndReceiverMembers(@Param("sendUserName") String sendUserName, @Param("receiverNickname") String receiverNickname);
 
 }

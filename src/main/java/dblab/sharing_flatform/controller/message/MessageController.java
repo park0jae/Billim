@@ -57,7 +57,7 @@ public class MessageController {
     @ResponseStatus(HttpStatus.OK)
     public Response findSendMessageToMember(@ApiParam(value = "수신자 이름", required = true) @PathVariable String receiverName){
         String senderName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        List<MessageDto> sendMessageToMember = messageService.findMessageMemberToMember(senderName, receiverName);
+        List<MessageDto> sendMessageToMember = messageService.findSendMessageToMember(senderName, receiverName);
 
         return Response.success(sendMessageToMember);
     }
@@ -66,9 +66,8 @@ public class MessageController {
     @GetMapping("/receive/{senderName}")
     @ResponseStatus(HttpStatus.OK)
     public Response findReceiveMessageByMember(@ApiParam(value = "송신자 이름", required = true) @PathVariable String senderName){
-        String receiverName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        List<MessageDto> sendMessageToMember = messageService.findMessageMemberToMember(receiverName, senderName);
-
+        String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
+        List<MessageDto> sendMessageToMember = messageService.findReceiveMessageFromMember(username, senderName);
         return Response.success(sendMessageToMember);
     }
 

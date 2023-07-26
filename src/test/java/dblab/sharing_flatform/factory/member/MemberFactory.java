@@ -39,11 +39,11 @@ public class MemberFactory {
     }
 
     public static Member createRenderMember() {
-        return new Member("빌려주는사람", "", "nickname", "", createAddress(), "None", List.of());
+        return new Member("빌려주는사람", "", "render", "", createAddress(), "None", List.of());
     }
 
     public static Member createBorrowerMember() {
-        return new Member("빌리는사람", "", "nickname", "", createAddress(), "None", List.of());
+        return new Member("빌리는사람", "", "borrower", "", createAddress(), "None", List.of());
     }
 
 }

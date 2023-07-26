@@ -64,9 +64,15 @@ public class MessageService {
 
     }
 
-    public List<MessageDto> findMessageMemberToMember(String username, String toUsername){
-        memberRepository.findByNickname(toUsername).orElseThrow(MemberNotFoundException::new);
-        List<Message> messages = messageRepository.findAllBySendAndReceiverMembers(username, toUsername);
+    public List<MessageDto> findSendMessageToMember(String username, String receiverNickname){
+        memberRepository.findByNickname(receiverNickname).orElseThrow(MemberNotFoundException::new);
+        List<Message> messages = messageRepository.findAllBySendAndReceiverMembers(username, receiverNickname);
+        return messages.stream().map(message -> MessageDto.toDto(message)).collect(Collectors.toList());
+    }
+
+    public List<MessageDto> findReceiveMessageFromMember(String username, String senderNickName){
+        memberRepository.findByNickname(senderNickName).orElseThrow(MemberNotFoundException::new);
+        List<Message> messages = messageRepository.findAllBySendAndReceiverMembers(username, senderNickName);
         return messages.stream().map(message -> MessageDto.toDto(message)).collect(Collectors.toList());
     }
 

@@ -91,7 +91,7 @@ public class MemberServiceTest {
         MemberProfileDto result = memberService.readMemberProfile(member.getNickname());
 
         // When
-        assertThat(result.getNickname()).isEqualTo("username");
+        assertThat(result.getNickname()).isEqualTo("nickname");
         assertThat(result.getPosts().get(0).getNickname()).isEqualTo(member.getNickname());
     }
 

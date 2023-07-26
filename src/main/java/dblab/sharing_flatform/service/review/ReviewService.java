@@ -47,8 +47,8 @@ public class ReviewService {
     @Transactional
     public ReviewResponseDto writeReview(ReviewRequestDto reviewRequestDto, Long tradeId, String username){
         Trade trade = tradeRepository.findById(tradeId).orElseThrow(TradeNotFoundException::new);
-        Member reviewerMember = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
-        Member member = memberRepository.findById(trade.getRenderMember().getId()).orElseThrow(MemberNotFoundException::new);
+        Member reviewerMember = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new); // 리뷰 작성자
+        Member member = memberRepository.findById(trade.getRenderMember().getId()).orElseThrow(MemberNotFoundException::new); // 리뷰 받는 사람
 
         validate(username, trade);
 

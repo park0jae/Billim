@@ -13,6 +13,7 @@ import dblab.sharing_flatform.exception.review.ImpossibleWriteReviewException;
 import dblab.sharing_flatform.exception.trade.TradeNotCompleteException;
 import dblab.sharing_flatform.factory.review.ReviewFactory;
 import dblab.sharing_flatform.factory.trade.TradeFactory;
+import dblab.sharing_flatform.repository.emitter.EmitterRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.review.ReviewRepository;
 import dblab.sharing_flatform.repository.trade.TradeRepository;
@@ -53,6 +54,9 @@ public class ReviewServiceTest {
     @Mock
     private TradeRepository tradeRepository;
 
+    @Mock
+    EmitterRepository emitterRepository;
+
     Trade trade;
     Post post;
     Member member;
@@ -76,7 +80,7 @@ public class ReviewServiceTest {
         ReviewRequestDto reviewRequestDto = new ReviewRequestDto(review.getReviewerMember().getUsername(), review.getContent(), review.getStarRating());
 
         given(tradeRepository.findById(trade.getId())).willReturn(Optional.of(trade));
-        given(memberRepository.findByUsername(reviewerMember.getNickname())).willReturn(Optional.of(reviewerMember));
+        given(memberRepository.findByUsername(reviewerMember.getUsername())).willReturn(Optional.of(reviewerMember));
         given(memberRepository.findById(member.getId())).willReturn(Optional.of(member));
 
         // When

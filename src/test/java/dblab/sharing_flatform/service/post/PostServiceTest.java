@@ -15,6 +15,7 @@ import dblab.sharing_flatform.dto.post.crud.update.PostUpdateResponseDto;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
 import dblab.sharing_flatform.factory.category.CategoryFactory;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
+import dblab.sharing_flatform.repository.emitter.EmitterRepository;
 import dblab.sharing_flatform.repository.likepost.LikePostRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
@@ -59,6 +60,11 @@ public class PostServiceTest {
     private PostFileService postFileService;
     @Mock
     private LikePostRepository likePostRepository;
+
+    @Mock
+    private EmitterRepository emitterRepository;
+
+
 
     Post post;
     Member member;

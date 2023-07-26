@@ -7,6 +7,7 @@ import dblab.sharing_flatform.dto.message.MessageDto;
 import dblab.sharing_flatform.exception.message.MessageNotFoundException;
 import dblab.sharing_flatform.factory.member.MemberFactory;
 import dblab.sharing_flatform.factory.message.MessageFactory;
+import dblab.sharing_flatform.repository.emitter.EmitterRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.message.MessageRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +39,9 @@ public class MessageServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
+
+    @Mock
+    private EmitterRepository emitterRepository;
 
     Member receiveMember;
     Member sendMember;
@@ -104,11 +108,11 @@ public class MessageServiceTest {
         messages.add(createMessageWithMeber(receiveMember, sendMember));
         messages.add(createMessageWithMeber(receiveMember, sendMember));
 
-        given(memberRepository.findByUsername(receiveMember.getUsername())).willReturn(Optional.of(receiveMember));
-        given(messageRepository.findAllBySendAndReceiverMembers(sendMember.getUsername(), receiveMember.getUsername())).willReturn(messages);
+        given(memberRepository.findByNickname(receiveMember.getNickname())).willReturn(Optional.of(receiveMember));
+        given(messageRepository.findAllBySendAndReceiverMembers(sendMember.getUsername(), receiveMember.getNickname())).willReturn(messages);
 
         // When
-        List<MessageDto> result = messageService.findMessageMemberToMember(sendMember.getUsername(), receiveMember.getNickname());
+        List<MessageDto> result = messageService.findSendMessageToMember(sendMember.getUsername(), receiveMember.getNickname());
 
         // Then
         assertThat(result).hasSize(2);
