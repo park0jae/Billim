@@ -57,7 +57,7 @@ public class QPostRepositoryImpl extends QuerydslRepositorySupport implements QP
                         .select(constructor(PostDto.class,
                                 post.id,
                                 post.title,
-                                post.member.username,
+                                post.member.nickname,
                                 post.createdTime))
                         .from(post)
                         .join(post.member)

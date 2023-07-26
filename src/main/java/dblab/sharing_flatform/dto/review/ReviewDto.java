@@ -21,7 +21,7 @@ public class ReviewDto {
     private double starRating;
 
     public static ReviewDto toDto(Review review) {
-        return new ReviewDto(review.getReviewerMember().getUsername(), review.getContent(), review.getStarRating());
+        return new ReviewDto(review.getReviewerMember().getNickname(), review.getContent(), review.getStarRating());
     }
 
     public static List<ReviewDto> toDtoList(List<Review> reviews) {

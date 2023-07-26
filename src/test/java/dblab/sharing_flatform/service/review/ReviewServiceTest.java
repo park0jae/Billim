@@ -76,7 +76,7 @@ public class ReviewServiceTest {
         ReviewRequestDto reviewRequestDto = new ReviewRequestDto(review.getReviewerMember().getUsername(), review.getContent(), review.getStarRating());
 
         given(tradeRepository.findById(trade.getId())).willReturn(Optional.of(trade));
-        given(memberRepository.findByUsername(reviewerMember.getUsername())).willReturn(Optional.of(reviewerMember));
+        given(memberRepository.findByUsername(reviewerMember.getNickname())).willReturn(Optional.of(reviewerMember));
         given(memberRepository.findById(member.getId())).willReturn(Optional.of(member));
 
         // When

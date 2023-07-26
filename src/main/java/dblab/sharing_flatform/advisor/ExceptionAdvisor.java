@@ -12,6 +12,7 @@ import dblab.sharing_flatform.exception.comment.RootCommentNotFoundException;
 import dblab.sharing_flatform.exception.guard.GuardException;
 import dblab.sharing_flatform.exception.image.NoExtException;
 import dblab.sharing_flatform.exception.image.UnSupportExtException;
+import dblab.sharing_flatform.exception.member.DuplicateNicknameException;
 import dblab.sharing_flatform.exception.member.DuplicateUsernameException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.message.MessageNotFoundException;
@@ -19,6 +20,7 @@ import dblab.sharing_flatform.exception.oauth.OAuthCommunicationException;
 import dblab.sharing_flatform.exception.oauth.OAuthUserNotFoundException;
 import dblab.sharing_flatform.exception.oauth.SocialAgreementException;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
+import dblab.sharing_flatform.exception.report.ReportNotFoundException;
 import dblab.sharing_flatform.exception.review.ExistReviewException;
 import dblab.sharing_flatform.exception.review.ImpossibleWriteReviewException;
 import dblab.sharing_flatform.exception.review.ReviewNotFoundException;
@@ -110,7 +112,13 @@ public class ExceptionAdvisor {
     @ExceptionHandler(DuplicateUsernameException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public Response duplicateUsernameException(DuplicateUsernameException e) {
-        return Response.failure(409, "이미 사용중인 Username입니다.");
+        return Response.failure(409, "해당 이메일로 가입된 계정이 이미 존재합니다.");
+    }
+
+    @ExceptionHandler(DuplicateNicknameException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Response duplicateNicknameException(DuplicateNicknameException e) {
+        return Response.failure(409, "해당 닉네임은 이미 사용중입니다.");
     }
 
     @ExceptionHandler(MemberNotFoundException.class)
@@ -223,6 +231,14 @@ public class ExceptionAdvisor {
     @ResponseStatus(HttpStatus.CONFLICT)
     public Response ExistReviewException(ExistReviewException e) {
         return Response.failure(409, "해당 거래에 대한 리뷰가 이미 존재합니다.");
+    }
+
+
+    // report
+    @ExceptionHandler(ReportNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response reportNotFoundException(ReportNotFoundException e) {
+        return Response.failure(404, "해당 신고내역을 찾을 수 없습니다.");
     }
 
     // Guard Exception

@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long>, QPostRepository{
 
-    @Query("select p from Post p join fetch p.member m where m.username =:username")
-    List<Post> findAllWithMemberByUsername(@Param("username") String username);
+    @Query("select p from Post p join fetch p.member m where m.nickname =:nickname")
+    List<Post> findAllWithMemberByNickname(@Param("nickname") String nickname);
 
 }

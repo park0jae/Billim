@@ -34,11 +34,12 @@ class MemberTest {
 
         String phoneNumber = "TestNumber";
         String password = "TestPassword";
+        String nickname = "nickname";
         String introduce = "hi~ I'm test member!";
         Address address = new Address("TestCity", "TestDistrict", "TestStreet", "TestZipcode");
 
         //when
-        member.updateMember(new MemberUpdateRequestDto(member.getUsername(),password, phoneNumber, address, introduce, null), password);
+        member.updateMember(new MemberUpdateRequestDto(member.getUsername(), password, nickname, phoneNumber, address, introduce, null), password);
 
         //then
         assertThat(member.getPassword()).isEqualTo(password);

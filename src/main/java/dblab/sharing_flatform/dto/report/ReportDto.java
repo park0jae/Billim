@@ -24,7 +24,7 @@ public class ReportDto {
 
 
     public static ReportDto toDto(Report report) {
-         return new ReportDto(report.getReporter().getUsername(), report.getReportType(), report.getContent(), report.getPost().getId(), report.getReported().getUsername());
+         return new ReportDto(report.getReporter().getNickname(), report.getReportType(), report.getContent(), report.getPost().getId(), report.getReported().getNickname());
      }
 
     public static List<ReportDto> toDtoList(List<Report> reports) {

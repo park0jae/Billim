@@ -20,7 +20,7 @@ public class ReviewPagingCondition {
     private Integer size;
 
     // 검색 조건
-    private String username;
+    private String nickname;
 
     public ReviewPagingCondition() {
         this.page = getDefaultPageNum();

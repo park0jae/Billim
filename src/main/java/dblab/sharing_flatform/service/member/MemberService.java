@@ -10,6 +10,8 @@ import dblab.sharing_flatform.dto.member.crud.read.response.PagedMemberListDto;
 import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
 import dblab.sharing_flatform.dto.member.crud.update.OAuthMemberUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.PostDto;
+import dblab.sharing_flatform.exception.member.DuplicateNicknameException;
+import dblab.sharing_flatform.exception.member.DuplicateUsernameException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
@@ -38,9 +40,9 @@ public class MemberService {
         return MemberPrivateDto.toDto(memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new));
     }
 
-    public MemberProfileDto readMemberProfile(String username) {
-        List<Post> posts = postRepository.findAllWithMemberByUsername(username);
-        return MemberProfileDto.toDto(memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new), PostDto.toDtoList(posts));
+    public MemberProfileDto readMemberProfile(String nickname) {
+        List<Post> posts = postRepository.findAllWithMemberByNickname(nickname);
+        return MemberProfileDto.toDto(memberRepository.findByNickname(nickname).orElseThrow(MemberNotFoundException::new), PostDto.toDtoList(posts));
     }
 
     public PagedMemberListDto readAll(MemberPagingCondition cond) {
@@ -73,11 +75,13 @@ public class MemberService {
     }
 
     private void memberUpdate(MemberUpdateRequestDto requestDto, Member member) {
+        validateDuplicateUsernameAndNickname(requestDto.getUsername(), requestDto.getNickname());
         String profileImage = member.updateMember(requestDto, encodeRawPassword(requestDto.getPassword()));
         profileImageServerUpdate(requestDto.getImage(), member, profileImage);
     }
 
     private void oAuthMemberUpdate(OAuthMemberUpdateRequestDto requestDto, Member member) {
+        validateDuplicateUsernameAndNickname(null, requestDto.getNickname());
         String profileImage = member.updateOAuthMember(requestDto);
         profileImageServerUpdate(requestDto.getImage(), member, profileImage);
     }
@@ -88,6 +92,14 @@ public class MemberService {
         }
         if (profileImage != null) {
             postFileService.delete(profileImage);
+        }
+    }
+
+    private void validateDuplicateUsernameAndNickname(String username, String nickname) {
+        if (username != null && memberRepository.existsByUsername(username)) {
+            throw new DuplicateUsernameException();
+        } else if (memberRepository.existsByNickname(nickname)) {
+            throw new DuplicateNicknameException();
         }
     }
 

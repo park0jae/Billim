@@ -18,7 +18,7 @@ public class PostDto {
 
     private Long id;
     private String title;
-    private String username;
+    private String nickname;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdTime;
@@ -27,7 +27,7 @@ public class PostDto {
     public static PostDto toDto(Post post) {
         return new PostDto(post.getId(),
                 post.getTitle(),
-                post.getMember().getUsername(),
+                post.getMember().getNickname(),
                 post.getCreatedTime());
     }
 

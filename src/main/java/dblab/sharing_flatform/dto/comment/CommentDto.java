@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentDto {
 
-    private String username;
+    private String nickname;
     private String content;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
@@ -40,7 +40,7 @@ public class CommentDto {
     }
 
     public static CommentDto toDto(Comment comment) {
-        return new CommentDto(comment.getMember() == null ? "(알수없음)" : comment.getMember().getUsername(),
+        return new CommentDto(comment.getMember() == null ? "(알수없음)" : comment.getMember().getNickname(),
                         comment.getContent(),
                         comment.getCreatedTime(),
                         new ArrayList<>());

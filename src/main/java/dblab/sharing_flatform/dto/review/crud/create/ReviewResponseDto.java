@@ -23,7 +23,7 @@ public class ReviewResponseDto {
                     review.getId(),
                     review.getContent(),
                     review.getStarRating(),
-                    review.getReviewerMember().getUsername());
+                    review.getReviewerMember().getNickname());
         } else {
             return null;
         }

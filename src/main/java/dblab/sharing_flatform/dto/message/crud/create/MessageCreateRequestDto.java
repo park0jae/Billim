@@ -24,8 +24,8 @@ public class MessageCreateRequestDto {
     @NotBlank(message = "내용을 입력해주세요.")
     private String content;
 
-    @ApiModelProperty(value = "수신자 이름", notes = "수신자 이름을 입력해주세요", required = true)
-    @NotBlank(message = "수신자 이름을 입력해주세요.")
+    @ApiModelProperty(value = "수신자 닉네임", notes = "수신자 닉네임을 입력해주세요", required = true)
+    @NotBlank(message = "수신자 닉네임을 입력해주세요.")
     private String receiveMember;
 
 }

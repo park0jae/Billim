@@ -38,8 +38,8 @@ public class QReviewRepositoryImpl extends QuerydslRepositorySupport implements 
     private Predicate createPredicate(ReviewPagingCondition cond) {
         BooleanBuilder builder = new BooleanBuilder();
 
-        if (StringUtils.hasText(cond.getUsername())) {
-            builder.and(review.reviewerMember.username.eq(cond.getUsername()));
+        if (StringUtils.hasText(cond.getNickname())) {
+            builder.and(review.reviewerMember.nickname.eq(cond.getNickname()));
         }
 
         return builder;
@@ -50,7 +50,7 @@ public class QReviewRepositoryImpl extends QuerydslRepositorySupport implements 
                 pageable,
                 query
                         .select(constructor(ReviewDto.class,
-                                review.reviewerMember.username,
+                                review.reviewerMember.nickname,
                                 review.content,
                                 review.starRating))
                         .from(review)

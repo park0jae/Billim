@@ -13,17 +13,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberDto {
 
-    private Long id;
-    private String username;
+    private String nickname;
     private RoleType memberRoles;
 
-    public MemberDto(Long id, String username, Member member) {
-        this.id = id;
-        this.username = username;
+    public MemberDto(Long id, String nickname, Member member) {
+        this.nickname = nickname;
         this.memberRoles = member.getRoles().get(0).getRole().getRoleType();
     }
 
     public static MemberDto toDto(Member member) {
-        return new MemberDto(member.getId(), member.getUsername(), member.getRoles().get(0).getRole().getRoleType());
+        return new MemberDto(member.getNickname(), member.getRoles().get(0).getRole().getRoleType());
     }
 }

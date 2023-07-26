@@ -38,8 +38,7 @@ public class MemberController {
     @ResponseStatus(HttpStatus.OK)
     public Response currentUser() {
         String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        MemberPrivateDto currentMember = memberService.readMyInfo(username);
-        return Response.success(currentMember);
+        return Response.success(memberService.readMyInfo(username));
     }
 
     @ApiOperation(value = "회원 프로필 정보 조회", notes = "회원의 프로필 정보를 조회합니다.")

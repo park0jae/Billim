@@ -57,7 +57,7 @@ public class MessageServiceTest {
         MessageCreateRequestDto messageCreateRequestDto = new MessageCreateRequestDto("sender", "HelloWorld","receiver");
 
         given(memberRepository.findByUsername("sender")).willReturn(Optional.of(sendMember));
-        given(memberRepository.findByUsername("receiver")).willReturn(Optional.of(receiveMember));
+        given(memberRepository.findByNickname("receiver")).willReturn(Optional.of(receiveMember));
 
         // When
         MessageDto result = messageService.sendMessage(messageCreateRequestDto);
@@ -108,7 +108,7 @@ public class MessageServiceTest {
         given(messageRepository.findAllBySendAndReceiverMembers(sendMember.getUsername(), receiveMember.getUsername())).willReturn(messages);
 
         // When
-        List<MessageDto> result = messageService.findMessageMemberToMember(sendMember.getUsername(), receiveMember.getUsername());
+        List<MessageDto> result = messageService.findMessageMemberToMember(sendMember.getUsername(), receiveMember.getNickname());
 
         // Then
         assertThat(result).hasSize(2);

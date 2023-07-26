@@ -20,7 +20,7 @@ import java.util.List;
 public class MemberProfileDto {
 
     private ProfileImageDto profileImage;
-    private String username;
+    private String nickname;
     private String introduce;
     private RoleType memberRole;
     private double rating;
@@ -29,7 +29,7 @@ public class MemberProfileDto {
     public static MemberProfileDto toDto(Member member, List<PostDto> postDtoList) {
         return new MemberProfileDto(
                 ProfileImageDto.toDto(member.getProfileImage()),
-                member.getUsername(),
+                member.getNickname(),
                 member.getIntroduce(),
                 member.getRoles().get(0).getRole().getRoleType(),
                 member.getRating(),

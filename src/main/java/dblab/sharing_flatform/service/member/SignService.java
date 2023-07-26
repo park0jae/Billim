@@ -8,6 +8,7 @@ import dblab.sharing_flatform.dto.member.login.LogInResponseDto;
 import dblab.sharing_flatform.dto.member.login.LoginRequestDto;
 import dblab.sharing_flatform.dto.member.crud.create.MemberCreateRequestDto;
 import dblab.sharing_flatform.exception.auth.LoginFailureException;
+import dblab.sharing_flatform.exception.member.DuplicateNicknameException;
 import dblab.sharing_flatform.exception.member.DuplicateUsernameException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
@@ -44,10 +45,11 @@ public class SignService {
 
     @Transactional
     public void signUp(MemberCreateRequestDto requestDto){
-        validateDuplicateUsername(requestDto);
+        validateDuplicateUsernameAndNickname(requestDto);
 
         Member member = new Member(requestDto.getUsername(),
                 passwordEncoder.encode(requestDto.getPassword()),
+                requestDto.getNickname(),
                 requestDto.getPhoneNumber(),
                 requestDto.getAddress(),
                 "None",
@@ -66,6 +68,7 @@ public class SignService {
                     passwordEncoder.encode(requestDto.getEmail()),
                     null,
                     null,
+                    null,
                     requestDto.getProvider(),
                     List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)));
             memberRepository.save(member);
@@ -77,9 +80,12 @@ public class SignService {
         return LogInResponseDto.toDto(jwt);
     }
 
-    private void validateDuplicateUsername(MemberCreateRequestDto requestDto) {
-        if (memberRepository.findOneWithRolesByUsername(requestDto.getUsername()).orElse(null) != null) {
+    private void validateDuplicateUsernameAndNickname(MemberCreateRequestDto requestDto) {
+        if (memberRepository.existsByUsername(requestDto.getUsername())) {
+            log.info("EXISTED USERNAME");
             throw new DuplicateUsernameException();
+        } else if (memberRepository.existsByNickname(requestDto.getNickname())) {
+            throw new DuplicateNicknameException();
         }
     }
 

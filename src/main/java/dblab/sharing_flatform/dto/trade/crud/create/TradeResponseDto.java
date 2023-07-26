@@ -29,8 +29,8 @@ public class TradeResponseDto {
         if (trade != null) {
             return new TradeResponseDto(
                     trade.getId(),
-                    trade.getRenderMember().getUsername(),
-                    trade.getBorrowerMember().getUsername(),
+                    trade.getRenderMember().getNickname(),
+                    trade.getBorrowerMember().getNickname(),
                     trade.getStartDate(),
                     trade.getEndDate(),
                     trade.isTradeComplete(),

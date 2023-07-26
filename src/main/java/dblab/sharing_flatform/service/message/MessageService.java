@@ -35,7 +35,7 @@ public class MessageService {
 
     @Transactional
     public MessageDto sendMessage(MessageCreateRequestDto requestDto) {
-        Member receiver = memberRepository.findByUsername(requestDto.getReceiveMember()).orElseThrow(MemberNotFoundException::new);
+        Member receiver = memberRepository.findByNickname(requestDto.getReceiveMember()).orElseThrow(MemberNotFoundException::new);
         Message message = new Message(requestDto.getContent(),
                 receiver,
                 memberRepository.findByUsername(requestDto.getSendMember()).orElseThrow(MemberNotFoundException::new));
@@ -65,7 +65,7 @@ public class MessageService {
     }
 
     public List<MessageDto> findMessageMemberToMember(String username, String toUsername){
-        memberRepository.findByUsername(toUsername).orElseThrow(MemberNotFoundException::new);
+        memberRepository.findByNickname(toUsername).orElseThrow(MemberNotFoundException::new);
         List<Message> messages = messageRepository.findAllBySendAndReceiverMembers(username, toUsername);
         return messages.stream().map(message -> MessageDto.toDto(message)).collect(Collectors.toList());
     }

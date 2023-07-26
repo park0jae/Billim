@@ -4,6 +4,7 @@ import dblab.sharing_flatform.domain.embedded.address.Address;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Embedded;
 import javax.validation.constraints.NotBlank;
@@ -17,11 +18,13 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberCreateRequestDto {
 
-    @ApiModelProperty(value = "username", notes = "사용자 이름은 한글 또는 알파벳으로 입력해주세요.", required = true, example = "kimdongwoong")
-    @NotBlank(message = "아이디를 입력해주세요.")
-    @Size(min=2, message = "사용자 이름이 너무 짧습니다.")
-    @Pattern(regexp = "^[A-Za-z가-힣]+$", message = "사용자 이름은 한글 또는 알파벳만 입력해주세요.")
+    @ApiModelProperty(value = "username", notes = "아이디는 이메일 형식으로 입력해주세요", required = true, example = "kimdongwoong@naver.com")
+    @NotBlank(message = "이메일을를 입력해주세요.")
     private String username;
+
+    @ApiModelProperty(value = "nickname", notes = "변경할 닉네임을 입력해주세요")
+    @Length(min = 2, max = 15, message = "닉네임은 최소 2자, 최대 15자로 설정할 수 있습니다.")
+    private String nickname;
 
 
     @ApiModelProperty(value = "password", notes = "비밀번호는 최소 8자리이면서 1개 이상의 알파벳, 숫자, 특수문자를 포함해야합니다.", required = true, example = "123456a!")

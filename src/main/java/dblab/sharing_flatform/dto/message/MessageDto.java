@@ -19,7 +19,7 @@ public class MessageDto {
         return new MessageDto(
                 message.getId(),
                 message.getContent(),
-                message.getSendMember().getUsername(),
-                message.getReceiveMember().getUsername());
+                message.getSendMember().getNickname(),
+                message.getReceiveMember().getNickname());
     }
 }

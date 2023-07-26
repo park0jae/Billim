@@ -72,6 +72,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         } else {
             member = new Member(oAuth2UserInfo.getEmail(),
                     "",
+                    null,
                     oAuth2UserInfo.getPhoneNumber(),
                     oAuth2UserInfo.getAddress(),
                     oAuth2UserInfo.getProvider(),

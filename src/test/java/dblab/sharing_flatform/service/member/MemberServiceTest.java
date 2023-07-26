@@ -84,15 +84,15 @@ public class MemberServiceTest {
         member = createMemberWithRole();
         posts.add(new Post("title", "content", createCategory(), createItem(), List.of(), member));
 
-        given(postRepository.findAllWithMemberByUsername(member.getUsername())).willReturn(posts);
-        given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
+        given(postRepository.findAllWithMemberByNickname(member.getNickname())).willReturn(posts);
+        given(memberRepository.findByNickname(member.getNickname())).willReturn(Optional.of(member));
 
         // Then
-        MemberProfileDto result = memberService.readMemberProfile(member.getUsername());
+        MemberProfileDto result = memberService.readMemberProfile(member.getNickname());
 
         // When
-        assertThat(result.getUsername()).isEqualTo("username");
-        assertThat(result.getPosts().get(0).getUsername()).isEqualTo(member.getUsername());
+        assertThat(result.getNickname()).isEqualTo("username");
+        assertThat(result.getPosts().get(0).getNickname()).isEqualTo(member.getNickname());
     }
 
     @Test
@@ -104,7 +104,7 @@ public class MemberServiceTest {
         members.add(createMemberWithRole());
         members.add(createRenderMember());
 
-        MemberPagingCondition cond = new MemberPagingCondition(0, 10, "username");
+        MemberPagingCondition cond = new MemberPagingCondition(0, 10, "nickname");
 
         given(memberRepository.findAllBySearch(cond)).willReturn(new PageImpl<>(List.of(MemberDto.toDto(members.get(0))), PageRequest.of(cond.getPage(), cond.getSize()),1));
 
@@ -114,7 +114,7 @@ public class MemberServiceTest {
         // Then
         assertThat(result.getContent()).hasSize(1);
         MemberDto memberDto = result.getContent().get(0);
-        assertThat(memberDto.getUsername()).isEqualTo("username");
+        assertThat(memberDto.getNickname()).isEqualTo("nickname");
     }
 
     @Test
@@ -134,7 +134,7 @@ public class MemberServiceTest {
     @DisplayName("회원 수정 테스트")
     public void updateMemberTest() throws Exception{
         // Given
-        MemberUpdateRequestDto memberUpdateRequestDto = new MemberUpdateRequestDto(member.getUsername(),"updatePass1!", "updatedPN", member.getAddress(), "hi~", null);
+        MemberUpdateRequestDto memberUpdateRequestDto = new MemberUpdateRequestDto(member.getUsername(),"updatePass1!", "updateNickName", "updatedPN", member.getAddress(), "hi~", null);
         given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
 
         // When

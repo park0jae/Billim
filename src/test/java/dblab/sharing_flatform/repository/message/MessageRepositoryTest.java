@@ -88,12 +88,12 @@ public class MessageRepositoryTest {
         flushAndClear();
 
         // when
-        List<Message> allBySendAndReceiverMembers = messageRepository.findAllBySendAndReceiverMembers(
+        List<Message> result = messageRepository.findAllBySendAndReceiverMembers(
                 message.getSendMember().getUsername(),
-                message.getReceiveMember().getUsername());
+                message.getReceiveMember().getNickname());
         // then
-        assertThat(allBySendAndReceiverMembers.get(0).getSendMember().getUsername()).isEqualTo("sender");
-        assertThat(allBySendAndReceiverMembers.get(0).getReceiveMember().getUsername()).isEqualTo("receiver");
+        assertThat(result.get(0).getSendMember().getUsername()).isEqualTo("sender");
+        assertThat(result.get(0).getReceiveMember().getUsername()).isEqualTo("receiver");
     }
 
     public void flushAndClear(){

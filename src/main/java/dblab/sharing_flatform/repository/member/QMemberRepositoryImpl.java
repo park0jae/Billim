@@ -39,8 +39,8 @@ public class QMemberRepositoryImpl extends QuerydslRepositorySupport implements 
     private Predicate createPredicate(MemberPagingCondition cond) {
         BooleanBuilder builder = new BooleanBuilder();
 
-        if (StringUtils.hasText(cond.getUsername())) {
-            builder.and(member.username.containsIgnoreCase(cond.getUsername()));
+        if (StringUtils.hasText(cond.getNickname())) {
+            builder.and(member.nickname.containsIgnoreCase(cond.getNickname()));
         }
 
         return builder;
@@ -53,7 +53,7 @@ public class QMemberRepositoryImpl extends QuerydslRepositorySupport implements 
                         .select(
                                 constructor(MemberDto.class,
                                             member.id,
-                                            member.username,
+                                            member.nickname,
                                             member
                                             ))
                         .from(member)

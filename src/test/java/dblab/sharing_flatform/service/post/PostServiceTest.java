@@ -155,11 +155,11 @@ public class PostServiceTest {
 
         PostDto postDto1 = result.getPostList().get(0);
         assertThat(postDto1.getTitle()).isEqualTo("title 1");
-        assertThat(postDto1.getUsername()).isEqualTo(member.getUsername());
+        assertThat(postDto1.getNickname()).isEqualTo(member.getNickname());
 
         PostDto postDto2 = result.getPostList().get(1);
         assertThat(postDto2.getTitle()).isEqualTo("title 2");
-        assertThat(postDto2.getUsername()).isEqualTo(member.getUsername());
+        assertThat(postDto2.getNickname()).isEqualTo(member.getNickname());
     }
 
     @Test
@@ -183,7 +183,7 @@ public class PostServiceTest {
 
         PostDto postDto1 = result.getPostList().get(0);
         assertThat(postDto1.getTitle()).isEqualTo("title 1");
-        assertThat(postDto1.getUsername()).isEqualTo(member.getUsername());
+        assertThat(postDto1.getNickname()).isEqualTo(member.getNickname());
     }
 
     @Test
@@ -205,7 +205,7 @@ public class PostServiceTest {
 
         PostDto postDto1 = result.getPostList().get(0);
         assertThat(postDto1.getTitle()).isEqualTo("title 1");
-        assertThat(postDto1.getUsername()).isEqualTo(member.getUsername());
+        assertThat(postDto1.getNickname()).isEqualTo(member.getNickname());
     }
 
     @Test

@@ -28,6 +28,9 @@ public class Member {
     private String password;
     private String phoneNumber;
 
+    @Column(nullable = false)
+    private String nickname;
+
     @Embedded
     @Nullable
     private Address address;
@@ -42,9 +45,10 @@ public class Member {
     @JoinColumn(name = "profile_image_id")
     private ProfileImage profileImage;
 
-    public Member(String username, String password, String phoneNumber, Address address, String provider, List<Role> roles) {
+    public Member(String username, String password, String nickname, String phoneNumber, Address address, String provider, List<Role> roles) {
         this.username = username;
         this.password = password;
+        this.nickname = nickname;
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.provider = provider;
@@ -60,6 +64,7 @@ public class Member {
 
     public String updateMember(MemberUpdateRequestDto memberUpdateRequestDto, String encodedPassword){
         this.password = encodedPassword;
+        this.nickname = memberUpdateRequestDto.getNickname();
         this.phoneNumber = memberUpdateRequestDto.getPhoneNumber();
         this.address = memberUpdateRequestDto.getAddress();
         this.introduce = memberUpdateRequestDto.getIntroduce();
@@ -71,6 +76,7 @@ public class Member {
 
     public String updateOAuthMember(OAuthMemberUpdateRequestDto requestDto){
         this.phoneNumber = requestDto.getPhoneNumber();
+        this.nickname = requestDto.getNickname();
         this.address = requestDto.getAddress();
         this.introduce = requestDto.getIntroduce();
 

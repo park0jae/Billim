@@ -1,4 +1,4 @@
-package dblab.sharing_flatform.dto.report;
+package dblab.sharing_flatform.exception.report;
 
 public class ReportNotFoundException extends RuntimeException{
 }

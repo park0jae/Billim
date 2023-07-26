@@ -20,7 +20,7 @@ public class MemberPagingCondition {
     private Integer size;
 
     // 검색 조건
-    private String username;
+    private String nickname;
 
     public MemberPagingCondition() {
         this.page = getDefaultPageNum();

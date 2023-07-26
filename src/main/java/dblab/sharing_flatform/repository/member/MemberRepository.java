@@ -10,10 +10,14 @@ public interface MemberRepository extends JpaRepository<Member, Long>, QMemberRe
 
     Optional<Member> findByUsername(String username);
 
+    Optional<Member> findByNickname(String nickname);
+
     @EntityGraph(attributePaths = "roles")
     Optional<Member> findOneWithRolesByUsername(String username);
 
     boolean existsByUsername(String username);
+
+    boolean existsByNickname(String nickname);
 
     Optional<Member> findByProviderAndUsername(String provider, String username);
 

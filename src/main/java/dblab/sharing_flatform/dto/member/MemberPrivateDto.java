@@ -16,7 +16,7 @@ public class MemberPrivateDto {
 
     private String username;
 
-    private String password;
+    private String nickname;
 
     private String phoneNumber;
 
@@ -28,7 +28,7 @@ public class MemberPrivateDto {
         return new MemberPrivateDto(
                 member.getId(),
                 member.getUsername(),
-                member.getPassword(),
+                member.getNickname(),
                 member.getPhoneNumber(),
                 member.getAddress(),
                 member.getRating());
