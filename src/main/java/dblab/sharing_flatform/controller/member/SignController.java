@@ -66,7 +66,7 @@ public class SignController {
 
     @ApiOperation(value = "이메일 인증" , notes = "회원가입 시 이메일 인증을 위한 엔드포인트")
     @ResponseBody
-    @PostMapping("/mail")
+    @GetMapping("/mail")
     public Response mailConfirm(@RequestParam(name = "email") String email)  {
         String code = naverMailService.sendSimpleMessage(email);
         return Response.success(code);
