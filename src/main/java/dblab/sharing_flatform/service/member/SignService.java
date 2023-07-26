@@ -8,6 +8,7 @@ import dblab.sharing_flatform.dto.member.login.LogInResponseDto;
 import dblab.sharing_flatform.dto.member.login.LoginRequestDto;
 import dblab.sharing_flatform.dto.member.crud.create.MemberCreateRequestDto;
 import dblab.sharing_flatform.exception.auth.LoginFailureException;
+import dblab.sharing_flatform.exception.member.AlreadyExistsMemberException;
 import dblab.sharing_flatform.exception.member.DuplicateNicknameException;
 import dblab.sharing_flatform.exception.member.DuplicateUsernameException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
@@ -60,19 +61,14 @@ public class SignService {
 
     @Transactional
     public void oAuth2Signup(OAuth2MemberCreateRequestDto requestDto) {
-        Optional<Member> search = memberRepository.findByUsername(requestDto.getEmail());
-
-        // DB에 없으면 회원가입
-        if (search.isEmpty()) {
-            Member member = new Member(requestDto.getEmail(),
-                    passwordEncoder.encode(requestDto.getEmail()),
-                    null,
-                    null,
-                    null,
-                    requestDto.getProvider(),
-                    List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)));
-            memberRepository.save(member);
-        }
+        Member member = new Member(requestDto.getEmail(),
+                passwordEncoder.encode(requestDto.getEmail()),
+                null,
+                null,
+                null,
+                requestDto.getProvider(),
+                List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)));
+        memberRepository.save(member);
     }
 
     public LogInResponseDto oauth2Login(OAuth2MemberCreateRequestDto requestDto) {
@@ -82,7 +78,6 @@ public class SignService {
 
     private void validateDuplicateUsernameAndNickname(MemberCreateRequestDto requestDto) {
         if (memberRepository.existsByUsername(requestDto.getUsername())) {
-            log.info("EXISTED USERNAME");
             throw new DuplicateUsernameException();
         } else if (memberRepository.existsByNickname(requestDto.getNickname())) {
             throw new DuplicateNicknameException();
@@ -100,15 +95,15 @@ public class SignService {
     }
 
     private String jwtLoginRequest(LoginRequestDto requestDto) {
+
+
         UsernamePasswordAuthenticationToken authenticationToken
                 = new UsernamePasswordAuthenticationToken(requestDto.getUsername(), requestDto.getPassword());
 
         try {
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
             String jwt = tokenProvider.createAccessToken(authentication);
-            log.info("jwt = {} ", jwt);
             if (!StringUtils.hasText(jwt)) {
                 throw new LoginFailureException();
             }
@@ -117,13 +112,4 @@ public class SignService {
             throw new LoginFailureException();
         }
     }
-
-    public Optional<Member> getMemberWithAuthorities(String username){
-        return memberRepository.findOneWithRolesByUsername(username);
-    }
-
-    public Optional<Member> getMyMemberWithAuthorities(){
-        return SecurityUtil.getCurrentUsername().flatMap(memberRepository::findOneWithRolesByUsername);
-    }
-
 }

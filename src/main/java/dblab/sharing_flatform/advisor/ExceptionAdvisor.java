@@ -12,6 +12,7 @@ import dblab.sharing_flatform.exception.comment.RootCommentNotFoundException;
 import dblab.sharing_flatform.exception.guard.GuardException;
 import dblab.sharing_flatform.exception.image.NoExtException;
 import dblab.sharing_flatform.exception.image.UnSupportExtException;
+import dblab.sharing_flatform.exception.member.AlreadyExistsMemberException;
 import dblab.sharing_flatform.exception.member.DuplicateNicknameException;
 import dblab.sharing_flatform.exception.member.DuplicateUsernameException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
@@ -80,6 +81,12 @@ public class ExceptionAdvisor {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response loginFailureException(LoginFailureException e) {
         return Response.failure(400, "로그인에 실패하였습니다. 아이디나 비밀번호를 확인해주세요.");
+    }
+
+    @ExceptionHandler(AlreadyExistsMemberException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response alreadyExistsMemberException(AlreadyExistsMemberException e) {
+        return Response.failure(400, "해당 이메일로 가입된 계정이 이미 존재합니다. 일반 로그인으로 로그인 해주세요.");
     }
 
     @ExceptionHandler(IllegalAuthenticationException.class)

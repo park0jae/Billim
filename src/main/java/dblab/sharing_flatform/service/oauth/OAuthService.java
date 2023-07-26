@@ -3,11 +3,21 @@ package dblab.sharing_flatform.service.oauth;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
+import dblab.sharing_flatform.dto.member.crud.create.OAuth2MemberCreateRequestDto.OAuth2MemberCreateRequestDto;
+import dblab.sharing_flatform.dto.member.login.LogInResponseDto;
 import dblab.sharing_flatform.dto.oauth.crud.create.*;
+import dblab.sharing_flatform.exception.member.AlreadyExistsMemberException;
+import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.oauth.OAuthCommunicationException;
+import dblab.sharing_flatform.exception.oauth.OAuthUserNotFoundException;
+import dblab.sharing_flatform.exception.oauth.SocialAgreementException;
+import dblab.sharing_flatform.repository.member.MemberRepository;
+import dblab.sharing_flatform.service.member.MemberService;
+import dblab.sharing_flatform.service.member.SignService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,8 +32,10 @@ public class OAuthService {
 
     private final Gson gson;
     private final RestTemplate restTemplate;
+    private final MemberRepository memberRepository;
 
-    public String getAccessToken(String code, String provider, AccessTokenRequestDto accessTokenRequestDto){
+
+    public OAuth2MemberCreateRequestDto getAccessToken(String code, String provider, AccessTokenRequestDto accessTokenRequestDto){
         String access_Token = "";
         String refresh_Token = "";
         String reqURL = "";
@@ -59,10 +71,6 @@ public class OAuthService {
             bw.write(sb.toString());
             bw.flush();
 
-            //결과 코드가 200이라면 성공
-            int responseCode = conn.getResponseCode();
-//            System.out.println("responseCode : " + responseCode);
-
             //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line = "";
@@ -71,17 +79,12 @@ public class OAuthService {
             while ((line = br.readLine()) != null) {
                 result += line;
             }
-//            System.out.println("response body : " + result);
 
             //Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
             access_Token = element.getAsJsonObject().get("access_token").getAsString();
-//            refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
-
-//            System.out.println("access_token : " + access_Token);
-//            System.out.println("refresh_token : " + refresh_Token);
 
             br.close();
             bw.close();
@@ -90,7 +93,7 @@ public class OAuthService {
             e.printStackTrace();
         }
 
-        return access_Token;
+        return getProvideInfo(provider, access_Token);
     }
 
     public Object getOAuthUserInfo(String accessToken, String provider)  {
@@ -181,4 +184,36 @@ public class OAuthService {
         }
         throw new OAuthCommunicationException();
     }
+
+
+    private OAuth2MemberCreateRequestDto getProvideInfo(String provider, String accessToken){
+        String email = "";
+        switch (provider){
+            case "kakao":
+                KakaoProfile oAuthKakaoInfo = (KakaoProfile) getOAuthUserInfo(accessToken, provider);
+                if(oAuthKakaoInfo == null) throw new OAuthUserNotFoundException();
+                email = oAuthKakaoInfo.getKakao_account().getEmail();
+                break;
+            case "google" :
+                GoogleProfile oAuthGoogleInfo = (GoogleProfile) getOAuthUserInfo(accessToken, provider);
+                if(oAuthGoogleInfo == null) throw new OAuthUserNotFoundException();
+                email = oAuthGoogleInfo.getEmail();
+                break;
+            case "naver":
+                NaverProfile oAuthNaverInfo = (NaverProfile) getOAuthUserInfo(accessToken, provider);
+                if(oAuthNaverInfo == null) throw new OAuthUserNotFoundException();
+                email = oAuthNaverInfo.getResponse().getEmail();
+                break;
+        }
+
+        if(email == null){
+            unlinkOAuthService(accessToken, provider);
+            throw new SocialAgreementException();
+        } else if (memberRepository.existsByUsernameAndProvider(email, "None")) {
+            throw new AlreadyExistsMemberException();
+        }
+
+        return new OAuth2MemberCreateRequestDto(email, provider, accessToken);
+    }
+
 }

@@ -28,9 +28,7 @@ public class Member {
     private String password;
     private String phoneNumber;
 
-    @Column(nullable = false)
     private String nickname;
-
     @Embedded
     @Nullable
     private Address address;
