@@ -95,7 +95,7 @@ public class MemberService {
         }
     }
 
-    private void validateDuplicateUsernameAndNickname(String username, String nickname) {
+    public void validateDuplicateUsernameAndNickname(String username, String nickname) {
         if (username != null && memberRepository.existsByUsername(username)) {
             throw new DuplicateUsernameException();
         } else if (memberRepository.existsByNickname(nickname)) {

@@ -82,7 +82,6 @@ public class SignService {
 
     private void validateDuplicateUsernameAndNickname(MemberCreateRequestDto requestDto) {
         if (memberRepository.existsByUsername(requestDto.getUsername())) {
-            log.info("EXISTED USERNAME");
             throw new DuplicateUsernameException();
         } else if (memberRepository.existsByNickname(requestDto.getNickname())) {
             throw new DuplicateNicknameException();
@@ -106,9 +105,7 @@ public class SignService {
         try {
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
             String jwt = tokenProvider.createAccessToken(authentication);
-            log.info("jwt = {} ", jwt);
             if (!StringUtils.hasText(jwt)) {
                 throw new LoginFailureException();
             }
