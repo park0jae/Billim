@@ -8,6 +8,7 @@ import dblab.sharing_flatform.exception.comment.CommentNotFoundException;
 import dblab.sharing_flatform.exception.comment.RootCommentNotFoundException;
 import dblab.sharing_flatform.exception.file.FileUploadFailureException;
 import dblab.sharing_flatform.exception.guard.GuardException;
+import dblab.sharing_flatform.exception.helper.ConvertException;
 import dblab.sharing_flatform.exception.image.NoExtException;
 import dblab.sharing_flatform.exception.image.UnSupportExtException;
 import dblab.sharing_flatform.exception.auth.AlreadyExistsMemberException;
@@ -176,6 +177,17 @@ public class ExceptionAdvisor {
     public Response guardException(GuardException e) {
         return getFailureResponse("UNAUTHORIZED.CODE", "GUARD.MSG");
     }
+
+
+    /**
+     * HELPER_EXCEPTION
+     */
+    @ExceptionHandler(GuardException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response convertException(ConvertException e) {
+        return getFailureResponse("BAD_REQUEST.CODE", "CONVERTER.MSG");
+    }
+
 
     /**
      * IMAGE_EXCEPTION
