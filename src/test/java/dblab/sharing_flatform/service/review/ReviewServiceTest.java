@@ -13,6 +13,7 @@ import dblab.sharing_flatform.exception.review.ImpossibleWriteReviewException;
 import dblab.sharing_flatform.exception.trade.TradeNotCompleteException;
 import dblab.sharing_flatform.factory.review.ReviewFactory;
 import dblab.sharing_flatform.factory.trade.TradeFactory;
+import dblab.sharing_flatform.helper.NotificationHelper;
 import dblab.sharing_flatform.repository.emitter.EmitterRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.review.ReviewRepository;
@@ -55,7 +56,7 @@ public class ReviewServiceTest {
     private TradeRepository tradeRepository;
 
     @Mock
-    EmitterRepository emitterRepository;
+    private NotificationHelper helper;
 
     Trade trade;
     Post post;

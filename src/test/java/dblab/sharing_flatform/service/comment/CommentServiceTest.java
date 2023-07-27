@@ -72,7 +72,7 @@ class CommentServiceTest {
         given(commentRepository.save(any())).willReturn(createComment(null));
 
         // when
-        commentService.create(post.getId(), new CommentCreateRequestDto(member.getUsername(), "content", null));
+        commentService.create(post.getId(), new CommentCreateRequestDto("content", null), member.getUsername());
 
         // then
         verify(commentRepository).save(any(Comment.class));

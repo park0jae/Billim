@@ -63,14 +63,14 @@ class ReportServiceTest {
     @DisplayName("게시글 신고 생성")
     public void createPostReportTest() throws Exception {
         //given
-        ReportCreateRequestDto requestDto = new ReportCreateRequestDto("reporter", ReportType.POST_REPORT, post.getId(), "content");
+        ReportCreateRequestDto requestDto = new ReportCreateRequestDto(ReportType.POST_REPORT, post.getId(), "content");
 
-        given(memberRepository.findByUsername(requestDto.getReporterName())).willReturn(Optional.ofNullable(reporter));
+        given(memberRepository.findByUsername(reporter.getUsername())).willReturn(Optional.ofNullable(reporter));
         given(postRepository.findById(requestDto.getPostId())).willReturn(Optional.ofNullable(post));
 
 
         //when
-        reportService.create(requestDto);
+        reportService.create(requestDto, reporter.getUsername());
 
         //then
         verify(reportRepository).save(any(Report.class));
@@ -80,11 +80,11 @@ class ReportServiceTest {
     @DisplayName("버그 신고 생성")
     public void createMemberReportTest() throws Exception {
         //given
-        ReportCreateRequestDto requestDto = new ReportCreateRequestDto("reporter", ReportType.BUG, null, "content");
-        given(memberRepository.findByUsername(requestDto.getReporterName())).willReturn(Optional.ofNullable(reporter));
+        ReportCreateRequestDto requestDto = new ReportCreateRequestDto( ReportType.BUG, null, "content");
+        given(memberRepository.findByUsername(reporter.getUsername())).willReturn(Optional.ofNullable(reporter));
 
         //when
-        reportService.create(requestDto);
+        reportService.create(requestDto, reporter.getUsername());
 
         //then
         verify(reportRepository).save(any(Report.class));

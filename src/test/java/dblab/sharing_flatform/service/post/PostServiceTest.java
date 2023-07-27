@@ -14,6 +14,7 @@ import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateResponseDto;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
 import dblab.sharing_flatform.factory.category.CategoryFactory;
+import dblab.sharing_flatform.helper.NotificationHelper;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
 import dblab.sharing_flatform.repository.emitter.EmitterRepository;
 import dblab.sharing_flatform.repository.likepost.LikePostRepository;
@@ -56,13 +57,12 @@ public class PostServiceTest {
 
     @Mock
     private CategoryRepository categoryRepository;
-    @Mock
-    private PostFileService postFileService;
+
     @Mock
     private LikePostRepository likePostRepository;
 
     @Mock
-    private EmitterRepository emitterRepository;
+    private NotificationHelper helper;
 
 
 
@@ -81,13 +81,13 @@ public class PostServiceTest {
     @DisplayName("글 생성 테스트")
     public void createPostTest(){
         // Given
-        PostCreateRequestDto postCreateRequestDto = new PostCreateRequestDto(member.getUsername(),"테스트 타이틀", "테스트 내용",  category.getName(), List.of(), null);
+        PostCreateRequestDto postCreateRequestDto = new PostCreateRequestDto("테스트 타이틀", "테스트 내용",  category.getName(), List.of(), null);
 
         given(categoryRepository.findByName(postCreateRequestDto.getCategoryName())).willReturn(Optional.of(category));
-        given(memberRepository.findByUsername(postCreateRequestDto.getUsername())).willReturn(Optional.of(member));
+        given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
 
         // when
-        PostCreateResponseDto result = postService.create(postCreateRequestDto);
+        PostCreateResponseDto result = postService.create(postCreateRequestDto, member.getUsername());
 
         assertThat(result.getId()).isEqualTo(post.getId());
     }

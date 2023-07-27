@@ -171,7 +171,6 @@ public class PostService {
             likePosts.add(new LikePost(member, post));
             likePostRepository.save(new LikePost(member, post));
             Member writeMember = memberRepository.findByUsername(post.getMember().getUsername()).orElseThrow(MemberNotFoundException::new);
-
             notificationHelper.notificationIfSubscribe(member, writeMember, NotificationType.LIKE, "님이 이 글을 좋아합니다.");
         }
     }

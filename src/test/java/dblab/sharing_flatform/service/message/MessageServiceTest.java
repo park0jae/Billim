@@ -7,6 +7,7 @@ import dblab.sharing_flatform.dto.message.MessageDto;
 import dblab.sharing_flatform.exception.message.MessageNotFoundException;
 import dblab.sharing_flatform.factory.member.MemberFactory;
 import dblab.sharing_flatform.factory.message.MessageFactory;
+import dblab.sharing_flatform.helper.NotificationHelper;
 import dblab.sharing_flatform.repository.emitter.EmitterRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.message.MessageRepository;
@@ -41,7 +42,7 @@ public class MessageServiceTest {
     private MemberRepository memberRepository;
 
     @Mock
-    private EmitterRepository emitterRepository;
+    private NotificationHelper helper;
 
     Member receiveMember;
     Member sendMember;
@@ -60,7 +61,7 @@ public class MessageServiceTest {
         // Given
         MessageCreateRequestDto messageCreateRequestDto = new MessageCreateRequestDto("HelloWorld", "receiver");
 
-        given(memberRepository.findByUsername("sender")).willReturn(Optional.of(sendMember));
+        given(memberRepository.findByUsername(sendMember.getUsername())).willReturn(Optional.of(sendMember));
         given(memberRepository.findByNickname("receiver")).willReturn(Optional.of(receiveMember));
 
         // When
