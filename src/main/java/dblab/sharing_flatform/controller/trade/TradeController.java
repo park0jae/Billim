@@ -26,7 +26,7 @@ public class TradeController {
     @ResponseStatus(HttpStatus.CREATED)
     public Response createTrade(@Valid @RequestBody TradeRequestDto tradeRequestDto,
                                 @ApiParam(value = "Post ID", required = true) @PathVariable Long postId) {
-        tradeRequestDto.setRenderName(SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new));
+        tradeRequestDto.setUsername(SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new));
         return Response.success(tradeService.createTrade(tradeRequestDto, postId));
     }
 

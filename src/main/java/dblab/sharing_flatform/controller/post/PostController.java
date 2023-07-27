@@ -1,5 +1,6 @@
 package dblab.sharing_flatform.controller.post;
 
+import dblab.sharing_flatform.aop.AssignUsername;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
@@ -50,10 +51,10 @@ public class PostController {
     }
 
     @ApiOperation(value = "게시글 생성", notes = "게시글을 생성합니다.")
+    @AssignUsername
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Response create(@Valid @ModelAttribute PostCreateRequestDto postCreateRequestDto) {
-        postCreateRequestDto.setUsername(SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new));
         return Response.success(postService.create(postCreateRequestDto));
     }
 
@@ -74,6 +75,7 @@ public class PostController {
     }
 
     @ApiOperation(value = "게시글 좋아요/좋아요 취소", notes = "해당 번호의 게시글에 좋아요 남기기/좋아요 취소")
+    @AssignUsername
     @PostMapping("/like/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public Response likeUp(@ApiParam(value = "좋아요할 게시글 id", required = true) @PathVariable Long postId) {

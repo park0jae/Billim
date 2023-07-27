@@ -42,7 +42,6 @@ public class ReportController {
     @DeleteMapping("/{reportId}")
     @ResponseStatus(HttpStatus.CREATED)
     public Response delete(@ApiParam(name = "삭제할 Report의 ID", required = true) @PathVariable Long reportId) {
-
         reportService.delete(reportId);
         return Response.success();
     }

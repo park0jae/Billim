@@ -1,6 +1,7 @@
 package dblab.sharing_flatform.dto.trade.crud.create;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,8 +15,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class TradeRequestDto {
 
+    @ApiModelProperty(hidden = true)
     @Null
-    private String renderName;
+    private String username;
 
     private String borrowerName;
 

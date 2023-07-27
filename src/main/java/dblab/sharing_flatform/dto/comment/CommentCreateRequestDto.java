@@ -19,7 +19,7 @@ import javax.validation.constraints.Null;
 public class CommentCreateRequestDto {
 
     @ApiModelProperty(hidden = true)
-    @Nullable
+    @Null
     private String username;
 
     @ApiModelProperty(value = "댓글 내용", notes = "댓글 내용을 입력해주세요", required = true, example = "안녕하세요.")

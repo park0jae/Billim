@@ -1,5 +1,6 @@
 package dblab.sharing_flatform.dto.review.crud.create;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.validation.constraints.Null;
@@ -9,8 +10,9 @@ import javax.validation.constraints.Null;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReviewRequestDto {
 
+    @ApiModelProperty(hidden = true)
     @Null
-    private String writer;
+    private String username;
 
     private String content;
 

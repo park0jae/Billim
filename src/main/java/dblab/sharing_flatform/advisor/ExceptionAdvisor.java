@@ -182,7 +182,7 @@ public class ExceptionAdvisor {
     /**
      * HELPER_EXCEPTION
      */
-    @ExceptionHandler(GuardException.class)
+    @ExceptionHandler(ConvertException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response convertException(ConvertException e) {
         return getFailureResponse("BAD_REQUEST.CODE", "CONVERTER.MSG");

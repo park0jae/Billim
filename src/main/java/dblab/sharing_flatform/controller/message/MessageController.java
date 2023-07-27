@@ -1,5 +1,6 @@
 package dblab.sharing_flatform.controller.message;
 
+import dblab.sharing_flatform.aop.AssignUsername;
 import dblab.sharing_flatform.dto.message.crud.create.MessageCreateRequestDto;
 import dblab.sharing_flatform.dto.message.MessageDto;
 import dblab.sharing_flatform.dto.response.Response;
@@ -23,11 +24,10 @@ public class MessageController {
     private final MessageService messageService;
 
     @ApiOperation(value = "메세지 생성 및 전송", notes = "메세지를 생성하고 수신자에게 전송합니다.")
+    @AssignUsername
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Response sendMessageToReceiver(@Valid @RequestBody MessageCreateRequestDto messageCreateRequestDto) {
-        String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        messageCreateRequestDto.setSendMember(username);
         MessageDto messageDto = messageService.sendMessage(messageCreateRequestDto);
         return Response.success(messageDto);
     }
@@ -48,7 +48,6 @@ public class MessageController {
     public Response findReceiveMessage(){
         String receiverName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
         List<MessageDto> receiveMessage = messageService.findReceiveMessage(receiverName);
-
         return Response.success(receiveMessage);
     }
 
@@ -58,7 +57,6 @@ public class MessageController {
     public Response findSendMessageToMember(@ApiParam(value = "수신자 이름", required = true) @PathVariable String receiverName){
         String senderName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
         List<MessageDto> sendMessageToMember = messageService.findSendMessageToMember(senderName, receiverName);
-
         return Response.success(sendMessageToMember);
     }
 
