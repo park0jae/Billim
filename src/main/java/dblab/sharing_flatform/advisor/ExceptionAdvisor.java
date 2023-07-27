@@ -58,15 +58,16 @@ public class ExceptionAdvisor {
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response bindException(BindException e) {
+        e.printStackTrace();
         return getFailureResponse("BAD_REQUEST.CODE", "FIELD_ERROR.MSG");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response methodArgumentNotValidException(MethodArgumentNotValidException e) {
+        e.printStackTrace();
         return getFailureResponse("BAD_REQUEST.CODE", "FIELD_ERROR.MSG");
     }
-
 
     /**
      * AUTH-EXCEPTION

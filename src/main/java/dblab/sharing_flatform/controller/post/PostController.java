@@ -1,6 +1,5 @@
 package dblab.sharing_flatform.controller.post;
 
-import dblab.sharing_flatform.aop.AssignUsername;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;

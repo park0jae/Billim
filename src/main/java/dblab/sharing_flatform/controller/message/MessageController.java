@@ -1,6 +1,5 @@
 package dblab.sharing_flatform.controller.message;
 
-import dblab.sharing_flatform.aop.AssignUsername;
 import dblab.sharing_flatform.dto.message.crud.create.MessageCreateRequestDto;
 import dblab.sharing_flatform.dto.message.MessageDto;
 import dblab.sharing_flatform.dto.response.Response;

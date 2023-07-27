@@ -28,14 +28,13 @@ public class CommentService {
     private final PostRepository postRepository;
 
     @Transactional
-    public Long create(Long postId, CommentCreateRequestDto requestDto) {
+    public Long create(Long postId, CommentCreateRequestDto requestDto, String username) {
         Comment comment = commentRepository.save(
                 new Comment(requestDto.getContent(),
                 requestDto.getParentCommentId() == null ? true : false,
                 postRepository.findById(postId).orElseThrow(PostNotFoundException::new),
-                memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(MemberNotFoundException::new),
+                memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new),
                 requestDto.getParentCommentId() == null ? null : commentRepository.findById(requestDto.getParentCommentId()).orElseThrow(RootCommentNotFoundException::new)));
-
         return comment.getId();
     }
 
