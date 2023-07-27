@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.validation.constraints.Email;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
@@ -49,8 +48,6 @@ public class NaverMailService implements MailService{
 
     @Override
     public MimeMessage creatMessage(String email) throws MessagingException, UnsupportedEncodingException {
-        System.out.println("메일받을 사용자 : " + email);
-        System.out.println("인증번호 : " + ePw);
 
         MimeMessage message = emailSender.createMimeMessage();
 

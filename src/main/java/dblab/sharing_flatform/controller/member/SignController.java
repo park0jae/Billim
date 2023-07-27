@@ -7,8 +7,6 @@ import dblab.sharing_flatform.dto.member.crud.create.MemberCreateRequestDto;
 import dblab.sharing_flatform.dto.oauth.crud.create.AccessTokenRequestDto;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
-import dblab.sharing_flatform.exception.oauth.OAuthUserNotFoundException;
-import dblab.sharing_flatform.exception.oauth.SocialAgreementException;
 import dblab.sharing_flatform.service.mail.NaverMailService;
 import dblab.sharing_flatform.service.member.MemberService;
 import dblab.sharing_flatform.service.member.SignService;
@@ -20,12 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import javax.mail.MessagingException;
 import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
-
 
 @Api(value = "Sign Controller", tags = "Sign")
 @Slf4j
@@ -57,8 +52,10 @@ public class SignController {
 
     @ApiOperation(value = "OAuth2.0 메인 페이지", notes = "OAuth2.0 로그인을 위한 메인 페이지입니다.")
     @GetMapping("/")
-    public String index() {
-        return "index";
+    public String index(@RequestParam(required = false) String username, @RequestParam(required = false) String code,  Model model) {
+        model.addAttribute("username", username);
+        model.addAttribute("code", code);
+        return "/index";
     }
 
     @ApiOperation(value = "이메일 인증" , notes = "회원가입 시 이메일 인증을 위한 엔드포인트")
