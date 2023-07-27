@@ -30,8 +30,7 @@ public class ReviewController {
     @GetMapping("/myPage")
     @ResponseStatus(HttpStatus.OK)
     public Response findCurrentUserReviews(){
-        String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        return Response.success(reviewService.findCurrentUserReviews(username));
+        return Response.success(reviewService.findCurrentUserReviews(SecurityUtil.getCurrentUsernameCheck()));
     }
 
     @ApiOperation(value = "모든 리뷰 조회 (ADMIN 권한)", notes = "(ADMIN 권한으로) 작성된 모든 리뷰를 조회합니다.")
@@ -52,8 +51,7 @@ public class ReviewController {
     @ResponseStatus(HttpStatus.CREATED)
     public Response writeReview(@ApiParam(value = "생성할 리뷰의 Trade Id", required = true) @PathVariable Long tradeId,
                                 @Valid @RequestBody ReviewRequestDto reviewRequestDto){
-        String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        return Response.success(reviewService.writeReview(reviewRequestDto, tradeId, username));
+        return Response.success(reviewService.writeReview(reviewRequestDto, tradeId, SecurityUtil.getCurrentUsernameCheck()));
     }
 
     @ApiOperation(value = "거래에 대해 작성한 리뷰 삭제", notes = "현재 로그인한 유저에게 작성된 리뷰를 조회합니다.")
@@ -63,5 +61,6 @@ public class ReviewController {
         reviewService.deleteReview(tradeId);
         return Response.success();
     }
+
 
 }

@@ -27,7 +27,6 @@ public class CommentService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
 
-    // create
     @Transactional
     public Long create(Long postId, CommentCreateRequestDto requestDto, String username) {
         Comment comment = commentRepository.save(
@@ -39,7 +38,6 @@ public class CommentService {
         return comment.getId();
     }
 
-    // delete
     @Transactional
     public void delete(Long id) {
         Comment comment = commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);

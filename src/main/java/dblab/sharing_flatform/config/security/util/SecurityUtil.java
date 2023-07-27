@@ -78,4 +78,11 @@ public class SecurityUtil {
     private static Authentication getAuthenticationFromContext() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
+
+    public static String getCurrentUsernameCheck(){
+        return getCurrentUsername().orElseThrow(AccessDeniedException::new);
+    }
+    public static String getCurrentUserIdCheck(){
+        return getCurrentUserId().orElseThrow(AccessDeniedException::new);
+    }
 }

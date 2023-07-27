@@ -26,45 +26,36 @@ public class MessageController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Response sendMessageToReceiver(@Valid @RequestBody MessageCreateRequestDto messageCreateRequestDto) {
-        MessageDto messageDto = messageService.sendMessage(messageCreateRequestDto);
-        return Response.success(messageDto);
+        messageCreateRequestDto.setSendMember(SecurityUtil.getCurrentUsernameCheck());
+        return Response.success(messageService.sendMessage(messageCreateRequestDto));
     }
 
     @ApiOperation(value = "송신 메시지 조회", notes = "현재 로그인한 유저가 송신한 메시지를 모두 조회합니다.")
     @GetMapping("/send")
     @ResponseStatus(HttpStatus.OK)
     public Response findSendMessage(){
-        String senderName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        List<MessageDto> sendMessage = messageService.findSendMessage(senderName);
-
-        return Response.success(sendMessage);
+        return Response.success(messageService.findSendMessage(SecurityUtil.getCurrentUsernameCheck()));
     }
 
     @ApiOperation(value = "수신 메시지 조회", notes = "현재 로그인한 유저가 수신한 메시지를 모두 조회합니다.")
     @GetMapping("/receive")
     @ResponseStatus(HttpStatus.OK)
     public Response findReceiveMessage(){
-        String receiverName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        List<MessageDto> receiveMessage = messageService.findReceiveMessage(receiverName);
-        return Response.success(receiveMessage);
+        return Response.success(messageService.findReceiveMessage(SecurityUtil.getCurrentUsernameCheck()));
     }
 
     @ApiOperation(value = "특정 송신 메시지 조회", notes = "현재 로그인한 유저가 특정 유저에게 송신한 메세지를 조회합니다.")
     @GetMapping("/send/{receiverName}")
     @ResponseStatus(HttpStatus.OK)
     public Response findSendMessageToMember(@ApiParam(value = "수신자 이름", required = true) @PathVariable String receiverName){
-        String senderName = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        List<MessageDto> sendMessageToMember = messageService.findSendMessageToMember(senderName, receiverName);
-        return Response.success(sendMessageToMember);
+        return Response.success(messageService.findSendMessageToMember(SecurityUtil.getCurrentUsernameCheck(), receiverName));
     }
 
     @ApiOperation(value = "특정 수신 메시지 조회", notes = "현재 로그인한 유저가 특정 유저로부터 수신한 메세지를 조회합니다.")
     @GetMapping("/receive/{senderName}")
     @ResponseStatus(HttpStatus.OK)
     public Response findReceiveMessageByMember(@ApiParam(value = "송신자 이름", required = true) @PathVariable String senderName){
-        String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        List<MessageDto> sendMessageToMember = messageService.findReceiveMessageFromMember(username, senderName);
-        return Response.success(sendMessageToMember);
+        return Response.success(messageService.findReceiveMessageFromMember(SecurityUtil.getCurrentUsernameCheck(), senderName));
     }
 
     @ApiOperation(value = "송신자에 의한 메세지 삭제", notes = "메세지를 보낸 유저가 메세지를 삭제합니다.")
