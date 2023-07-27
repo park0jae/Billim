@@ -1,6 +1,6 @@
 package dblab.sharing_flatform.controller.exception;
 
-import dblab.sharing_flatform.exception.ValidateTokenException;
+import dblab.sharing_flatform.exception.auth.ValidateTokenException;
 import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_flatform.exception.guard.GuardException;

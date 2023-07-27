@@ -1,6 +1,6 @@
 package dblab.sharing_flatform.helper;
 
-import dblab.sharing_flatform.exception.category.CantConvertException;
+import dblab.sharing_flatform.exception.CantConvertException;
 
 import java.util.ArrayList;
 import java.util.HashMap;

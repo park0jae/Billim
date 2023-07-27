@@ -6,7 +6,6 @@ import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.notification.NotificationType;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.item.crud.create.ItemCreateRequestDto;
-import dblab.sharing_flatform.dto.notification.crud.create.NotificationRequestDto;
 import dblab.sharing_flatform.dto.post.PostDto;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateResponseDto;
@@ -22,21 +21,17 @@ import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
 import dblab.sharing_flatform.helper.NotificationHelper;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
-import dblab.sharing_flatform.repository.emitter.EmitterRepository;
 import dblab.sharing_flatform.repository.likepost.LikePostRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
 import dblab.sharing_flatform.service.file.PostFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -176,6 +171,7 @@ public class PostService {
             likePosts.add(new LikePost(member, post));
             likePostRepository.save(new LikePost(member, post));
             Member writeMember = memberRepository.findByUsername(post.getMember().getUsername()).orElseThrow(MemberNotFoundException::new);
+
             notificationHelper.notificationIfSubscribe(member, writeMember, NotificationType.LIKE, "님이 이 글을 좋아합니다.");
         }
     }

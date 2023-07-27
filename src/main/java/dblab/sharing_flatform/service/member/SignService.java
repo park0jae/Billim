@@ -11,15 +11,13 @@ import dblab.sharing_flatform.dto.member.crud.create.MemberCreateRequestDto;
 import dblab.sharing_flatform.exception.auth.EmailAuthNotEqualsException;
 import dblab.sharing_flatform.exception.auth.EmailAuthNotFoundException;
 import dblab.sharing_flatform.exception.auth.LoginFailureException;
-import dblab.sharing_flatform.exception.member.AlreadyExistsMemberException;
-import dblab.sharing_flatform.exception.member.DuplicateNicknameException;
-import dblab.sharing_flatform.exception.member.DuplicateUsernameException;
+import dblab.sharing_flatform.exception.auth.DuplicateNicknameException;
+import dblab.sharing_flatform.exception.auth.DuplicateUsernameException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
 import dblab.sharing_flatform.repository.emailAuth.EmailAuthRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.role.RoleRepository;
-import dblab.sharing_flatform.config.security.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
