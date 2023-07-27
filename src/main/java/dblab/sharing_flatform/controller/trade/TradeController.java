@@ -1,5 +1,6 @@
 package dblab.sharing_flatform.controller.trade;
 
+import dblab.sharing_flatform.aop.AssignUsername;
 import dblab.sharing_flatform.config.security.util.SecurityUtil;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.dto.trade.crud.create.TradeRequestDto;
@@ -26,7 +27,7 @@ public class TradeController {
     @ResponseStatus(HttpStatus.CREATED)
     public Response createTrade(@Valid @RequestBody TradeRequestDto tradeRequestDto,
                                 @ApiParam(value = "Post ID", required = true) @PathVariable Long postId) {
-        tradeRequestDto.setRenderName(SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new));
+        tradeRequestDto.setUsername(SecurityUtil.getCurrentUsernameCheck());
         return Response.success(tradeService.createTrade(tradeRequestDto, postId));
     }
 
@@ -58,4 +59,6 @@ public class TradeController {
         tradeService.deleteTrade(postId);
         return Response.success();
     }
+
+
 }

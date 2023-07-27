@@ -46,8 +46,7 @@ public class SignController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public Response login(@Valid @ModelAttribute LoginRequestDto loginRequestDto){
-        LogInResponseDto logInResponseDto = signService.login(loginRequestDto);
-        return Response.success(logInResponseDto);
+        return Response.success(signService.login(loginRequestDto));
     }
 
     @ApiOperation(value = "OAuth2.0 메인 페이지", notes = "OAuth2.0 로그인을 위한 메인 페이지입니다.")
@@ -75,8 +74,8 @@ public class SignController {
                                 @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}") String redirectUri) {
         AccessTokenRequestDto accessTokenRequestDto= new AccessTokenRequestDto(clientId, clientSecret, redirectUri);
         OAuth2MemberCreateRequestDto req = oAuthService.getAccessToken(code, "kakao", accessTokenRequestDto);
-        LogInResponseDto logInResponseDto = signUpAndLogin(req);
-        return Response.success(logInResponseDto);
+
+        return Response.success(signUpAndLogin(req));
     }
 
 
@@ -89,8 +88,8 @@ public class SignController {
                                       @Value("${spring.security.oauth2.client.registration.google.redirect-uri}") String redirectUri) {
         AccessTokenRequestDto accessTokenRequestDto= new AccessTokenRequestDto(clientId, clientSecret, redirectUri);
         OAuth2MemberCreateRequestDto req = oAuthService.getAccessToken(code, "google", accessTokenRequestDto);
-        LogInResponseDto logInResponseDto = signUpAndLogin(req);
-        return Response.success(logInResponseDto);
+
+        return Response.success(signUpAndLogin(req));
     }
 
     @ApiOperation(value = "네이버 로그인", notes = "OAuth2.0 네이버로 소셜 로그인을 진행합니다.")
@@ -102,8 +101,8 @@ public class SignController {
                                      @Value("${spring.security.oauth2.client.registration.naver.redirect-uri}") String redirectUri) {
         AccessTokenRequestDto accessTokenRequestDto = new AccessTokenRequestDto(clientId, clientSecret, redirectUri);
         OAuth2MemberCreateRequestDto req = oAuthService.getAccessToken(code, "naver", accessTokenRequestDto);
-        LogInResponseDto logInResponseDto = signUpAndLogin(req);
-        return Response.success(logInResponseDto);
+
+        return Response.success(signUpAndLogin(req));
     }
 
     private LogInResponseDto signUpAndLogin(OAuth2MemberCreateRequestDto req) {
@@ -112,8 +111,7 @@ public class SignController {
         } catch (MemberNotFoundException e) {
             signService.oAuth2Signup(req);
         } finally {
-            LogInResponseDto logInResponseDto = signService.oauth2Login(req);
-            return logInResponseDto;
+            return signService.oauth2Login(req);
         }
     }
 

@@ -30,7 +30,7 @@ public class CategoryController {
     @ApiOperation(value = "카테고리 생성", notes = "카테고리를 생성 / ADMIN 전용")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Response create(@Valid @RequestBody CategoryCreateRequestDto categoryCreateRequestDto) {
+    public Response create(@Valid @ModelAttribute CategoryCreateRequestDto categoryCreateRequestDto) {
         return Response.success(categoryService.create(categoryCreateRequestDto));
     }
 

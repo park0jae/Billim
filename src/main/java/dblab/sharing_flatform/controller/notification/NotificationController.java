@@ -21,16 +21,14 @@ public class NotificationController {
     @GetMapping(value = "/subscribe/on", produces = "text/event-stream")
     @ResponseStatus(HttpStatus.OK)
     public SseEmitter subscribe(@RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
-        Long memberId = Long.valueOf(SecurityUtil.getCurrentUserId().orElseThrow(AccessDeniedException::new));
-        return notificationService.subscribe(memberId, lastEventId);
+        return notificationService.subscribe(Long.valueOf(SecurityUtil.getCurrentUserIdCheck()), lastEventId);
     }
 
     @ApiOperation(value = "알림 구독 취소", notes = "알림을 구독 취소한다.")
     @GetMapping(value = "/subscribe/off")
     @ResponseStatus(HttpStatus.OK)
     public Response unSubscribe() {
-        Long memberId = Long.valueOf(SecurityUtil.getCurrentUserId().orElseThrow(AccessDeniedException::new));
-        notificationService.unSubscribe(memberId);
+        notificationService.unSubscribe(Long.valueOf(SecurityUtil.getCurrentUserIdCheck()));
         return Response.success();
     }
 }

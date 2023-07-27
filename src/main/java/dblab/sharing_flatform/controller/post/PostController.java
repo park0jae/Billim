@@ -1,5 +1,6 @@
 package dblab.sharing_flatform.controller.post;
 
+import dblab.sharing_flatform.aop.AssignUsername;
 import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
@@ -45,7 +46,7 @@ public class PostController {
     @GetMapping("/like")
     @ResponseStatus(HttpStatus.OK)
     public Response readAllLikePost() {
-        Long memberId = Long.valueOf(SecurityUtil.getCurrentUserId().orElseThrow(AccessDeniedException::new));
+        Long memberId = Long.valueOf(SecurityUtil.getCurrentUserIdCheck());
         return Response.success(postService.readAllLikePost(memberId));
     }
 
@@ -53,7 +54,7 @@ public class PostController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Response create(@Valid @ModelAttribute PostCreateRequestDto postCreateRequestDto) {
-        postCreateRequestDto.setUsername(SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new));
+        postCreateRequestDto.setUsername(SecurityUtil.getCurrentUsernameCheck());
         return Response.success(postService.create(postCreateRequestDto));
     }
 
@@ -77,8 +78,7 @@ public class PostController {
     @PostMapping("/like/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public Response likeUp(@ApiParam(value = "좋아요할 게시글 id", required = true) @PathVariable Long postId) {
-        String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        postService.like(postId, username);
+        postService.like(postId, SecurityUtil.getCurrentUsernameCheck());
         return Response.success();
     }
 

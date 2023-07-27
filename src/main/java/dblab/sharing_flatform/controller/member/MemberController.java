@@ -37,24 +37,21 @@ public class MemberController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Response currentUser() {
-        String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        return Response.success(memberService.readMyInfo(username));
+        return Response.success(memberService.readMyInfo(SecurityUtil.getCurrentUsernameCheck()));
     }
 
     @ApiOperation(value = "회원 프로필 정보 조회", notes = "회원의 프로필 정보를 조회합니다.")
     @GetMapping("/profile/{username}")
     @ResponseStatus(HttpStatus.OK)
     public Response findMemberProfile(@ApiParam(name = "검색할 사용자 아이디", required = true) @PathVariable String username) {
-        MemberProfileDto memberInfo = memberService.readMemberProfile(username);
-        return Response.success(memberInfo);
+        return Response.success(memberService.readMemberProfile(username));
     }
 
     @ApiOperation(value = "회원 삭제", notes = "관리자 또는 본인인 경우 사용자를 삭제한다.")
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
     public Response deleteMember() {
-        String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        memberService.delete(username);
+        memberService.delete(SecurityUtil.getCurrentUsernameCheck());
         return Response.success();
     }
 
@@ -62,17 +59,13 @@ public class MemberController {
     @PatchMapping
     @ResponseStatus(HttpStatus.OK)
     public Response updateMember(@Valid @ModelAttribute MemberUpdateRequestDto memberUpdateRequestDto) {
-        String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        MemberPrivateDto updateMember = memberService.update(username, memberUpdateRequestDto);
-        return Response.success(updateMember);
+        return Response.success(memberService.update(SecurityUtil.getCurrentUsernameCheck(), memberUpdateRequestDto));
     }
 
     @ApiOperation(value = "OAuth 회원 추가 정보 등록(필수) / 수정 ", notes = "OAuth2 유저 최초 로그인 시 OAuth 회원 본인의 정보를 등록합니다. / OAuth2 회원의 정보를 수정합니다.")
     @PatchMapping("/update/oauth")
     @ResponseStatus(HttpStatus.OK)
     public Response updateOAuthMember(@Valid @ModelAttribute OAuthMemberUpdateRequestDto requestDto) {
-        String username = SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
-        MemberPrivateDto updateMember = memberService.oauthMemberUpdate(username, requestDto);
-        return Response.success(updateMember);
+        return Response.success(memberService.oauthMemberUpdate(SecurityUtil.getCurrentUsernameCheck(), requestDto));
     }
 }
