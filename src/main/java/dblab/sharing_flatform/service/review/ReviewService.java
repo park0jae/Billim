@@ -55,8 +55,8 @@ public class ReviewService {
 
         Review review = new Review(reviewRequestDto.getContent(),
                 reviewRequestDto.getStarRating(),
-                reviewerMember,
-                member);
+                member,
+                reviewerMember);
 
         reviewRepository.save(review);
         trade.addReview(review);
