@@ -1,10 +1,8 @@
 package dblab.sharing_flatform.controller.trade;
 
-import dblab.sharing_flatform.aop.AssignUsername;
 import dblab.sharing_flatform.config.security.util.SecurityUtil;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.dto.trade.crud.create.TradeRequestDto;
-import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.service.trade.TradeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import static dblab.sharing_flatform.config.security.util.SecurityUtil.getCurrentUsernameCheck;
 
 @Api(value = "Trade Controller", tags = "Trade")
 @RestController
@@ -27,8 +27,7 @@ public class TradeController {
     @ResponseStatus(HttpStatus.CREATED)
     public Response createTrade(@Valid @RequestBody TradeRequestDto tradeRequestDto,
                                 @ApiParam(value = "Post ID", required = true) @PathVariable Long postId) {
-        tradeRequestDto.setUsername(SecurityUtil.getCurrentUsernameCheck());
-        return Response.success(tradeService.createTrade(tradeRequestDto, postId));
+        return Response.success(tradeService.createTrade(tradeRequestDto, postId, getCurrentUsernameCheck()));
     }
 
     @ApiOperation(value = "Trade ID로 Trade의 거래완료", notes = "거래 ID로 Trade의 거래를 완료합니다.")

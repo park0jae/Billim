@@ -58,13 +58,13 @@ public class MessageServiceTest {
     @DisplayName("메세지 생성 및 전송 테스트")
     public void sendMessageTest() {
         // Given
-        MessageCreateRequestDto messageCreateRequestDto = new MessageCreateRequestDto("sender", "HelloWorld","receiver");
+        MessageCreateRequestDto messageCreateRequestDto = new MessageCreateRequestDto("HelloWorld", "receiver");
 
         given(memberRepository.findByUsername("sender")).willReturn(Optional.of(sendMember));
         given(memberRepository.findByNickname("receiver")).willReturn(Optional.of(receiveMember));
 
         // When
-        MessageDto result = messageService.sendMessage(messageCreateRequestDto);
+        MessageDto result = messageService.sendMessage(messageCreateRequestDto, sendMember.getUsername());
 
         // Then
         assertThat(result.getContent()).isEqualTo("HelloWorld");

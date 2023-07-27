@@ -15,10 +15,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class TradeRequestDto {
 
-    @ApiModelProperty(hidden = true)
-    @Null
-    private String username;
-
     private String borrowerName;
 
     @JsonFormat(pattern = "yyyy.MM.dd") //데이터 포맷 변환

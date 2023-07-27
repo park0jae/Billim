@@ -58,7 +58,6 @@ public class MemberService {
     public MemberPrivateDto update(String username, MemberUpdateRequestDto requestDto){
         Member member = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
         memberUpdate(requestDto, member);
-
         return MemberPrivateDto.toDto(member);
     }
 
@@ -75,13 +74,13 @@ public class MemberService {
     }
 
     private void memberUpdate(MemberUpdateRequestDto requestDto, Member member) {
-        validateDuplicateUsernameAndNickname(requestDto.getUsername(), requestDto.getNickname());
+        validateDuplicateNickname(requestDto.getNickname());
         String profileImage = member.updateMember(requestDto, encodeRawPassword(requestDto.getPassword()));
         profileImageServerUpdate(requestDto.getImage(), member, profileImage);
     }
 
     private void oAuthMemberUpdate(OAuthMemberUpdateRequestDto requestDto, Member member) {
-        validateDuplicateUsernameAndNickname(null, requestDto.getNickname());
+        validateDuplicateNickname(requestDto.getNickname());
         String profileImage = member.updateOAuthMember(requestDto);
         profileImageServerUpdate(requestDto.getImage(), member, profileImage);
     }
@@ -95,10 +94,8 @@ public class MemberService {
         }
     }
 
-    public void validateDuplicateUsernameAndNickname(String username, String nickname) {
-        if (username != null && memberRepository.existsByUsername(username)) {
-            throw new DuplicateUsernameException();
-        } else if (memberRepository.existsByNickname(nickname)) {
+    public void validateDuplicateNickname(String nickname) {
+        if (memberRepository.existsByNickname(nickname)) {
             throw new DuplicateNicknameException();
         }
     }

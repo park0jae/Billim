@@ -22,10 +22,6 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostCreateRequestDto {
 
-    @ApiModelProperty(hidden = true)
-    @Null
-    private String username;
-
     @ApiModelProperty(value = "게시글 제목", notes = "게시글 제목을 입력해주세요", required = true)
     @NotBlank(message = "제목을 입력해주세요.")
     private String title;

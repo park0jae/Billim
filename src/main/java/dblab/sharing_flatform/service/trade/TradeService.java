@@ -31,8 +31,8 @@ public class TradeService {
     private final PostRepository postRepository;
 
     @Transactional
-    public TradeResponseDto createTrade(TradeRequestDto tradeRequestDto, Long id){
-        Member render = memberRepository.findByUsername(tradeRequestDto.getUsername()).orElseThrow(MemberNotFoundException::new);
+    public TradeResponseDto createTrade(TradeRequestDto tradeRequestDto, Long id, String username){
+        Member render = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
         Member borrower = memberRepository.findByNickname(tradeRequestDto.getBorrowerName()).orElseThrow(MemberNotFoundException::new);
 
         validateCreateTrade(id, borrower, render);

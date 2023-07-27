@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static dblab.sharing_flatform.config.security.util.SecurityUtil.getCurrentUsernameCheck;
+
 @Api(value = "Member Controller", tags = "Member")
 @RestController
 @RequiredArgsConstructor
@@ -37,7 +39,7 @@ public class MemberController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Response currentUser() {
-        return Response.success(memberService.readMyInfo(SecurityUtil.getCurrentUsernameCheck()));
+        return Response.success(memberService.readMyInfo(getCurrentUsernameCheck()));
     }
 
     @ApiOperation(value = "회원 프로필 정보 조회", notes = "회원의 프로필 정보를 조회합니다.")
@@ -51,7 +53,7 @@ public class MemberController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
     public Response deleteMember() {
-        memberService.delete(SecurityUtil.getCurrentUsernameCheck());
+        memberService.delete(getCurrentUsernameCheck());
         return Response.success();
     }
 
@@ -59,13 +61,13 @@ public class MemberController {
     @PatchMapping
     @ResponseStatus(HttpStatus.OK)
     public Response updateMember(@Valid @ModelAttribute MemberUpdateRequestDto memberUpdateRequestDto) {
-        return Response.success(memberService.update(SecurityUtil.getCurrentUsernameCheck(), memberUpdateRequestDto));
+        return Response.success(memberService.update(getCurrentUsernameCheck(), memberUpdateRequestDto));
     }
 
     @ApiOperation(value = "OAuth 회원 추가 정보 등록(필수) / 수정 ", notes = "OAuth2 유저 최초 로그인 시 OAuth 회원 본인의 정보를 등록합니다. / OAuth2 회원의 정보를 수정합니다.")
     @PatchMapping("/update/oauth")
     @ResponseStatus(HttpStatus.OK)
     public Response updateOAuthMember(@Valid @ModelAttribute OAuthMemberUpdateRequestDto requestDto) {
-        return Response.success(memberService.oauthMemberUpdate(SecurityUtil.getCurrentUsernameCheck(), requestDto));
+        return Response.success(memberService.oauthMemberUpdate(getCurrentUsernameCheck(), requestDto));
     }
 }

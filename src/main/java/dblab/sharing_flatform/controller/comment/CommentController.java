@@ -34,7 +34,6 @@ public class CommentController {
     @ResponseStatus(HttpStatus.CREATED)
     public Response create(@ApiParam(value = "Post ID", required = true) @PathVariable Long postId,
             @Valid @RequestBody CommentCreateRequestDto requestDto) {
-
         return Response.success(commentService.create(postId, requestDto, getCurrentUsername()));
     }
 
@@ -49,6 +48,4 @@ public class CommentController {
     private String getCurrentUsername() {
         return SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
     }
-
-
 }

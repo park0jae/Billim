@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static dblab.sharing_flatform.config.security.util.SecurityUtil.getCurrentUsernameCheck;
+
 @Api(value = "Report Controller", tags = "Report")
 @RestController
 @RequiredArgsConstructor
@@ -32,10 +34,8 @@ public class ReportController {
     @ApiOperation(value = "게시글 또는 회원에 대한 Report를 생성", notes = "현재 로그인한 유저 정보로 게시글/회원에 대한 Report를 생성합니다.")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-
     public Response create(@Valid @RequestBody ReportCreateRequestDto requestDto) {
-        requestDto.setReporterName(SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new));
-        reportService.create(requestDto);
+        reportService.create(requestDto, getCurrentUsernameCheck());
         return Response.success();
     }
 

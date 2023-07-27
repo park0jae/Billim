@@ -34,8 +34,8 @@ public class MessageService {
     private final NotificationHelper notificationHelper;
 
     @Transactional
-    public MessageDto sendMessage(MessageCreateRequestDto requestDto) {
-        Member sender = memberRepository.findByUsername(requestDto.getSendMember()).orElseThrow(MemberNotFoundException::new);
+    public MessageDto sendMessage(MessageCreateRequestDto requestDto, String username) {
+        Member sender = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
         Member receiver = memberRepository.findByNickname(requestDto.getReceiveMember()).orElseThrow(MemberNotFoundException::new);
         Message message = new Message(requestDto.getContent(), receiver, sender);
 

@@ -16,10 +16,6 @@ import javax.validation.constraints.Null;
 @AllArgsConstructor
 public class ReportCreateRequestDto {
 
-    @ApiModelProperty(hidden = true)
-    @Null
-    private String reporterName;
-
     @NotNull
     private ReportType reportType;
 

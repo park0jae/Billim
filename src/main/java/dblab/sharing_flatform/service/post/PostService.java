@@ -66,7 +66,7 @@ public class PostService {
 
     // create
     @Transactional
-    public PostCreateResponseDto create(PostCreateRequestDto requestDto) {
+    public PostCreateResponseDto create(PostCreateRequestDto requestDto, String username) {
         List<PostImage> postImages = getImages(requestDto);
 
         Post post = new Post(requestDto.getTitle(),
@@ -74,7 +74,7 @@ public class PostService {
                 categoryRepository.findByName(requestDto.getCategoryName()).orElseThrow(CategoryNotFoundException::new),
                 requestDto.getItemCreateRequestDto() != null ? ItemCreateRequestDto.toEntity(requestDto.getItemCreateRequestDto()) : null,
                 postImages,
-                memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(AuthenticationEntryPointException::new));
+                memberRepository.findByUsername(username).orElseThrow(AuthenticationEntryPointException::new));
 
         postRepository.save(post);
 
