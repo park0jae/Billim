@@ -1,6 +1,6 @@
 package dblab.sharing_flatform.helper;
 
-import dblab.sharing_flatform.exception.CantConvertException;
+import dblab.sharing_flatform.exception.helper.ConvertException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +31,7 @@ public class FlatListToHierarchicalHelper<K, E, D> {
         try {
             return convertInternal();
         } catch (NullPointerException e) {
-            throw new CantConvertException();
+            throw new ConvertException();
         }
     }
 
