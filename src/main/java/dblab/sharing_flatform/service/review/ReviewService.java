@@ -15,6 +15,7 @@ import dblab.sharing_flatform.exception.review.ImpossibleWriteReviewException;
 import dblab.sharing_flatform.exception.review.ReviewNotFoundException;
 import dblab.sharing_flatform.exception.trade.TradeNotCompleteException;
 import dblab.sharing_flatform.exception.trade.TradeNotFoundException;
+import dblab.sharing_flatform.helper.NotificationHelper;
 import dblab.sharing_flatform.repository.emitter.EmitterRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.review.ReviewRepository;
@@ -41,8 +42,8 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
     private final TradeRepository tradeRepository;
-    private final EmitterRepository emitterRepository;
-    private final ApplicationEventPublisher eventPublisher;
+
+    private final NotificationHelper notificationHelper;
 
     @Transactional
     public ReviewResponseDto writeReview(ReviewRequestDto reviewRequestDto, Long tradeId, String username){
@@ -61,15 +62,10 @@ public class ReviewService {
         trade.addReview(review);
         reviewerMember.calculateTotalStarRating(reviewRequestDto.getStarRating(), reviewRepository.countByMemberId(trade.getRenderMember().getId()));
 
-        Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartsWithByMemberId(String.valueOf(member.getId()));
-        if(!emitters.isEmpty()){
-            NotificationRequestDto notificationRequestDto = new NotificationRequestDto(reviewerMember.getUsername()+"님으로부터 리뷰가 도착했습니다.", String.valueOf(NotificationType.REVIEW), member.getUsername());
-            eventPublisher.publishEvent(notificationRequestDto);
-        }
+        notificationHelper.notificationIfSubscribe(reviewerMember, member, NotificationType.REVIEW, "님이 거래에 대한 리뷰를 작성했습니다.");
 
         return ReviewResponseDto.toDto(review);
     }
-
 
     @Transactional
     public void deleteReview(Long tradeId){
