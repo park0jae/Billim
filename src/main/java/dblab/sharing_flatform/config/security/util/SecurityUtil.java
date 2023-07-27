@@ -4,6 +4,7 @@ import dblab.sharing_flatform.config.security.details.MemberDetails;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.domain.role.RoleType;
+import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_flatform.exception.auth.IllegalAuthenticationException;
 import lombok.extern.slf4j.Slf4j;

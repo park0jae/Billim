@@ -34,8 +34,7 @@ public class CommentController {
     @ResponseStatus(HttpStatus.CREATED)
     public Response create(@ApiParam(value = "Post ID", required = true) @PathVariable Long postId,
             @Valid @RequestBody CommentCreateRequestDto requestDto) {
-        requestDto.setUsername(SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new));
-        return Response.success(commentService.create(postId, requestDto));
+        return Response.success(commentService.create(postId, requestDto, getCurrentUsername()));
     }
 
     @ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제합니다.")
@@ -45,5 +44,10 @@ public class CommentController {
         commentService.delete(commentId);
         return Response.success();
     }
+
+    private String getCurrentUsername() {
+        return SecurityUtil.getCurrentUsername().orElseThrow(AccessDeniedException::new);
+    }
+
 
 }

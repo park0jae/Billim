@@ -1,6 +1,5 @@
 package dblab.sharing_flatform.controller.message;
 
-import dblab.sharing_flatform.aop.AssignUsername;
 import dblab.sharing_flatform.dto.message.crud.create.MessageCreateRequestDto;
 import dblab.sharing_flatform.dto.message.MessageDto;
 import dblab.sharing_flatform.dto.response.Response;
@@ -24,7 +23,6 @@ public class MessageController {
     private final MessageService messageService;
 
     @ApiOperation(value = "메세지 생성 및 전송", notes = "메세지를 생성하고 수신자에게 전송합니다.")
-    @AssignUsername
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Response sendMessageToReceiver(@Valid @RequestBody MessageCreateRequestDto messageCreateRequestDto) {
