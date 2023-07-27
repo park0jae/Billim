@@ -2,10 +2,7 @@ package dblab.sharing_flatform.advisor;
 
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.exception.ValidateTokenException;
-import dblab.sharing_flatform.exception.auth.AccessDeniedException;
-import dblab.sharing_flatform.exception.auth.AuthenticationEntryPointException;
-import dblab.sharing_flatform.exception.auth.IllegalAuthenticationException;
-import dblab.sharing_flatform.exception.auth.LoginFailureException;
+import dblab.sharing_flatform.exception.auth.*;
 import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
 import dblab.sharing_flatform.exception.comment.CommentNotFoundException;
 import dblab.sharing_flatform.exception.comment.RootCommentNotFoundException;
@@ -182,6 +179,20 @@ public class ExceptionAdvisor {
     public Response oAuthCommunicationException(OAuthCommunicationException e) {
         return Response.failure(500, "OAuth 연결 해제 링크과의 연결 중 문제가 발생했습니다.");
     }
+
+    // auth
+    @ExceptionHandler(EmailAuthNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response emailAuthNotFoundException(EmailAuthNotFoundException e) {
+        return Response.failure(404, "인증번호 전송에 실패하였습니다.");
+    }
+
+    @ExceptionHandler(EmailAuthNotEqualsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response emailAuthNotEqualsException(EmailAuthNotEqualsException e) {
+        return Response.failure(400, "인증번호가 일치하지 않습니다.");
+    }
+
 
     // comment
     @ExceptionHandler(CommentNotFoundException.class)

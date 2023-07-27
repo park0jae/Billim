@@ -1,31 +1,60 @@
 package dblab.sharing_flatform.service.mail;
 
+import dblab.sharing_flatform.domain.emailAuth.EmailAuth;
+import dblab.sharing_flatform.repository.emailAuth.EmailAuthRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.validation.constraints.Email;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class NaverMailService implements MailService{
 
     private final JavaMailSender emailSender;
+    private final EmailAuthRepository emailAuthRepository;
 
     private String ePw;
 
+
     @Override
-    public MimeMessage creatMessage(String to) throws MessagingException, UnsupportedEncodingException {
-        System.out.println("메일받을 사용자" + to);
-        System.out.println("인증번호" + ePw);
+    @Transactional
+    public void sendSimpleMessage(String email) {
+        ePw = createKey();
+        MimeMessage message = null;
+
+        try {
+            message = creatMessage(email);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            emailSender.send(message);
+            emailAuthRepository.save(new EmailAuth(ePw, email));
+        } catch (Exception e) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    @Override
+    public MimeMessage creatMessage(String email) throws MessagingException, UnsupportedEncodingException {
+        System.out.println("메일받을 사용자 : " + email);
+        System.out.println("인증번호 : " + ePw);
 
         MimeMessage message = emailSender.createMimeMessage();
 
-        message.addRecipients(MimeMessage.RecipientType.TO, to);
+        message.addRecipients(MimeMessage.RecipientType.TO, email);
         message.setSubject("[뭐든빌리개]" + "Sharing-Platform 회원가입 인증코드 입니다.");
 
         String msgg = "";
@@ -64,25 +93,5 @@ public class NaverMailService implements MailService{
         return key;
     }
 
-    @Override
-    public String sendSimpleMessage(String to) {
-        ePw = createKey();
-        MimeMessage message = null;
 
-        try {
-            message = creatMessage(to);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            emailSender.send(message);
-        } catch (Exception e) {
-            throw new IllegalArgumentException();
-        }
-
-        return ePw;
-    }
 }
