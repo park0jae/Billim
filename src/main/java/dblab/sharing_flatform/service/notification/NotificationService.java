@@ -64,7 +64,7 @@ public class NotificationService {
 
 
     public void send(NotificationRequestDto requestDto){
-        Member receiver = memberRepository.findByUsername(requestDto.getReceiver()).orElseThrow(MemberNotFoundException::new);
+        Member receiver = memberRepository.findByNickname(requestDto.getReceiver()).orElseThrow(MemberNotFoundException::new);
 
         // 알림 생성
         Notification notification = notificationRepository.save(
@@ -95,6 +95,7 @@ public class NotificationService {
             emitterRepository.deleteById(emitterId);
         }
     }
+
 
 
     private boolean hasLostData(String lastEventId){

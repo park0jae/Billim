@@ -20,6 +20,7 @@ import dblab.sharing_flatform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
+import dblab.sharing_flatform.helper.NotificationHelper;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
 import dblab.sharing_flatform.repository.emitter.EmitterRepository;
 import dblab.sharing_flatform.repository.likepost.LikePostRepository;
@@ -50,8 +51,8 @@ public class PostService {
     private final CategoryRepository categoryRepository;
     private final PostFileService postFileService;
     private final LikePostRepository likePostRepository;
-    private final EmitterRepository emitterRepository;
-    private final ApplicationEventPublisher eventPublisher;
+
+    private final NotificationHelper notificationHelper;
 
     public PagedPostListDto readAll(PostPagingCondition cond) {
         return PagedPostListDto.toDto(postRepository.findAllByCategoryAndTitle(cond));
@@ -175,11 +176,7 @@ public class PostService {
             likePosts.add(new LikePost(member, post));
             likePostRepository.save(new LikePost(member, post));
             Member writeMember = memberRepository.findByUsername(post.getMember().getUsername()).orElseThrow(MemberNotFoundException::new);
-            Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartsWithByMemberId(String.valueOf(writeMember.getId()));
-            if(!emitters.isEmpty()){
-                NotificationRequestDto notificationRequestDto = new NotificationRequestDto(member.getUsername() + "님이 좋아요를 눌렀습니다.", String.valueOf(NotificationType.LIKE), writeMember.getUsername());
-                eventPublisher.publishEvent(notificationRequestDto);
-            }
+            notificationHelper.notificationIfSubscribe(member, writeMember, NotificationType.LIKE, "님이 이 글을 좋아합니다.");
         }
     }
 
@@ -188,4 +185,5 @@ public class PostService {
                 .filter(lp -> lp.getMember().equals(member))
                 .findFirst();
     }
+
 }

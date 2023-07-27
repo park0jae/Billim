@@ -30,7 +30,8 @@ public class CommentService {
     // create
     @Transactional
     public Long create(Long postId, CommentCreateRequestDto requestDto) {
-        Comment comment = commentRepository.save(new Comment(requestDto.getContent(),
+        Comment comment = commentRepository.save(
+                new Comment(requestDto.getContent(),
                 requestDto.getParentCommentId() == null ? true : false,
                 postRepository.findById(postId).orElseThrow(PostNotFoundException::new),
                 memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(MemberNotFoundException::new),

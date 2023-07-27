@@ -8,6 +8,7 @@ import dblab.sharing_flatform.dto.message.MessageDto;
 import dblab.sharing_flatform.dto.notification.crud.create.NotificationRequestDto;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.message.MessageNotFoundException;
+import dblab.sharing_flatform.helper.NotificationHelper;
 import dblab.sharing_flatform.repository.emitter.EmitterRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.message.MessageRepository;
@@ -30,26 +31,20 @@ import java.util.stream.Collectors;
 public class MessageService {
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
-    private final ApplicationEventPublisher eventPublisher;
-    private final EmitterRepository emitterRepository;
+    private final NotificationHelper notificationHelper;
 
     @Transactional
     public MessageDto sendMessage(MessageCreateRequestDto requestDto) {
+        Member sender = memberRepository.findByUsername(requestDto.getSendMember()).orElseThrow(MemberNotFoundException::new);
         Member receiver = memberRepository.findByNickname(requestDto.getReceiveMember()).orElseThrow(MemberNotFoundException::new);
-        Message message = new Message(requestDto.getContent(),
-                receiver,
-                memberRepository.findByUsername(requestDto.getSendMember()).orElseThrow(MemberNotFoundException::new));
+        Message message = new Message(requestDto.getContent(), receiver, sender);
 
         messageRepository.save(message);
-
-        Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartsWithByMemberId(String.valueOf(receiver.getId()));
-        if(!emitters.isEmpty()){
-            NotificationRequestDto notificationRequestDto = new NotificationRequestDto(requestDto.getSendMember() + "님으로부터 새로운 메시지 도착", String.valueOf(NotificationType.MESSAGE), requestDto.getReceiveMember());
-            eventPublisher.publishEvent(notificationRequestDto);
-        }
+        notificationHelper.notificationIfSubscribe(sender, receiver, NotificationType.MESSAGE, "님으로부터 메시지가 도착했습니다.");
 
         return MessageDto.toDto(message);
     }
+
 
     public List<MessageDto> findSendMessage(String senderName){
         List<Message> messages = messageRepository.findAllBySendMember(senderName);

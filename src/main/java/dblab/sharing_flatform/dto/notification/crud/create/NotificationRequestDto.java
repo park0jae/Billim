@@ -25,5 +25,4 @@ public class NotificationRequestDto {
 
     private String receiver;
 
-
 }
