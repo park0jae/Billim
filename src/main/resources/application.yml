@@ -68,6 +68,8 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  messages:
+    basename: error/messages
 
 #echo 'wejfnwkandskjvnwejknfkjvnwekgwnkfnewfjkwnjkwnqkjnkjefwqjknwk'|base64
 jwt:

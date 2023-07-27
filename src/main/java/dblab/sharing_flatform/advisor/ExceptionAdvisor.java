@@ -1,17 +1,18 @@
 package dblab.sharing_flatform.advisor;
 
 import dblab.sharing_flatform.dto.response.Response;
-import dblab.sharing_flatform.exception.ValidateTokenException;
+import dblab.sharing_flatform.exception.auth.ValidateTokenException;
 import dblab.sharing_flatform.exception.auth.*;
 import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
 import dblab.sharing_flatform.exception.comment.CommentNotFoundException;
 import dblab.sharing_flatform.exception.comment.RootCommentNotFoundException;
+import dblab.sharing_flatform.exception.file.FileUploadFailureException;
 import dblab.sharing_flatform.exception.guard.GuardException;
 import dblab.sharing_flatform.exception.image.NoExtException;
 import dblab.sharing_flatform.exception.image.UnSupportExtException;
-import dblab.sharing_flatform.exception.member.AlreadyExistsMemberException;
-import dblab.sharing_flatform.exception.member.DuplicateNicknameException;
-import dblab.sharing_flatform.exception.member.DuplicateUsernameException;
+import dblab.sharing_flatform.exception.auth.AlreadyExistsMemberException;
+import dblab.sharing_flatform.exception.auth.DuplicateNicknameException;
+import dblab.sharing_flatform.exception.auth.DuplicateUsernameException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.message.MessageNotFoundException;
 import dblab.sharing_flatform.exception.oauth.OAuthCommunicationException;
@@ -27,7 +28,10 @@ import dblab.sharing_flatform.exception.trade.ExistTradeException;
 import dblab.sharing_flatform.exception.trade.ImpossibleCreateTradeException;
 import dblab.sharing_flatform.exception.trade.TradeNotCompleteException;
 import dblab.sharing_flatform.exception.trade.TradeNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -36,234 +40,285 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
+@RequiredArgsConstructor
 @Slf4j
 public class ExceptionAdvisor {
 
-    // uncaught Exception
+    private final MessageSource ms;
+
+    // UNCAUGHT EXCEPTION
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Response exception(Exception e) {
         e.printStackTrace();
-        return Response.failure(500, e.getMessage());
+        return getFailureResponse("INTERNAL_SERVER_ERROR.CODE", "EXCEPTION.MSG");
     }
 
-    // Field Error
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response bindException(BindException e) {
-        log.info("message = {}", e.getMessage());
-        return Response.failure(400, "양식에 맞게 입력해주세요.");
+        return getFailureResponse("BAD_REQUEST.CODE", "FIELD_ERROR.MSG");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response methodArgumentNotValidException(MethodArgumentNotValidException e) {
-        return Response.failure(400, "양식에 맞게 입력해주세요.");
+        return getFailureResponse("BAD_REQUEST.CODE", "FIELD_ERROR.MSG");
     }
 
-    // auth
+
+    /**
+     * AUTH-EXCEPTION
+     */
+    // member
     @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Response accessDeniedException(AccessDeniedException e) {
-        return Response.failure(400, "해당 권한으로 수행할 수 없는 작업입니다.");
-    }
-
-    @ExceptionHandler(AuthenticationEntryPointException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Response authenticationEntryPointException(AuthenticationEntryPointException e) {
-        return Response.failure(400, "로그인이 필요한 요청입니다.");
-    }
-
-    @ExceptionHandler(LoginFailureException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Response loginFailureException(LoginFailureException e) {
-        return Response.failure(400, "로그인에 실패하였습니다. 아이디나 비밀번호를 확인해주세요.");
+        return getFailureResponse("UNAUTHORIZED.CODE", "ACCESS_DENIED.MSG");
     }
 
     @ExceptionHandler(AlreadyExistsMemberException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Response alreadyExistsMemberException(AlreadyExistsMemberException e) {
-        return Response.failure(400, "해당 이메일로 가입된 계정이 이미 존재합니다. 일반 로그인으로 로그인 해주세요.");
-    }
-
-    @ExceptionHandler(IllegalAuthenticationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Response illegalAuthenticationException(IllegalAuthenticationException e) {
-        return Response.failure(400, "올바르지 않은 인증정보입니다.");
-    }
-
-    @ExceptionHandler(ValidateTokenException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Response validateTokenException(ValidateTokenException e) {
-        return Response.failure(400, "검증되지 않은 토큰 정보입니다.");
-    }
-
-    // image
-    @ExceptionHandler(NoExtException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Response noExtException(NoExtException e) {
-        return Response.failure(404, "사진의 확장자를 찾을 수 없습니다.");
-    }
-
-    @ExceptionHandler(UnSupportExtException.class)
-    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-    public Response unSupportExtException(UnSupportExtException e) {
-        return Response.failure(415, "지원하지 않는 미디어 타입입니다.");
-    }
-
-
-    // member
-    @ExceptionHandler(DuplicateUsernameException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public Response duplicateUsernameException(DuplicateUsernameException e) {
-        return Response.failure(409, "해당 이메일로 가입된 계정이 이미 존재합니다.");
+    public Response alreadyExistsMemberException(AlreadyExistsMemberException e) {
+        return getFailureResponse("CONFLICT.CODE", "OAUTH2_ALREADY_SIGNUP.MSG");
+    }
+
+    @ExceptionHandler(AuthenticationEntryPointException.class)
+    @ResponseStatus(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED)
+    public Response authenticationEntryPointException(AuthenticationEntryPointException e) {
+        return getFailureResponse("NETWORK_AUTHENTICATION_REQUIRED.CODE", "REQUIRED_AUTHENTICATE.MSG");
     }
 
     @ExceptionHandler(DuplicateNicknameException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public Response duplicateNicknameException(DuplicateNicknameException e) {
-        return Response.failure(409, "해당 닉네임은 이미 사용중입니다.");
+        return getFailureResponse("CONFLICT.CODE", "DUPLICATE_NICKNAME.MSG");
     }
 
-    @ExceptionHandler(MemberNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Response memberNotFoundException(MemberNotFoundException e) {
-        return Response.failure(404, "회원을 찾을 수 없습니다.");
-    }
-
-    // role
-    @ExceptionHandler(RoleNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Response roleNotFoundException(RoleNotFoundException e) {
-        return Response.failure(404, "권한을 찾을 수 없습니다.");
-    }
-
-
-    // category
-    @ExceptionHandler(CategoryNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Response categoryNotFoundException(CategoryNotFoundException e) {
-        return Response.failure(404, "지정한 카테고리를 찾을 수 없습니다.");
-    }
-
-    // message
-    @ExceptionHandler(MessageNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Response messageNotFoundException(MessageNotFoundException e) {
-        return Response.failure(404, "메시지를 찾을 수 없습니다.");
-    }
-
-    // post
-    @ExceptionHandler(PostNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Response postNotFoundException(PostNotFoundException e) {
-        return Response.failure(404, "게시글을 찾을 수 없습니다.");
-    }
-
-
-    // oauth
-    @ExceptionHandler(OAuthUserNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Response oAuthUserNotFoundException(OAuthUserNotFoundException e) {
-        return Response.failure(404, "OAuth 소셜 유저를 찾을 수 없습니다.");
-    }
-
-    @ExceptionHandler(SocialAgreementException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Response socialAgreementException(SocialAgreementException e) {
-        return Response.failure(400, "OAuth 정보 제공 동의 관련 오류가 발생했습니다.");
-    }
-
-    @ExceptionHandler(OAuthCommunicationException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Response oAuthCommunicationException(OAuthCommunicationException e) {
-        return Response.failure(500, "OAuth 연결 해제 링크과의 연결 중 문제가 발생했습니다.");
-    }
-
-    // auth
-    @ExceptionHandler(EmailAuthNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Response emailAuthNotFoundException(EmailAuthNotFoundException e) {
-        return Response.failure(404, "인증번호 전송에 실패하였습니다.");
+    @ExceptionHandler(DuplicateUsernameException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Response duplicateUsernameException(DuplicateUsernameException e) {
+        return getFailureResponse("CONFLICT.CODE", "COMMON_ALREADY_SIGNUP.MSG");
     }
 
     @ExceptionHandler(EmailAuthNotEqualsException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public Response emailAuthNotEqualsException(EmailAuthNotEqualsException e) {
-        return Response.failure(400, "인증번호가 일치하지 않습니다.");
+        return getFailureResponse("CONFLICT.CODE", "EMAIL_AUTH_NOT_EQUAL.MSG");
+    }
+
+    @ExceptionHandler(EmailAuthNotFoundException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response emailAuthNotFoundException(EmailAuthNotFoundException e) {
+        return getFailureResponse("INTERNAL_SERVER_ERROR.CODE", "EMAIL_AUTH_FAIL.MSG");
+    }
+
+    @ExceptionHandler(IllegalAuthenticationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response illegalAuthenticationException(IllegalAuthenticationException e) {
+        return getFailureResponse("BAD_REQUEST.CODE", "ILLEGAL_AUTHENTICATION.MSG");
+    }
+
+    @ExceptionHandler(LoginFailureException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Response loginFailureException(LoginFailureException e) {
+        return getFailureResponse("CONFLICT.CODE", "LOGIN_FAILURE.MSG");
+    }
+
+    @ExceptionHandler(ValidateTokenException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response validateTokenException(ValidateTokenException e) {
+        return getFailureResponse("BAD_REQUEST.CODE", "INVALID_TOKEN.MSG");
     }
 
 
-    // comment
+    /**
+     * CATEGORY_EXCEPTION
+     */
+    @ExceptionHandler(CategoryNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response categoryNotFoundException(CategoryNotFoundException e) {
+        return getFailureResponse("NOT_FOUND.CODE", "CATEGORY_NOT_FOUND.MSG");
+    }
+
+
+    /**
+     * COMMENT_EXCEPTION
+     */
     @ExceptionHandler(CommentNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response commentNotFoundException(CommentNotFoundException e) {
-        return Response.failure(404, "존재하지 않는 댓글입니다.");
+        return getFailureResponse("NOT_FOUND.CODE", "COMMENT_NOT_FOUND.MSG");
     }
 
     @ExceptionHandler(RootCommentNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response rootCommentNotFoundException(RootCommentNotFoundException e) {
-        return Response.failure(404, "상위 댓글이 존재하지 않습니다.");
+        return getFailureResponse("NOT_FOUND.CODE", "ROOT_COMMENT_NOT_FOUND.MSG");
     }
 
-    // trade
-    @ExceptionHandler(TradeNotCompleteException.class)
+
+    /**
+     * FILE_UPLOAD_EXCEPTION
+     */
+    @ExceptionHandler(FileUploadFailureException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Response tradeNotCompleteException(TradeNotCompleteException e) {
-        return Response.failure(400, "완료되지 않은 거래에 대해서는 리뷰 작성이 불가능합니다. 거래를 완료해주세요.");
+    public Response fileUploadFailureException(FileUploadFailureException e) {
+        return getFailureResponse("BAD_REQUEST.CODE", "FILE_UPLOAD.MSG");
     }
 
-    @ExceptionHandler(ImpossibleCreateTradeException.class)
+
+    /**
+     * GUARD_EXCEPTION
+     */
+    @ExceptionHandler(GuardException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Response guardException(GuardException e) {
+        return getFailureResponse("UNAUTHORIZED.CODE", "GUARD.MSG");
+    }
+
+    /**
+     * IMAGE_EXCEPTION
+     */
+    @ExceptionHandler(NoExtException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Response impossibleCreateTradeException(ImpossibleCreateTradeException e) {
-        return Response.failure(400, "거래를 시작할 수 없습니다.");
+    public Response noExtException(NoExtException e) {
+        return getFailureResponse("BAD_REQUEST.CODE", "NOT_EXIST_EXT.MSG");
     }
 
-    @ExceptionHandler(TradeNotFoundException.class)
+    @ExceptionHandler(UnSupportExtException.class)
+    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+    public Response unSupportExtException(UnSupportExtException e) {
+        return getFailureResponse("UNSUPPORTED_MEDIA_TYPE.CODE", "UNSUPPORTED_TYPE.MSG");
+    }
+
+    /**
+     * MEMBER_EXCEPTION
+     */
+    @ExceptionHandler(MemberNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Response tradeNotFoundException(TradeNotFoundException e) {
-        return Response.failure(404, "거래 내역이 존재하지 않습니다.");
+    public Response memberNotFoundException(MemberNotFoundException e) {
+        return getFailureResponse("NOT_FOUND.CODE", "MEMBER_NOT_FOUND.MSG");
     }
 
-    @ExceptionHandler(ExistTradeException.class)
+    /**
+     * MESSAGE_EXCEPTION
+     */
+    @ExceptionHandler(MessageNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response messageNotFoundException(MessageNotFoundException e) {
+        return getFailureResponse("NOT_FOUND.CODE", "MESSAGE_NOT_FOUND.MSG");
+    }
+
+
+    /**
+     * OAUTH_EXCEPTION
+     */
+    @ExceptionHandler(OAuthCommunicationException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response oAuthCommunicationException(OAuthCommunicationException e) {
+        return getFailureResponse("INTERNAL_SERVER_ERROR.CODE", "OAUTH_LOGOUT.MSG");
+    }
+
+    @ExceptionHandler(OAuthUserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response oAuthUserNotFoundException(OAuthUserNotFoundException e) {
+        return getFailureResponse("NOT_FOUND.CODE", "OAUTH_MEMBER_NOT_FOUND.MSG");
+    }
+
+    @ExceptionHandler(SocialAgreementException.class)
+    @ResponseStatus(HttpStatus.PRECONDITION_REQUIRED)
+    public Response socialAgreementException(SocialAgreementException e) {
+        return getFailureResponse("PRECONDITION_REQUIRED.CODE", "SOCIAL_AGREEMENT.MSG");
+    }
+
+    /**
+     * POST_EXCEPTION
+     */
+    @ExceptionHandler(PostNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response postNotFoundException(PostNotFoundException e) {
+        return getFailureResponse("NOT_FOUND.CODE", "POST_NOT_FOUND.MSG");
+    }
+
+    /**
+     * REPORT_EXCEPTION
+     */
+    @ExceptionHandler(ReportNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response reportNotFoundException(ReportNotFoundException e) {
+        return getFailureResponse("NOT_FOUND.CODE", "REPORT_NOT_FOUND.MSG");
+    }
+
+    /**
+     * REVIEW_EXCEPTION
+     */
+    @ExceptionHandler(ExistReviewException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public Response ExistTradeException(ExistTradeException e) {
-        return Response.failure(409, "해당 거래가 이미 진행중입니다.");
+    public Response ExistReviewException(ExistReviewException e) {
+        return getFailureResponse("CONFLICT.CODE", "EXIST_REVIEW.MSG");
     }
 
-    // review
     @ExceptionHandler(ImpossibleWriteReviewException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Response impossibleWriteReviewException(ImpossibleWriteReviewException e) {
-        return Response.failure(400, "해당 거래에 대해 리뷰를 작성할 권한이 없습니다.");
+        return getFailureResponse("UNAUTHORIZED.CODE", "WRITE_REVIEW.MSG");
     }
 
     @ExceptionHandler(ReviewNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response reviewNotFoundException(ReviewNotFoundException e) {
-        return Response.failure(404, "리뷰가 존재하지 않습니다.");
-    }
-
-    @ExceptionHandler(ExistReviewException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public Response ExistReviewException(ExistReviewException e) {
-        return Response.failure(409, "해당 거래에 대한 리뷰가 이미 존재합니다.");
+        return getFailureResponse("NOT_FOUND.CODE", "REVIEW_NOT_FOUND.MSG");
     }
 
 
-    // report
-    @ExceptionHandler(ReportNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Response reportNotFoundException(ReportNotFoundException e) {
-        return Response.failure(404, "해당 신고내역을 찾을 수 없습니다.");
-    }
-
-    // Guard Exception
-    @ExceptionHandler(GuardException.class)
+    /**
+     * ROLE_EXCEPTION
+     */
+    @ExceptionHandler(RoleNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Response guardException(GuardException e) {
-        return Response.failure(400, "비정상적인 접근입니다.");
+    public Response roleNotFoundException(RoleNotFoundException e) {
+        return getFailureResponse("BAD_REQUEST.CODE", "ROLE_NOT_FOUND.MSG");
     }
 
+
+    /**
+     * TRADE_EXCEPTION
+     */
+    @ExceptionHandler(ExistTradeException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Response ExistTradeException(ExistTradeException e) {
+        return getFailureResponse("CONFLICT.CODE", "EXIST_TRADE.MSG");
+    }
+
+    @ExceptionHandler(ImpossibleCreateTradeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response impossibleCreateTradeException(ImpossibleCreateTradeException e) {
+        return getFailureResponse("BAD_REQUEST.CODE", "IMPOSSIBLE_CREATE_TRADE.MSG");
+    }
+
+    @ExceptionHandler(TradeNotCompleteException.class)
+    @ResponseStatus(HttpStatus.PRECONDITION_REQUIRED)
+    public Response tradeNotCompleteException(TradeNotCompleteException e) {
+        return getFailureResponse("PRECONDITION_REQUIRED.CODE", "TRADE_NOT_COMPLETE.MSG");
+    }
+
+    @ExceptionHandler(TradeNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response tradeNotFoundException(TradeNotFoundException e) {
+        return getFailureResponse("NOT_FOUND.CODE", "TRADE_NOT_FOUND.MSG");
+    }
+
+
+    private Response getFailureResponse(String code, String msg) {
+        return Response.failure(getCode(code), getMessage(msg));
+    }
+
+    private Integer getCode(String code) {
+        return Integer.valueOf(ms.getMessage(code,null, null));
+    }
+
+    private String getMessage(String msg) {
+        return ms.getMessage(msg, null, LocaleContextHolder.getLocale());
+    }
 }

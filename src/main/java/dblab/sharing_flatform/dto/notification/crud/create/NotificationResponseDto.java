@@ -25,10 +25,9 @@ public class NotificationResponseDto {
 
     public static NotificationResponseDto toDto(Notification notification){
         return new NotificationResponseDto(
-
                 notification.getContent(),
                 notification.getNotificationType().toString(),
-                notification.getReceiver().getUsername(),
+                notification.getReceiver().getNickname(),
                 notification.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd/HH:mm:ss"))
         );
     }

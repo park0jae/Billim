@@ -1,13 +1,12 @@
 package dblab.sharing_flatform.config.security.jwt.handler;
 
 import dblab.sharing_flatform.config.security.details.MemberDetails;
-import dblab.sharing_flatform.exception.ValidateTokenException;
+import dblab.sharing_flatform.exception.auth.ValidateTokenException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

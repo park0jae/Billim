@@ -1,4 +1,4 @@
-package dblab.sharing_flatform.exception;
+package dblab.sharing_flatform.exception.auth;
 
 
 // Filter
