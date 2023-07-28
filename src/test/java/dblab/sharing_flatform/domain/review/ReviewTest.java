@@ -16,6 +16,6 @@ public class ReviewTest {
         Review review = createReview();
 
         //then
-        Assertions.assertThat(review).isNotNull();
+        Assertions.assertThat(review.getContent()).isEqualTo("테스트 리뷰입니다.");
     }
 }
