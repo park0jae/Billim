@@ -8,6 +8,7 @@ import dblab.sharing_flatform.dto.review.ReviewDto;
 import dblab.sharing_flatform.dto.review.crud.create.ReviewRequestDto;
 import dblab.sharing_flatform.dto.review.crud.create.ReviewResponseDto;
 import dblab.sharing_flatform.dto.review.crud.read.request.ReviewPagingCondition;
+import dblab.sharing_flatform.dto.review.crud.read.response.PagedReviewListDto;
 import dblab.sharing_flatform.exception.review.ExistReviewException;
 import dblab.sharing_flatform.exception.review.ImpossibleWriteReviewException;
 import dblab.sharing_flatform.exception.trade.TradeNotCompleteException;
@@ -96,50 +97,73 @@ public class ReviewServiceTest {
     public void findAllReviewTest(){
         // Given
         List<Review> reviews = new ArrayList<>();
-        reviews.add(new Review("review 1", member, reviewerMember));
-        reviews.add(new Review("review 2", reviewerMember , member));
+        List<ReviewDto> reviewDtoList = new ArrayList<>();
 
-        given(reviewRepository.findAll()).willReturn(reviews);
+        reviews.add(new Review("review 1", member, reviewerMember));
+        reviews.add(new Review("review 2", member, reviewerMember));
+
+        reviewDtoList.add(ReviewDto.toDto(reviews.get(0)));
+        reviewDtoList.add(ReviewDto.toDto(reviews.get(1)));
+
+
+        ReviewPagingCondition cond = new ReviewPagingCondition(1, 5, null);
+
+        Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize(), Sort.by("review_id").ascending());
+
+        Page<ReviewDto> resultPage = new PageImpl<>(reviewDtoList, pageable, reviews.size());
+
+        given(reviewRepository.findAllReviews(cond)).willReturn(resultPage);
 
         // When
-        List<ReviewResponseDto> result = reviewService.findAllReviews();
+        PagedReviewListDto result = reviewService.findAllReviews(cond);
 
         // Then
-        assertThat(result).hasSize(2);
+        assertThat(result.getReviewList()).hasSize(2);
 
-        ReviewResponseDto reviewResponseDto1 = result.get(0);
-        assertThat(reviewResponseDto1.getContent()).isEqualTo("review 1");
+        ReviewDto reviewDto = result.getReviewList().get(0);
+        assertThat(reviewDto.getContent()).isEqualTo("review 1");
 
-        ReviewResponseDto reviewResponseDto2 = result.get(1);
-        assertThat(reviewResponseDto2.getContent()).isEqualTo("review 2");
+        ReviewDto reviewDto2 = result.getReviewList().get(1);
+        assertThat(reviewDto2.getContent()).isEqualTo("review 2");
     }
 
     @Test
     @DisplayName("현재 유저의 리뷰 조회 테스트")
     public void findCurrentUserReviewsTest(){
         List<Review> reviews = new ArrayList<>();
+        List<ReviewDto> reviewDtoList = new ArrayList<>();
+
         reviews.add(new Review("review 1", member, reviewerMember));
         reviews.add(new Review("review 2", member, reviewerMember));
 
-        String username = member.getUsername();
+        reviewDtoList.add(ReviewDto.toDto(reviews.get(0)));
+        reviewDtoList.add(ReviewDto.toDto(reviews.get(1)));
 
-        given(reviewRepository.findAllWithMemberByMemberId(username)).willReturn(reviews);
+
+        ReviewPagingCondition cond = new ReviewPagingCondition(1, 5, member.getUsername());
+        Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize(), Sort.by("review_id").ascending());
+
+        Page<ReviewDto> resultPage = new PageImpl<>(reviewDtoList, pageable, reviews.size());
+
+        given(reviewRepository.findAllWithMemberByCurrentUsername(cond)).willReturn(resultPage);
 
         // When
-        List<ReviewResponseDto> result = reviewService.findCurrentUserReviews(username);
+        PagedReviewListDto result = reviewService.findCurrentUserReviews(cond);
 
         // Then
-        assertThat(result).hasSize(2);
-        ReviewResponseDto reviewResponseDto1 = result.get(0);
-        assertThat(reviewResponseDto1.getContent()).isEqualTo("review 1");
+        assertThat(result.getReviewList()).hasSize(2);
+        ReviewDto reviewDto = result.getReviewList().get(0);
+        assertThat(reviewDto.getContent()).isEqualTo("review 1");
 
-        ReviewResponseDto reviewResponseDto2 = result.get(1);
-        assertThat(reviewResponseDto2.getContent()).isEqualTo("review 2");
+        ReviewDto reviewDto2 = result.getReviewList().get(1);
+        assertThat(reviewDto2.getContent()).isEqualTo("review 2");
+
     }
 
     @Test
     @DisplayName("유저 이름을 검색조건으로 특정 리뷰 조회 테스트")
     public void findAllReviewsByUsername(){
+        // given
         List<Review> reviews = new ArrayList<>();
         List<ReviewDto> reviewDtoList = new ArrayList<>();
 
@@ -150,23 +174,24 @@ public class ReviewServiceTest {
         reviewDtoList.add(ReviewDto.toDto(reviews.get(1)));
 
         ReviewPagingCondition cond = new ReviewPagingCondition(1, 5, member.getUsername());
-
         Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize(), Sort.by("review_id").ascending());
+
         Page<ReviewDto> resultPage = new PageImpl<>(reviewDtoList, pageable, reviews.size());
 
         given(reviewRepository.findAllByUsername(cond)).willReturn(resultPage);
 
         // When
-        Page<ReviewDto> result = reviewService.findAllReviewsByUsername(cond);
+        PagedReviewListDto result = reviewService.findAllReviewsByUsername(cond);
 
         // Then
-        assertThat(result).hasSize(2);
-        ReviewDto reviewDto1 = result.getContent().get(0);
+        assertThat(result.getReviewList()).hasSize(2);
+        ReviewDto reviewDto1 = result.getReviewList().get(0);
         assertThat(reviewDto1.getContent()).isEqualTo("review 1");
 
-        ReviewDto reviewDto2 = result.getContent().get(1);
+        ReviewDto reviewDto2 = result.getReviewList().get(1);
         assertThat(reviewDto2.getContent()).isEqualTo("review 2");
     }
+
     @Test
     @DisplayName("리뷰 삭제 테스트")
     public void deleteReviewTest(){

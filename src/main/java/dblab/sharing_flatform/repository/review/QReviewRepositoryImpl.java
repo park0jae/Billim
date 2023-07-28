@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -31,17 +32,36 @@ public class QReviewRepositoryImpl extends QuerydslRepositorySupport implements 
     @Override
     public Page<ReviewDto> findAllByUsername(ReviewPagingCondition cond) {
         Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize());
-        Predicate predicate = createPredicate(cond); // 검색 조건
+        Predicate predicate = createPredicateByNickname(cond); // 검색 조건
         return new PageImpl<>(fetchAll(predicate, pageable), pageable, fetchCount(predicate));
     }
 
-    private Predicate createPredicate(ReviewPagingCondition cond) {
-        BooleanBuilder builder = new BooleanBuilder();
+    @Override
+    public Page<ReviewDto> findAllWithMemberByCurrentUsername(ReviewPagingCondition cond) {
+        Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize());
+        Predicate predicate = createPredicateByNickname(cond); // 검색 조건
+        return new PageImpl<>(fetchAll(predicate, pageable), pageable, fetchCount(predicate));
+    }
 
+    @Override
+    public Page<ReviewDto> findAllReviews(ReviewPagingCondition cond) {
+        Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize());
+        Predicate predicate = createPredicateAll(); // 검색 조건
+        return new PageImpl<>(fetchAll(predicate, pageable), pageable, fetchCount(predicate));
+    }
+
+
+    private Predicate createPredicateByNickname(ReviewPagingCondition cond) {
+        BooleanBuilder builder = new BooleanBuilder();
         if (StringUtils.hasText(cond.getNickname())) {
             builder.and(review.reviewerMember.nickname.eq(cond.getNickname()));
         }
 
+        return builder;
+    }
+
+    private Predicate createPredicateAll() {
+        BooleanBuilder builder = new BooleanBuilder();
         return builder;
     }
 

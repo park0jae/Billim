@@ -12,16 +12,16 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Address {
 
-    @ApiModelProperty(value = "city", required = true, example = "전주시")
-    private String city; // 도시
+    @ApiModelProperty(value = "도시", required = true, example = "전주시")
+    private String city;
 
-    @ApiModelProperty(value = "disrict", required = true, example = "덕진구")
-    private String district; // 구
+    @ApiModelProperty(value = "구", required = true, example = "덕진구")
+    private String district;
 
-    @ApiModelProperty(value = "city", required = true, example = "금암동 1길")
-    private String street; // 상세 주소
+    @ApiModelProperty(value = "도로명 주소", required = true, example = "금암동 1길")
+    private String street;
 
-    @ApiModelProperty(value = "zipCode", required = true, example = "54475")
-    private String zipCode; // 우편번호
+    @ApiModelProperty(value = "우편번호", required = true, example = "54475")
+    private String zipCode;
 
 }

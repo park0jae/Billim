@@ -4,10 +4,10 @@ import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.notification.NotificationType;
 import dblab.sharing_flatform.domain.review.Review;
 import dblab.sharing_flatform.domain.trade.Trade;
-import dblab.sharing_flatform.dto.review.ReviewDto;
 import dblab.sharing_flatform.dto.review.crud.create.ReviewRequestDto;
 import dblab.sharing_flatform.dto.review.crud.create.ReviewResponseDto;
 import dblab.sharing_flatform.dto.review.crud.read.request.ReviewPagingCondition;
+import dblab.sharing_flatform.dto.review.crud.read.response.PagedReviewListDto;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.review.ExistReviewException;
 import dblab.sharing_flatform.exception.review.ImpossibleWriteReviewException;
@@ -20,8 +20,6 @@ import dblab.sharing_flatform.repository.review.ReviewRepository;
 import dblab.sharing_flatform.repository.trade.TradeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,16 +67,16 @@ public class ReviewService {
         reviewRepository.delete(review);
     }
 
-    public List<ReviewResponseDto> findAllReviews(){
-        return reviewRepository.findAll().stream().map(review -> ReviewResponseDto.toDto(review)).collect(Collectors.toList());
+    public PagedReviewListDto findAllReviews(ReviewPagingCondition cond){
+        return PagedReviewListDto.toDto(reviewRepository.findAllReviews(cond));
     }
 
-    public List<ReviewResponseDto> findCurrentUserReviews(String username){
-        return reviewRepository.findAllWithMemberByMemberId(username).stream().map(review -> ReviewResponseDto.toDto(review)).collect(Collectors.toList());
+    public PagedReviewListDto findCurrentUserReviews(ReviewPagingCondition cond){
+        return PagedReviewListDto.toDto(reviewRepository.findAllWithMemberByCurrentUsername(cond));
     }
 
-    public Page<ReviewDto> findAllReviewsByUsername(ReviewPagingCondition cond){
-        return reviewRepository.findAllByUsername(cond);
+    public PagedReviewListDto findAllReviewsByUsername(ReviewPagingCondition cond){
+        return PagedReviewListDto.toDto(reviewRepository.findAllByUsername(cond));
     }
 
     private void validate(String username, Trade trade) {
