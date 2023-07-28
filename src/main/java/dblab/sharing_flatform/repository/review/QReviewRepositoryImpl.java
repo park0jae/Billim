@@ -51,8 +51,7 @@ public class QReviewRepositoryImpl extends QuerydslRepositorySupport implements 
                 query
                         .select(constructor(ReviewDto.class,
                                 review.reviewerMember.nickname,
-                                review.content,
-                                review.starRating))
+                                review.content))
                         .from(review)
                         .join(review.reviewerMember)
                         .where(predicate)

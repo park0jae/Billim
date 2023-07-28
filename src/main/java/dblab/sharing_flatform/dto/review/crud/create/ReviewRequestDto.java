@@ -11,7 +11,4 @@ import javax.validation.constraints.Null;
 public class ReviewRequestDto {
 
     private String content;
-
-    private Double starRating;
-
 }

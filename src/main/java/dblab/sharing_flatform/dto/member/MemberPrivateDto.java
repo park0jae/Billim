@@ -22,7 +22,6 @@ public class MemberPrivateDto {
 
     private Address address;
 
-    private double totalRating;
 
     public static MemberPrivateDto toDto(Member member) {
         return new MemberPrivateDto(
@@ -30,7 +29,6 @@ public class MemberPrivateDto {
                 member.getUsername(),
                 member.getNickname(),
                 member.getPhoneNumber(),
-                member.getAddress(),
-                member.getRating());
+                member.getAddress());
     }
 }

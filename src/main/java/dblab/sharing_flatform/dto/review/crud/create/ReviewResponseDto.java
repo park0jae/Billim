@@ -14,7 +14,6 @@ public class ReviewResponseDto {
 
     private Long id;
     private String content;
-    private double starRating;
     private String reviewerMember;
 
     public static ReviewResponseDto toDto(Review review) {
@@ -22,7 +21,6 @@ public class ReviewResponseDto {
             return new ReviewResponseDto(
                     review.getId(),
                     review.getContent(),
-                    review.getStarRating(),
                     review.getReviewerMember().getNickname());
         } else {
             return null;

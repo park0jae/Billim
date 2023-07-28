@@ -50,13 +50,11 @@ public class ReviewService {
         validate(username, trade);
 
         Review review = new Review(reviewRequestDto.getContent(),
-                reviewRequestDto.getStarRating(),
                 member,
                 reviewerMember);
 
         reviewRepository.save(review);
         trade.addReview(review);
-        reviewerMember.calculateTotalStarRating(reviewRequestDto.getStarRating(), reviewRepository.countByMemberId(trade.getRenderMember().getId()));
         notificationHelper.notificationIfSubscribe(reviewerMember, member, NotificationType.REVIEW, "님이 거래에 대한 리뷰를 작성했습니다.");
 
         return ReviewResponseDto.toDto(review);
