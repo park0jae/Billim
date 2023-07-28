@@ -18,9 +18,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public List<CategoryDto> readAll() {
-        List<Category> categoryList = categoryRepository.findAllOrderByParentIdAscNullsFirstCategoryIdAsc();
-
-        return CategoryDto.toList(categoryList);
+        return CategoryDto.toList(categoryRepository.findAllOrderByParentIdAscNullsFirstCategoryIdAsc());
     }
 
     @Transactional
@@ -30,8 +28,7 @@ public class CategoryService {
             Category category = categoryRepository.save(CategoryCreateRequestDto.toEntity(requestDto, parentCategory));
             return category.getId();
         } else {
-            Category category = categoryRepository.save(CategoryCreateRequestDto.toEntity(requestDto, null));
-            return category.getId();
+            return categoryRepository.save(CategoryCreateRequestDto.toEntity(requestDto, null)).getId();
         }
     }
 
@@ -39,6 +36,4 @@ public class CategoryService {
     public void delete(String categoryName) {
         categoryRepository.delete(categoryRepository.findByName(categoryName).orElseThrow(CategoryNotFoundException::new));
     }
-
-
 }

@@ -5,21 +5,17 @@ import dblab.sharing_flatform.domain.notification.Notification;
 import dblab.sharing_flatform.domain.notification.NotificationType;
 import dblab.sharing_flatform.dto.notification.crud.create.NotificationRequestDto;
 import dblab.sharing_flatform.dto.notification.crud.create.NotificationResponseDto;
-import dblab.sharing_flatform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.repository.emitter.EmitterRepositoryImpl;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.notification.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -33,8 +29,7 @@ public class NotificationService {
     private final MemberRepository memberRepository;
 
     public SseEmitter subscribe(Long memberId, String lastEventId){
-        // 현재 회원의 id와 lastEvent ID로 고유의 emitter를 생성함.
-        String emitterId = makeTimeIncludeId(memberId); // emitterId = memberId_currentTime
+        String emitterId = makeTimeIncludeId(memberId);
         SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(DEFAULT_TIMEOUT));
 
         emitter.onCompletion(() -> emitterRepository.deleteById(emitterId));
@@ -62,11 +57,9 @@ public class NotificationService {
         }
     }
 
-
     public void send(NotificationRequestDto requestDto){
         Member receiver = memberRepository.findByNickname(requestDto.getReceiver()).orElseThrow(MemberNotFoundException::new);
 
-        // 알림 생성
         Notification notification = notificationRepository.save(
                 new Notification(
                         requestDto.getContent(),
@@ -76,7 +69,6 @@ public class NotificationService {
         String receiverId = String.valueOf(receiver.getId());
         String eventId = receiverId + "_" + System.currentTimeMillis();
 
-        // receiver의 에미터에 이벤트 캐시를 담아 알림 전송
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartsWithByMemberId(receiverId);
         emitters.forEach((key,emitter) -> {
             emitterRepository.saveEventCache(key, notification);
@@ -84,8 +76,6 @@ public class NotificationService {
         });
     }
 
-
-    // Dummy 데이터 전송 함수
     private void sendNotification(SseEmitter emitter, String eventId, String emitterId, Object data) {
         try{
             emitter.send(SseEmitter.event()
@@ -95,8 +85,6 @@ public class NotificationService {
             emitterRepository.deleteById(emitterId);
         }
     }
-
-
 
     private boolean hasLostData(String lastEventId){
         return !lastEventId.isEmpty();
