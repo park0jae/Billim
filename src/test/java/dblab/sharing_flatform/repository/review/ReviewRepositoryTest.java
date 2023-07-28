@@ -93,7 +93,7 @@ public class ReviewRepositoryTest {
         clear();
 
         // 리뷰 생성
-        review = new Review("테스트 리뷰입니다.", 4.5, member, borrowerMember);
+        review = new Review("테스트 리뷰입니다.", member, borrowerMember);
         trade.addReview(review);
         reviewRepository.save(review);
         clear();

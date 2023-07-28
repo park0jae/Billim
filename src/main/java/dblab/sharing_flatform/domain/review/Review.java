@@ -21,7 +21,6 @@ public class Review {
     private Long id;
 
     private String content;
-    private double starRating;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -33,9 +32,8 @@ public class Review {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member reviewerMember;
 
-    public Review (String content, double starRating, Member member, Member reviewerMember){
+    public Review (String content, Member member, Member reviewerMember){
         this.content = content;
-        this.starRating = starRating;
         this.member = member;
         this.reviewerMember = reviewerMember;
     }

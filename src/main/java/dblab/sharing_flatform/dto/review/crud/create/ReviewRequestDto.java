@@ -10,12 +10,5 @@ import javax.validation.constraints.Null;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReviewRequestDto {
 
-    @ApiModelProperty(hidden = true)
-    @Null
-    private String username;
-
     private String content;
-
-    private Double starRating;
-
 }

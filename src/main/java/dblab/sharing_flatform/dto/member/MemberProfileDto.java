@@ -23,7 +23,6 @@ public class MemberProfileDto {
     private String nickname;
     private String introduce;
     private RoleType memberRole;
-    private double rating;
     private List<PostDto> posts;
 
     public static MemberProfileDto toDto(Member member, List<PostDto> postDtoList) {
@@ -32,7 +31,6 @@ public class MemberProfileDto {
                 member.getNickname(),
                 member.getIntroduce(),
                 member.getRoles().get(0).getRole().getRoleType(),
-                member.getRating(),
                 postDtoList);
     }
 }

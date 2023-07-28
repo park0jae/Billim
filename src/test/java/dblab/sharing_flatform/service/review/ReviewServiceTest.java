@@ -78,7 +78,7 @@ public class ReviewServiceTest {
     public void writeReviewTest(){
         // Given
         trade.isTradeComplete(true);
-        ReviewRequestDto reviewRequestDto = new ReviewRequestDto(review.getReviewerMember().getUsername(), review.getContent(), review.getStarRating());
+        ReviewRequestDto reviewRequestDto = new ReviewRequestDto(review.getContent());
 
         given(tradeRepository.findById(trade.getId())).willReturn(Optional.of(trade));
         given(memberRepository.findByUsername(reviewerMember.getUsername())).willReturn(Optional.of(reviewerMember));
@@ -96,8 +96,8 @@ public class ReviewServiceTest {
     public void findAllReviewTest(){
         // Given
         List<Review> reviews = new ArrayList<>();
-        reviews.add(new Review("review 1", 5, member, reviewerMember));
-        reviews.add(new Review("review 2", 4, reviewerMember , member));
+        reviews.add(new Review("review 1", member, reviewerMember));
+        reviews.add(new Review("review 2", reviewerMember , member));
 
         given(reviewRepository.findAll()).willReturn(reviews);
 
@@ -109,19 +109,17 @@ public class ReviewServiceTest {
 
         ReviewResponseDto reviewResponseDto1 = result.get(0);
         assertThat(reviewResponseDto1.getContent()).isEqualTo("review 1");
-        assertThat(reviewResponseDto1.getStarRating()).isEqualTo(5);
 
         ReviewResponseDto reviewResponseDto2 = result.get(1);
         assertThat(reviewResponseDto2.getContent()).isEqualTo("review 2");
-        assertThat(reviewResponseDto2.getStarRating()).isEqualTo(4);
     }
 
     @Test
     @DisplayName("현재 유저의 리뷰 조회 테스트")
     public void findCurrentUserReviewsTest(){
         List<Review> reviews = new ArrayList<>();
-        reviews.add(new Review("review 1", 5, member, reviewerMember));
-        reviews.add(new Review("review 2", 2, member, reviewerMember));
+        reviews.add(new Review("review 1", member, reviewerMember));
+        reviews.add(new Review("review 2", member, reviewerMember));
 
         String username = member.getUsername();
 
@@ -134,11 +132,9 @@ public class ReviewServiceTest {
         assertThat(result).hasSize(2);
         ReviewResponseDto reviewResponseDto1 = result.get(0);
         assertThat(reviewResponseDto1.getContent()).isEqualTo("review 1");
-        assertThat(reviewResponseDto1.getStarRating()).isEqualTo(5);
 
         ReviewResponseDto reviewResponseDto2 = result.get(1);
         assertThat(reviewResponseDto2.getContent()).isEqualTo("review 2");
-        assertThat(reviewResponseDto2.getStarRating()).isEqualTo(2);
     }
 
     @Test
@@ -147,8 +143,8 @@ public class ReviewServiceTest {
         List<Review> reviews = new ArrayList<>();
         List<ReviewDto> reviewDtoList = new ArrayList<>();
 
-        reviews.add(new Review("review 1", 5, member, reviewerMember));
-        reviews.add(new Review("review 2", 2, member, reviewerMember));
+        reviews.add(new Review("review 1", member, reviewerMember));
+        reviews.add(new Review("review 2", member, reviewerMember));
 
         reviewDtoList.add(ReviewDto.toDto(reviews.get(0)));
         reviewDtoList.add(ReviewDto.toDto(reviews.get(1)));
@@ -167,11 +163,9 @@ public class ReviewServiceTest {
         assertThat(result).hasSize(2);
         ReviewDto reviewDto1 = result.getContent().get(0);
         assertThat(reviewDto1.getContent()).isEqualTo("review 1");
-        assertThat(reviewDto1.getStarRating()).isEqualTo(5);
 
         ReviewDto reviewDto2 = result.getContent().get(1);
         assertThat(reviewDto2.getContent()).isEqualTo("review 2");
-        assertThat(reviewDto2.getStarRating()).isEqualTo(2);
     }
     @Test
     @DisplayName("리뷰 삭제 테스트")
@@ -196,7 +190,7 @@ public class ReviewServiceTest {
         trade = new Trade(review.getMember(), review.getReviewerMember(), LocalDate.now(), LocalDate.now(), post);
 
         trade.isTradeComplete(true);
-        ReviewRequestDto reviewRequestDto = new ReviewRequestDto(review.getReviewerMember().getUsername(), review.getContent(), review.getStarRating());
+        ReviewRequestDto reviewRequestDto = new ReviewRequestDto(review.getContent());
 
         given(tradeRepository.findById(trade.getId())).willReturn(Optional.of(trade));
         given(memberRepository.findByUsername(review.getReviewerMember().getUsername())).willReturn(Optional.of(review.getReviewerMember()));
@@ -212,7 +206,7 @@ public class ReviewServiceTest {
         // Given
         trade.isTradeComplete(true);
         trade.addReview(review);
-        ReviewRequestDto reviewRequestDto = new ReviewRequestDto(review.getReviewerMember().getUsername(), review.getContent(), review.getStarRating());
+        ReviewRequestDto reviewRequestDto = new ReviewRequestDto(review.getContent());
 
         given(tradeRepository.findById(trade.getId())).willReturn(Optional.of(trade));
         given(memberRepository.findByUsername(review.getReviewerMember().getUsername())).willReturn(Optional.of(reviewerMember));
@@ -225,7 +219,7 @@ public class ReviewServiceTest {
     @DisplayName("거래 미완료 리뷰 작성 불가 예외 테스트")
     public void writeReviewTradeNotCompleteException(){
         // Given
-        ReviewRequestDto reviewRequestDto = new ReviewRequestDto(review.getReviewerMember().getUsername(), review.getContent(), review.getStarRating());
+        ReviewRequestDto reviewRequestDto = new ReviewRequestDto(review.getContent());
 
         given(tradeRepository.findById(trade.getId())).willReturn(Optional.of(trade));
         given(memberRepository.findByUsername(review.getReviewerMember().getUsername())).willReturn(Optional.of(reviewerMember));

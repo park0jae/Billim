@@ -6,13 +6,14 @@ values ('ADMIN'),
 
 -- MEMBER // password : 1q2w3e4r!!
 INSERT INTO MEMBER
-(username, password, nickname, city, district, street, zip_code, introduce, phone_number, profile_image_id, provider, rating)
+(username, password, nickname, city, district, street, zip_code, introduce, phone_number, profile_image_id, provider)
 values
-    ('admin123@naver.com', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', 'admin','서울시', '관악구', '신림동', '56-1', '안녕하세요 ADMIN입니다.', '011-3124-3678', null, 'None', 0),
-    ('manager123@naver.com', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', 'manager','서울시', '강북구', '미아동', '56-3', '안녕하세요 MANAGER입니다.', '011-1311-5478', null, 'None', 0),
-    ('user123@naver.com', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', 'user','서울시', '광진구', '화양동', '620-1', '안녕하세요 USER입니다. 잘부탁드립니다.', '011-3134-7623', null, 'None', 0),
-    ('kdo6301@naver.com', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', 'ehddnd', '전주시', '덕진구', '금암동', '709-4', '안녕하세요 김동웅입니다. 잘부탁드립니다.', '012-6606-3323', null, 'None', 0),
-    ('dudwo0926@naver.com', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', 'dudwo','전주시', '덕진구', '금암동', '709-3', '안녕하세요 박영재입니다. 잘부탁드립니다.', '011-3134-7623', null, 'None', 0);
+    ('admin123@naver.com', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', 'admin','서울시', '관악구', '신림동', '56-1', '안녕하세요 ADMIN입니다.', '011-3124-3678', null, 'None'),
+    ('manager123@naver.com', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', 'manager','서울시', '강북구', '미아동', '56-3', '안녕하세요 MANAGER입니다.', '011-1311-5478', null, 'None'),
+    ('user123@naver.com', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', 'user','서울시', '광진구', '화양동', '620-1', '안녕하세요 USER입니다. 잘부탁드립니다.', '011-3134-7623', null, 'None'),
+    ('kdo6301@naver.com', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', 'ehddnd', '전주시', '덕진구', '금암동', '709-4', '안녕하세요 김동웅입니다. 잘부탁드립니다.', '012-6606-3323', null, 'None'),
+    ('dudwo0926@naver.com', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', 'dudwo','전주시', '덕진구', '금암동', '709-3', '안녕하세요 박영재입니다. 잘부탁드립니다.', '011-3134-7623', null, 'None');
+
 
 -- MEMBER_ROLE
 INSERT INTO MEMBER_ROLE (member_id, role_id)

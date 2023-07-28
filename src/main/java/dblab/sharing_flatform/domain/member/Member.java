@@ -34,7 +34,6 @@ public class Member {
     private Address address;
     private String provider;
     private String introduce;
-    private Double rating;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<MemberRole> roles = new ArrayList<>();
@@ -50,7 +49,6 @@ public class Member {
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.provider = provider;
-        this.rating = 0.0;
         this.profileImage = null;
         addRoles(roles);
     }
@@ -95,10 +93,6 @@ public class Member {
             this.profileImage = null;
         }
         return existedImageName;
-    }
-
-    public void calculateTotalStarRating(Double rating, Long reviewNum) {
-        this.rating = Math.round(((this.rating + rating) / (double) reviewNum) * 10) / 10.0;
     }
 
 }

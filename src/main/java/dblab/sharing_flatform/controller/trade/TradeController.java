@@ -59,5 +59,4 @@ public class TradeController {
         return Response.success();
     }
 
-
 }
