@@ -52,7 +52,7 @@ public class SignService {
     @Transactional
     public void signUp(MemberCreateRequestDto requestDto){
         validateDuplicateUsernameAndNickname(requestDto);
-        validateEmailAuthKey(requestDto);
+        validateEmailAuthKey(requestDto, "SIGN-UP");
 
         Member member = new Member(requestDto.getUsername(),
                 passwordEncoder.encode(requestDto.getPassword()),
@@ -69,7 +69,7 @@ public class SignService {
     @Transactional
     public void resetPassword(PasswordResetRequestDto requestDto) {
         Member member = memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(MemberNotFoundException::new);
-        validateEmailAuthKey(requestDto);
+        validateEmailAuthKey(requestDto, "RESET-PASSWORD");
         validatePasswordEqualsVerifyPassword(requestDto);
 
         member.updatePassword(passwordEncoder.encode(requestDto.getPassword()));
@@ -128,8 +128,8 @@ public class SignService {
         }
     }
 
-    private void validateEmailAuthKey(EmailAuthRequest requestDto) {
-        EmailAuth emailAuth = emailAuthRepository.findByEmail(requestDto.getUsername()).orElseThrow(EmailAuthNotFoundException::new);
+    private void validateEmailAuthKey(EmailAuthRequest requestDto, String purpose) {
+        EmailAuth emailAuth = emailAuthRepository.findByEmailAndPurpose(requestDto.getUsername(), purpose).orElseThrow(EmailAuthNotFoundException::new);
         if (!emailAuth.getKey().equals(requestDto.getAuthKey())) {
             throw new EmailAuthNotEqualsException();
         }
@@ -138,6 +138,5 @@ public class SignService {
         if (!requestDto.getPassword().equals(requestDto.getVerifyPassword())) {
             throw new NotEqualsPasswordToVerifiedException();
         }
-
     }
 }

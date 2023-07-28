@@ -20,8 +20,12 @@ public class EmailAuth {
     @Column(name = "email", nullable = false)
     private String email;
 
-    public EmailAuth(String key, String email) {
+    @Column(name = "purpose", nullable = false)
+    private String purpose;
+
+    public EmailAuth(String key, String email, String purpose) {
         this.key = key;
         this.email = email;
+        this.purpose = purpose;
     }
 }

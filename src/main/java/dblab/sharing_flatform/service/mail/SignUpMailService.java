@@ -10,17 +10,17 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.xml.crypto.KeySelector;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class MailServiceImpl implements MailService{
+public class SignUpMailService implements MailService{
 
     private final JavaMailSender emailSender;
     private final EmailAuthRepository emailAuthRepository;
-
     private String ePw;
 
 
@@ -40,7 +40,7 @@ public class MailServiceImpl implements MailService{
 
         try {
             emailSender.send(message);
-            emailAuthRepository.save(new EmailAuth(ePw, email));
+            emailAuthRepository.save(new EmailAuth(ePw, email, "SIGN-UP"));
         } catch (Exception e) {
             throw new IllegalArgumentException();
         }

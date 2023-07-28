@@ -8,7 +8,8 @@ import dblab.sharing_flatform.dto.member.crud.create.MemberCreateRequestDto;
 import dblab.sharing_flatform.dto.oauth.crud.create.AccessTokenRequestDto;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
-import dblab.sharing_flatform.service.mail.MailServiceImpl;
+import dblab.sharing_flatform.service.mail.ResetPasswordMailService;
+import dblab.sharing_flatform.service.mail.SignUpMailService;
 import dblab.sharing_flatform.service.member.MemberService;
 import dblab.sharing_flatform.service.member.SignService;
 import dblab.sharing_flatform.service.oauth.OAuthService;
@@ -31,7 +32,8 @@ public class SignController {
     private final SignService signService;
     private final MemberService memberService;
     private final OAuthService oAuthService;
-    private final MailServiceImpl mailService;
+    private final SignUpMailService signUpMailService;
+    private final ResetPasswordMailService resetPasswordMailService;
 
     @ApiOperation(value = "일반 회원가입", notes = "일반 회원가입을 한다.") // 2
     @PostMapping("/sign-up")
@@ -67,11 +69,19 @@ public class SignController {
         return "/index";
     }
 
-    @ApiOperation(value = "이메일 인증" , notes = "회원가입/비밀번호 찾기에서 이메일 인증을 위한 엔드포인트")
+    @ApiOperation(value = "회원가입을 위한 이메일 인증" , notes = "회원가입에서 이메일 인증을 위한 엔드포인트")
     @ResponseBody
-    @PostMapping("/mail")
+    @PostMapping("/sign-up/email")
+    public Response mailConfirmSignUp(@RequestParam(name = "email") String email)  {
+        signUpMailService.sendSimpleMessage(email);
+        return Response.success();
+    }
+
+    @ApiOperation(value = "비밀번호 재설정을 위한 이메일 인증" , notes = "비밀번호 재설정 페이지에서 이메일 인증을 위한 엔드포인트")
+    @ResponseBody
+    @PostMapping("/reset-password/mail")
     public Response mailConfirm(@RequestParam(name = "email") String email)  {
-        mailService.sendSimpleMessage(email);
+        resetPasswordMailService.sendSimpleMessage(email);
         return Response.success();
     }
 
