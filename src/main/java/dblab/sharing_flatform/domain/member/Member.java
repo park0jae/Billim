@@ -70,6 +70,10 @@ public class Member {
         return existedImageName;
     }
 
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
     public String updateOAuthMember(OAuthMemberUpdateRequestDto requestDto){
         this.phoneNumber = requestDto.getPhoneNumber();
         this.nickname = requestDto.getNickname();

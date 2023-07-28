@@ -4,7 +4,9 @@ import dblab.sharing_flatform.config.security.jwt.support.TokenProvider;
 import dblab.sharing_flatform.domain.emailAuth.EmailAuth;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.role.RoleType;
+import dblab.sharing_flatform.dto.EmailAuthRequest;
 import dblab.sharing_flatform.dto.member.crud.create.OAuth2MemberCreateRequestDto.OAuth2MemberCreateRequestDto;
+import dblab.sharing_flatform.dto.member.crud.update.PasswordResetRequestDto;
 import dblab.sharing_flatform.dto.member.login.LogInResponseDto;
 import dblab.sharing_flatform.dto.member.login.LoginRequestDto;
 import dblab.sharing_flatform.dto.member.crud.create.MemberCreateRequestDto;
@@ -14,6 +16,7 @@ import dblab.sharing_flatform.exception.auth.LoginFailureException;
 import dblab.sharing_flatform.exception.auth.DuplicateNicknameException;
 import dblab.sharing_flatform.exception.auth.DuplicateUsernameException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
+import dblab.sharing_flatform.exception.auth.NotEqualsPasswordToVerifiedException;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
 import dblab.sharing_flatform.repository.emailAuth.EmailAuthRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
@@ -41,9 +44,9 @@ public class SignService {
 
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final EmailAuthRepository emailAuthRepository;
+    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Transactional
@@ -60,6 +63,17 @@ public class SignService {
                 List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)));
 
         memberRepository.save(member);
+        emailAuthRepository.deleteByEmail(requestDto.getUsername());
+    }
+
+    @Transactional
+    public void resetPassword(PasswordResetRequestDto requestDto) {
+        Member member = memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(MemberNotFoundException::new);
+        validateEmailAuthKey(requestDto);
+        validatePasswordEqualsVerifyPassword(requestDto);
+
+        member.updatePassword(passwordEncoder.encode(requestDto.getPassword()));
+
         emailAuthRepository.deleteByEmail(requestDto.getUsername());
     }
 
@@ -114,10 +128,16 @@ public class SignService {
         }
     }
 
-    private void validateEmailAuthKey(MemberCreateRequestDto requestDto) {
+    private void validateEmailAuthKey(EmailAuthRequest requestDto) {
         EmailAuth emailAuth = emailAuthRepository.findByEmail(requestDto.getUsername()).orElseThrow(EmailAuthNotFoundException::new);
         if (!emailAuth.getKey().equals(requestDto.getAuthKey())) {
             throw new EmailAuthNotEqualsException();
         }
+    }
+    private void validatePasswordEqualsVerifyPassword(PasswordResetRequestDto requestDto) {
+        if (!requestDto.getPassword().equals(requestDto.getVerifyPassword())) {
+            throw new NotEqualsPasswordToVerifiedException();
+        }
+
     }
 }

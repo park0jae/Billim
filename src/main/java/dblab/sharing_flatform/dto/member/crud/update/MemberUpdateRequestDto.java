@@ -1,6 +1,7 @@
 package dblab.sharing_flatform.dto.member.crud.update;
 
 import dblab.sharing_flatform.domain.embedded.address.Address;
+import dblab.sharing_flatform.domain.member.Member;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -40,4 +41,8 @@ public class MemberUpdateRequestDto {
     @ApiModelProperty(value = "image", notes = "프로필 사진을 업로드하세요. (선택)")
     private MultipartFile image;
 
+//    public static MemberUpdateRequestDto toDto(Member member) {
+//        return new MemberUpdateRequestDto(member.getPassword(),
+//                                member.getNickname(), member.getPhoneNumber(), member.getAddress(), member.getIntroduce(), )
+//    }
 }

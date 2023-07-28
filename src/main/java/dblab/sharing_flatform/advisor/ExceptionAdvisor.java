@@ -72,7 +72,6 @@ public class ExceptionAdvisor {
     /**
      * AUTH-EXCEPTION
      */
-    // member
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Response accessDeniedException(AccessDeniedException e) {
@@ -125,6 +124,12 @@ public class ExceptionAdvisor {
     @ResponseStatus(HttpStatus.CONFLICT)
     public Response loginFailureException(LoginFailureException e) {
         return getFailureResponse("CONFLICT.CODE", "LOGIN_FAILURE.MSG");
+    }
+
+    @ExceptionHandler(NotEqualsPasswordToVerifiedException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Response notEqualsPasswordToVerifiedException(NotEqualsPasswordToVerifiedException e) {
+        return getFailureResponse("CONFLICT.CODE", "NOT_EQUAL_PASSWORD_VERIFIED.MSG");
     }
 
     @ExceptionHandler(ValidateTokenException.class)

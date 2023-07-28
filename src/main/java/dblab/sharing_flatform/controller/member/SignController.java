@@ -1,6 +1,7 @@
 package dblab.sharing_flatform.controller.member;
 
 import dblab.sharing_flatform.dto.member.crud.create.OAuth2MemberCreateRequestDto.OAuth2MemberCreateRequestDto;
+import dblab.sharing_flatform.dto.member.crud.update.PasswordResetRequestDto;
 import dblab.sharing_flatform.dto.member.login.LogInResponseDto;
 import dblab.sharing_flatform.dto.member.login.LoginRequestDto;
 import dblab.sharing_flatform.dto.member.crud.create.MemberCreateRequestDto;
@@ -49,6 +50,15 @@ public class SignController {
         return Response.success(signService.login(loginRequestDto));
     }
 
+    @ApiOperation(value = "비밀번호 재설정", notes = "비밀번호를 재설정합니다.") // 2
+    @PostMapping("/reset/password")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public Response resetPassword(@Valid @ModelAttribute PasswordResetRequestDto passwordResetRequestDto){
+        signService.resetPassword(passwordResetRequestDto);
+        return Response.success();
+    }
+
     @ApiOperation(value = "OAuth2.0 메인 페이지", notes = "OAuth2.0 로그인을 위한 메인 페이지입니다.")
     @GetMapping("/")
     public String index(@RequestParam(required = false) String username, @RequestParam(required = false) String code,  Model model) {
@@ -57,7 +67,7 @@ public class SignController {
         return "/index";
     }
 
-    @ApiOperation(value = "이메일 인증" , notes = "회원가입 시 이메일 인증을 위한 엔드포인트")
+    @ApiOperation(value = "이메일 인증" , notes = "회원가입/비밀번호 찾기에서 이메일 인증을 위한 엔드포인트")
     @ResponseBody
     @PostMapping("/mail")
     public Response mailConfirm(@RequestParam(name = "email") String email)  {
