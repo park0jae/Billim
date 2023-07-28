@@ -98,7 +98,7 @@ public class Member {
     }
 
     public void calculateTotalStarRating(Double rating, Long reviewNum) {
-        this.rating = Math.round(((this.rating + rating) / (double) reviewNum) * 10) / 10.0;
+        this.rating = Math.round(((this.rating + rating) / (double) reviewNum) * 10.0 ) / 10.0;
     }
 
 }
