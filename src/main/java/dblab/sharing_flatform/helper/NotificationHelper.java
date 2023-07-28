@@ -20,8 +20,6 @@ public class NotificationHelper {
     public void notificationIfSubscribe(Member sendMember, Member member, NotificationType notificationType, String msg) {
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartsWithByMemberId(String.valueOf(member.getId()));
         if(!emitters.isEmpty()){
-            System.out.println("member.getUsername() = " + member.getUsername());
-            System.out.println("member.getNickname() = " + member.getNickname());
             NotificationRequestDto notificationRequestDto = new NotificationRequestDto(sendMember.getNickname() + msg, String.valueOf(notificationType), member.getNickname());
             eventPublisher.publishEvent(notificationRequestDto);
         }

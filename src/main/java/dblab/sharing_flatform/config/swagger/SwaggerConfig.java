@@ -35,8 +35,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("STR BOOT BOARD")
-                .description("BOARD REST API Documentation")
+                .title("STR BOOT SharingPlatform")
+                .description("SharingPlatform REST API Documentation")
                 .license("rlaehddnd0422@naver.com")
                 .licenseUrl("https://github.com/Dongwoongkim/Sharing_PlatForm")
                 .license("okvv26@naver.com")
