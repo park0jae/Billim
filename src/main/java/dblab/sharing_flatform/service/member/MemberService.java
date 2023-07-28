@@ -65,7 +65,6 @@ public class MemberService {
     public MemberPrivateDto oauthMemberUpdate(String username, OAuthMemberUpdateRequestDto requestDto){
         Member member = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
         oAuthMemberUpdate(requestDto, member);
-
         return MemberPrivateDto.toDto(member);
     }
 

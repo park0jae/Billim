@@ -16,7 +16,7 @@ import java.util.Random;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class NaverMailService implements MailService{
+public class MailServiceImpl implements MailService{
 
     private final JavaMailSender emailSender;
     private final EmailAuthRepository emailAuthRepository;
