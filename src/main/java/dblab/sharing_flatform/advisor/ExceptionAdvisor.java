@@ -333,7 +333,7 @@ public class ExceptionAdvisor {
      */
     @ExceptionHandler(TokenNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Response tradeNotFoundException(TokenNotFoundException e) {
+    public Response tokenNotFoundException(TokenNotFoundException e) {
         return getFailureResponse("NOT_FOUND.CODE", "TOKEN_NOT_FOUND.MSG");
     }
 
