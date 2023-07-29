@@ -25,6 +25,7 @@ import dblab.sharing_flatform.exception.review.ExistReviewException;
 import dblab.sharing_flatform.exception.review.ImpossibleWriteReviewException;
 import dblab.sharing_flatform.exception.review.ReviewNotFoundException;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
+import dblab.sharing_flatform.exception.token.TokenNotFoundException;
 import dblab.sharing_flatform.exception.trade.ExistTradeException;
 import dblab.sharing_flatform.exception.trade.ImpossibleCreateTradeException;
 import dblab.sharing_flatform.exception.trade.TradeNotCompleteException;
@@ -327,6 +328,14 @@ public class ExceptionAdvisor {
         return getFailureResponse("NOT_FOUND.CODE", "TRADE_NOT_FOUND.MSG");
     }
 
+    /**
+     * Token Exception
+     */
+    @ExceptionHandler(TokenNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response tradeNotFoundException(TokenNotFoundException e) {
+        return getFailureResponse("NOT_FOUND.CODE", "TOKEN_NOT_FOUND.MSG");
+    }
 
     private Response getFailureResponse(String code, String msg) {
         return Response.failure(getCode(code), getMessage(msg));

@@ -13,8 +13,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LogInResponseDto {
 
-    private String token;
-    public static LogInResponseDto toDto(String token) {
-        return new LogInResponseDto(token);
+    private String accessToken;
+    private String refreshToken;
+    public static LogInResponseDto toDto(String accessToken, String refreshToken) {
+        return new LogInResponseDto(accessToken, refreshToken);
     }
 }
