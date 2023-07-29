@@ -11,12 +11,13 @@ import java.io.UnsupportedEncodingException;
 public interface MailService {
 
     // 메일 내용 작성
-    MimeMessage creatMessage(String to) throws MessagingException, UnsupportedEncodingException;
+    MimeMessage creatMessage(String to, String purpose) throws MessagingException, UnsupportedEncodingException;
 
     // 랜덤 인증코드 생성
     String createKey();
 
     // 메일 발송
-    void sendSimpleMessage(String to) throws Exception;
+    void sendSignUpMail(String to);
 
+    void sendResetPasswordMail(String to);
 }
