@@ -21,6 +21,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Api(value = "Sign Controller", tags = "Sign")
@@ -46,8 +48,9 @@ public class SignController {
     @PostMapping("/login")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public Response login(@Valid @ModelAttribute LoginRequestDto loginRequestDto){
-        return Response.success(signService.login(loginRequestDto));
+    public Response login(@Valid @ModelAttribute LoginRequestDto loginRequestDto,
+                          HttpServletResponse response){
+        return Response.success(signService.login(loginRequestDto, response));
     }
 
     @ApiOperation(value = "비밀번호 재설정", notes = "비밀번호를 재설정합니다.") // 2
