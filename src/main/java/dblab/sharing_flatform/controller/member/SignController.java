@@ -8,8 +8,7 @@ import dblab.sharing_flatform.dto.member.crud.create.MemberCreateRequestDto;
 import dblab.sharing_flatform.dto.oauth.crud.create.AccessTokenRequestDto;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
-import dblab.sharing_flatform.service.mail.ResetPasswordMailService;
-import dblab.sharing_flatform.service.mail.SignUpMailService;
+import dblab.sharing_flatform.service.mail.MailServiceImpl;
 import dblab.sharing_flatform.service.member.MemberService;
 import dblab.sharing_flatform.service.member.SignService;
 import dblab.sharing_flatform.service.oauth.OAuthService;
@@ -32,8 +31,7 @@ public class SignController {
     private final SignService signService;
     private final MemberService memberService;
     private final OAuthService oAuthService;
-    private final SignUpMailService signUpMailService;
-    private final ResetPasswordMailService resetPasswordMailService;
+    private final MailServiceImpl mailService;
 
     @ApiOperation(value = "일반 회원가입", notes = "일반 회원가입을 한다.") // 2
     @PostMapping("/sign-up")
@@ -73,7 +71,7 @@ public class SignController {
     @ResponseBody
     @PostMapping("/sign-up/email")
     public Response mailConfirmSignUp(@RequestParam(name = "email") String email)  {
-        signUpMailService.sendSimpleMessage(email);
+        mailService.sendSignUpMail(email);
         return Response.success();
     }
 
@@ -81,7 +79,7 @@ public class SignController {
     @ResponseBody
     @PostMapping("/reset-password/mail")
     public Response mailConfirm(@RequestParam(name = "email") String email)  {
-        resetPasswordMailService.sendSimpleMessage(email);
+        mailService.sendResetPasswordMail(email);
         return Response.success();
     }
 
