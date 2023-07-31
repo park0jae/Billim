@@ -48,9 +48,8 @@ public class SignController {
     @PostMapping("/login")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public Response login(@Valid @ModelAttribute LoginRequestDto loginRequestDto,
-                          HttpServletResponse response){
-        return Response.success(signService.login(loginRequestDto, response));
+    public Response login(@Valid @ModelAttribute LoginRequestDto loginRequestDto){
+        return Response.success(signService.login(loginRequestDto));
     }
 
     @ApiOperation(value = "비밀번호 재설정", notes = "비밀번호를 재설정합니다.") // 2

@@ -1,7 +1,7 @@
 package dblab.sharing_flatform.dto.member.crud.create;
 
 import dblab.sharing_flatform.domain.embedded.address.Address;
-import dblab.sharing_flatform.dto.EmailAuthRequest;
+import dblab.sharing_flatform.dto.member.crud.update.EmailAuthRequest;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -11,7 +11,6 @@ import javax.persistence.Embedded;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 @ApiModel(value = "회원가입 요청")
 @Data

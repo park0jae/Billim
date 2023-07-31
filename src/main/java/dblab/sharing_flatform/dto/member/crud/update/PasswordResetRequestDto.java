@@ -1,6 +1,5 @@
 package dblab.sharing_flatform.dto.member.crud.update;
 
-import dblab.sharing_flatform.dto.EmailAuthRequest;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;

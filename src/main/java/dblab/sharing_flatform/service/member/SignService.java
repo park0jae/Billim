@@ -1,12 +1,11 @@
 package dblab.sharing_flatform.service.member;
 
 import dblab.sharing_flatform.config.security.jwt.provider.TokenProvider;
-import dblab.sharing_flatform.config.security.util.SecurityUtil;
 import dblab.sharing_flatform.domain.emailAuth.EmailAuth;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.refresh.RefreshToken;
 import dblab.sharing_flatform.domain.role.RoleType;
-import dblab.sharing_flatform.dto.EmailAuthRequest;
+import dblab.sharing_flatform.dto.member.crud.update.EmailAuthRequest;
 import dblab.sharing_flatform.dto.member.crud.create.OAuth2MemberCreateRequestDto.OAuth2MemberCreateRequestDto;
 import dblab.sharing_flatform.dto.member.crud.update.PasswordResetRequestDto;
 import dblab.sharing_flatform.dto.member.login.LogInResponseDto;
@@ -37,16 +36,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
+import static dblab.sharing_flatform.domain.refresh.RefreshToken.createToken;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class SignService {
+
+    public static final String AUTH_KEY_SIGN_UP = "SIGN-UP";
+    public static final String AUTH_KEY_RESET_PASSWORD = "RESET-PASSWORD";
+    public static final String ACCESS_TOKEN = "accessToken";
+    public static final String REFRESH_TOKEN = "refreshToken";
+    public static final String NONE = "None";
 
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
@@ -56,17 +61,18 @@ public class SignService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RefreshTokenRepository tokenRepository;
 
+
     @Transactional
     public void signUp(MemberCreateRequestDto requestDto){
         validateDuplicateUsernameAndNickname(requestDto);
-        validateEmailAuthKey(requestDto, "SIGN-UP");
+        validateEmailAuthKey(requestDto, AUTH_KEY_SIGN_UP);
 
         Member member = new Member(requestDto.getUsername(),
                 passwordEncoder.encode(requestDto.getPassword()),
                 requestDto.getNickname(),
                 requestDto.getPhoneNumber(),
                 requestDto.getAddress(),
-                "None",
+                NONE,
                 List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)));
 
         memberRepository.save(member);
@@ -76,7 +82,7 @@ public class SignService {
     @Transactional
     public void resetPassword(PasswordResetRequestDto requestDto) {
         Member member = memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(MemberNotFoundException::new);
-        validateEmailAuthKey(requestDto, "RESET-PASSWORD");
+        validateEmailAuthKey(requestDto, AUTH_KEY_RESET_PASSWORD);
         validatePasswordEqualsVerifyPassword(requestDto);
 
         member.updatePassword(passwordEncoder.encode(requestDto.getPassword()));
@@ -96,38 +102,36 @@ public class SignService {
         memberRepository.save(member);
     }
 
+    @Transactional
     public LogInResponseDto oauth2Login(OAuth2MemberCreateRequestDto requestDto) {
         List<String> tokens = jwtLoginRequest(new LoginRequestDto(requestDto.getEmail(), requestDto.getEmail()));
         return LogInResponseDto.toDto(tokens.get(0), tokens.get(1));
     }
 
-    public LogInResponseDto login(LoginRequestDto requestDto, HttpServletResponse response) {
-        Member member = memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(MemberNotFoundException::new);
-
-        if (member != null) {
-            List<String> tokens = jwtLoginRequest(requestDto);
-            return LogInResponseDto.toDto(tokens.get(0), tokens.get(1));
-        }
-        throw new MemberNotFoundException();
+    @Transactional
+    public LogInResponseDto login(LoginRequestDto requestDto) {
+        memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(MemberNotFoundException::new);
+        List<String> tokens = jwtLoginRequest(requestDto);
+        return LogInResponseDto.toDto(tokens.get(0), tokens.get(1));
     }
 
-    private List<String> jwtLoginRequest(LoginRequestDto requestDto) {
+    @Transactional
+    public List<String> jwtLoginRequest(LoginRequestDto requestDto) {
         UsernamePasswordAuthenticationToken authenticationToken
                 = new UsernamePasswordAuthenticationToken(requestDto.getUsername(), requestDto.getPassword());
         try {
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            String accessToken = tokenProvider.createToken(authentication, "accessToken");
-            String refreshToken = tokenProvider.createToken(authentication, "refreshToken");
 
-            Optional<RefreshToken> findToken = tokenRepository.findByUsername(requestDto.getUsername());
+            String accessToken = tokenProvider.createToken(authentication, ACCESS_TOKEN);
+            String refreshToken = tokenProvider.createToken(authentication, REFRESH_TOKEN);
 
-            if(findToken.isPresent()) {
-                findToken.get().changeToken(refreshToken);
-                tokenRepository.save(findToken.get().changeToken(refreshToken));
-            }else {
-                RefreshToken newToken = RefreshToken.createToken(requestDto.getUsername(),refreshToken);
-                tokenRepository.save(newToken);
+            RefreshToken findToken = tokenRepository.findByUsername(requestDto.getUsername()).orElse(null);
+
+            if (findToken == null) {
+                tokenRepository.save(createToken(requestDto.getUsername(), refreshToken));
+            } else {
+                findToken.changeToken(refreshToken);
             }
 
             List<String> tokens = new ArrayList<>();

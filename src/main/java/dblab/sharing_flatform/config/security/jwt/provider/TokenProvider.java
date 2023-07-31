@@ -31,8 +31,8 @@ public class TokenProvider {
     private static final String AUTH_KEY = "AUTHORITY";
     private static final String AUTH_ID = "ID";
     private static final String AUTH_USERNAME = "USERNAME";
-    public static final String ACCESS = "Access_Token";
-    public static final String REFRESH = "Refresh_Token";
+    public static final String ACCESS = "accessToken";
+    public static final String REFRESH = "refreshToken";
 
     private final long tokenValidityMilliSeconds;
     private final long refreshTokenValidityMilliSeconds;
@@ -45,7 +45,7 @@ public class TokenProvider {
                          @Value("${jwt.refresh-token-validity-in-seconds}") long refreshTokenValidityMilliSeconds,
                          @Value("${jwt.secret_key}") String originSecretKey, RefreshTokenRepository tokenRepository) {
         this.tokenValidityMilliSeconds =  tokenValiditySeconds * 1000;
-        this.refreshTokenValidityMilliSeconds = refreshTokenValidityMilliSeconds;
+        this.refreshTokenValidityMilliSeconds = refreshTokenValidityMilliSeconds * 1000;
         this.originSecretKey = originSecretKey;
         this.refreshTokenRepository = tokenRepository;
     }
@@ -76,9 +76,10 @@ public class TokenProvider {
 
         long now = new Date().getTime();
         Date validity = null;
-        if(type.equals("accessToken")){
+
+        if (type.equals(ACCESS)) {
             validity = new Date(now + this.tokenValidityMilliSeconds);
-        }else {
+        } else if(type.equals(REFRESH)){
             validity = new Date(now + this.refreshTokenValidityMilliSeconds);
         }
 
@@ -89,22 +90,15 @@ public class TokenProvider {
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .setExpiration(validity)
                 .compact();
+
         return token;
     }
 
     @Transactional
-    public void reIssueRefreshToken(String refreshToken) throws RuntimeException{
-        // refresh token을 디비의 그것과 비교해보기
-        Authentication authentication = getAuthenticationFromToken(refreshToken);
-        RefreshToken findRefreshToken = refreshTokenRepository.findByUsername(authentication.getName()).orElseThrow(TokenNotFoundException::new);
-
-        if(findRefreshToken.getToken().equals(refreshToken)){
-            String newRefreshToken = createToken(authentication, "refreshToken");
-            refreshTokenRepository.save(findRefreshToken.changeToken(newRefreshToken));
-        }
-        else {
-            log.info("refresh 토큰이 일치하지 않습니다. ");
-        }
+    public void reIssueRefreshToken(Authentication authentication) throws RuntimeException{
+        RefreshToken token = refreshTokenRepository.findByUsername(authentication.getName()).orElseThrow(TokenNotFoundException::new);
+        String newRefreshToken = createToken(authentication, REFRESH);
+        token.changeToken(newRefreshToken);
     }
 
 
@@ -137,22 +131,24 @@ public class TokenProvider {
             Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("잘못된 JWT 서명입니다.");
             throw new ValidateTokenException();
-        } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 토큰입니다.");
-            return false;
         } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다.");
             throw new ValidateTokenException();
         } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 잘못되었습니다.");
             throw new ValidateTokenException();
         }
     }
 
-    public Boolean refreshTokenValidation(String token) {
+    public boolean validateExpire(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
+            return true;
+        } catch (ExpiredJwtException e) {
+            return false;
+        }
+    }
 
+    public Boolean refreshTokenValidation(String token) {
         // 1차 토큰 검증
         if(!validateToken(token)) return false;
 
@@ -162,12 +158,6 @@ public class TokenProvider {
 
         return refreshToken.isPresent() && token.equals(refreshToken.get().getToken());
     }
-    // 어세스 토큰 헤더 설정
 
-    @Transactional(readOnly = true)
-    public String getRefreshToken(String username) {
-        RefreshToken refreshToken = refreshTokenRepository.findByUsername(username).orElseThrow(TokenNotFoundException::new);
-        return refreshToken.getToken();
-    }
 
 }

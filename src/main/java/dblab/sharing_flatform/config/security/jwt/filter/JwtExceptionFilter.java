@@ -29,6 +29,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             return;
         } catch (TokenNotFoundException e){
             response.sendRedirect("/exception/no-token");
+            return;
         }
     }
 
