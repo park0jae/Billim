@@ -4,6 +4,7 @@ import dblab.sharing_flatform.config.security.jwt.provider.TokenProvider;
 import dblab.sharing_flatform.config.security.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -29,7 +30,6 @@ public class JwtFilter extends OncePerRequestFilter {
     public static final String REFRESH_HEADER = "Auth";
     public static final String LOGIN_PATH = "/login";
     public static final String EXCEPTION_PATH = "/exception";
-
     public static final String SAVED_AUTHENTICATION = "인증정보를 Security Context에 저장하였습니다.";
     public static final String ACCESS_EXPIRED = "액세스 토큰이 만료되었습니다.";
     public static final String REFRESH_EXPIRED = "리프레시 토큰이 만료되었습니다.";
@@ -63,6 +63,8 @@ public class JwtFilter extends OncePerRequestFilter {
                 String newAccessToken = tokenProvider.createToken(authentication, ACCESS);
                 Authentication newAuthentication = tokenProvider.getAuthenticationFromToken(newAccessToken);
                 SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+
+                response.setHeader(AUTH_HEADER, newAccessToken);
             }
         } else if (validateExpire(accessToken) && !validateExpire(refreshToken)) {
             log.info(REFRESH_EXPIRED);
@@ -74,7 +76,6 @@ public class JwtFilter extends OncePerRequestFilter {
         } else {
             log.debug(ALL_EXPIRED);
         }
-
         chain.doFilter(request, response);
     }
 

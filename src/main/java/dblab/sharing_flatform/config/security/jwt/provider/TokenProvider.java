@@ -3,7 +3,6 @@ package dblab.sharing_flatform.config.security.jwt.provider;
 import dblab.sharing_flatform.config.security.details.MemberDetails;
 import dblab.sharing_flatform.domain.refresh.RefreshToken;
 import dblab.sharing_flatform.exception.auth.ValidateTokenException;
-import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.token.TokenNotFoundException;
 import dblab.sharing_flatform.repository.refresh.RefreshTokenRepository;
 import io.jsonwebtoken.*;
@@ -19,8 +18,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -75,7 +72,7 @@ public class TokenProvider {
                 .collect(Collectors.joining(","));
 
         long now = new Date().getTime();
-        Date validity = null;
+        Date validity = new Date(now + this.tokenValidityMilliSeconds);
 
         if (type.equals(ACCESS)) {
             validity = new Date(now + this.tokenValidityMilliSeconds);
@@ -83,19 +80,17 @@ public class TokenProvider {
             validity = new Date(now + this.refreshTokenValidityMilliSeconds);
         }
 
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .addClaims(Map.of(AUTH_ID, principal.getId()))
                 .addClaims(Map.of(AUTH_USERNAME, principal.getUsername()))
                 .addClaims(Map.of(AUTH_KEY, authorities))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .setExpiration(validity)
                 .compact();
-
-        return token;
     }
 
     @Transactional
-    public void reIssueRefreshToken(Authentication authentication) throws RuntimeException{
+    public void reIssueRefreshToken(Authentication authentication){
         RefreshToken token = refreshTokenRepository.findByUsername(authentication.getName()).orElseThrow(TokenNotFoundException::new);
         String newRefreshToken = createToken(authentication, REFRESH);
         token.changeToken(newRefreshToken);

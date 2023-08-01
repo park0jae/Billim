@@ -49,8 +49,6 @@ public class SignService {
 
     public static final String AUTH_KEY_SIGN_UP = "SIGN-UP";
     public static final String AUTH_KEY_RESET_PASSWORD = "RESET-PASSWORD";
-    public static final String ACCESS_TOKEN = "accessToken";
-    public static final String REFRESH_TOKEN = "refreshToken";
     public static final String NONE = "None";
 
     private final MemberRepository memberRepository;
@@ -123,8 +121,8 @@ public class SignService {
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-            String accessToken = tokenProvider.createToken(authentication, ACCESS_TOKEN);
-            String refreshToken = tokenProvider.createToken(authentication, REFRESH_TOKEN);
+            String accessToken = tokenProvider.createToken(authentication, TokenProvider.ACCESS);
+            String refreshToken = tokenProvider.createToken(authentication, TokenProvider.REFRESH);
 
             RefreshToken findToken = tokenRepository.findByUsername(requestDto.getUsername()).orElse(null);
 
