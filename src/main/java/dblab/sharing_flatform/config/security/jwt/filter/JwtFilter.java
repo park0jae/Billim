@@ -2,9 +2,6 @@ package dblab.sharing_flatform.config.security.jwt.filter;
 
 import dblab.sharing_flatform.config.security.jwt.provider.TokenProvider;
 import dblab.sharing_flatform.config.security.util.SecurityUtil;
-import dblab.sharing_flatform.domain.refresh.RefreshToken;
-import dblab.sharing_flatform.exception.token.TokenNotFoundException;
-import dblab.sharing_flatform.repository.refresh.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -27,16 +24,16 @@ import static dblab.sharing_flatform.config.security.jwt.provider.TokenProvider.
 public class JwtFilter extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;
-    private static final String AUTH_HEADER = "Authorization";
-    private static final String BEARER = "Bearer ";
-    private static final String REFRESH_HEADER = "Auth";
-    private static final String LOGIN_PATH = "/login";
-    private static final String EXCEPTION_PATH = "/exception";
+    public static final String AUTH_HEADER = "Authorization";
+    public static final String BEARER = "Bearer ";
+    public static final String REFRESH_HEADER = "Auth";
+    public static final String LOGIN_PATH = "/login";
+    public static final String EXCEPTION_PATH = "/exception";
 
-    private static final String SAVED_AUTHENTICATION = "인증정보를 Security Context에 저장하였습니다.";
-    private static final String ACCESS_EXPIRED = "액세스 토큰이 만료되었습니다.";
-    private static final String REFRESH_EXPIRED = "리프레시 토큰이 만료되었습니다.";
-    private static final String REQUIRED_SIGN_IN = "다시 로그인해주세요.";
+    public static final String SAVED_AUTHENTICATION = "인증정보를 Security Context에 저장하였습니다.";
+    public static final String ACCESS_EXPIRED = "액세스 토큰이 만료되었습니다.";
+    public static final String REFRESH_EXPIRED = "리프레시 토큰이 만료되었습니다.";
+    public static final String ALL_EXPIRED = "다시 로그인해주세요.";
 
 
     // 인증/인가가 필요한 요청시 실행하는 필터
@@ -64,7 +61,8 @@ public class JwtFilter extends OncePerRequestFilter {
             if (tokenProvider.refreshTokenValidation(refreshToken)) {
                 Authentication authentication = tokenProvider.getAuthenticationFromToken(refreshToken);
                 String newAccessToken = tokenProvider.createToken(authentication, ACCESS);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                Authentication newAuthentication = tokenProvider.getAuthenticationFromToken(newAccessToken);
+                SecurityContextHolder.getContext().setAuthentication(newAuthentication);
             }
         } else if (validateExpire(accessToken) && !validateExpire(refreshToken)) {
             log.info(REFRESH_EXPIRED);
@@ -74,7 +72,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } else {
-            log.debug(REQUIRED_SIGN_IN);
+            log.debug(ALL_EXPIRED);
         }
 
         chain.doFilter(request, response);
