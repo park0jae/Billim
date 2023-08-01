@@ -93,4 +93,12 @@ values
     ('네. 근데 일주일간 빌린다고 하시면 어느정도 깎아드릴게요!!', false, false, 4, 3);
 
 
+INSERT INTO REVIEW (writer_id, member_id, content)
+values
+    (4, 3, '굿굿'),
+    (5, 3, '잘썼습니다.');
 
+INSERT INTO TRADE (render_id, start_date, end_date, trade_complete, written_review, borrower_id, post_id, review_id)
+values
+    (3, now(), now(), true, true, 4, 2, 1),
+    (3, now(), now(), true, true, 5, 3, 2);

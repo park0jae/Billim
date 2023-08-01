@@ -28,14 +28,14 @@ public class Review {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reviewer_id")
+    @JoinColumn(name = "writer_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Member reviewerMember;
+    private Member writer;
 
-    public Review (String content, Member member, Member reviewerMember){
+    public Review (String content, Member member, Member writer){
         this.content = content;
         this.member = member;
-        this.reviewerMember = reviewerMember;
+        this.writer = writer;
     }
 
 }

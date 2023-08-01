@@ -27,11 +27,11 @@ public class MemberFactory {
     }
 
     public static Member createSendMember() {
-        return new Member("sender", "", "nickname", "", createAddress(), "None", List.of());
+        return new Member("sender", "", "sender1", "", createAddress(), "None", List.of());
     }
 
     public static Member createReceiveMember() {
-        return new Member("receiver", "","nickname", "", createAddress(), "None",List.of());
+        return new Member("receiver", "", "receiver1", "", createAddress(), "None", List.of());
     }
 
     public static Address createAddress() {

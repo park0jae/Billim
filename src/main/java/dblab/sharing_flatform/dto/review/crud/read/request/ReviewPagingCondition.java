@@ -19,7 +19,7 @@ public class ReviewPagingCondition {
     @Positive(message = "1 이상의 올바른 페이지당 글 개수를 입력해주세요.")
     private Integer size;
 
-    // 검색 조건
+    private String username;
     private String nickname;
 
     public ReviewPagingCondition() {

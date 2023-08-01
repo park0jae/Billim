@@ -75,7 +75,7 @@ spring:
 jwt:
   secret_key: d2VqZm53a2FuZHNranZud2Vqa25ma2p2bndla2d3bmtmbmV3Zmprd25qa3ducWtqbmtqZWZ3cWprbndrCg==
   token-validity-in-seconds: 10 # 30분
-  refresh-token-validity-in-seconds: 60 # 6시간
+  refresh-token-validity-in-seconds: 1000 # 6시간
 #  86400
 upload:
   post:

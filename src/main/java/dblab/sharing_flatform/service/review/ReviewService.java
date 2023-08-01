@@ -1,5 +1,6 @@
 package dblab.sharing_flatform.service.review;
 
+import dblab.sharing_flatform.config.security.util.SecurityUtil;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.notification.NotificationType;
 import dblab.sharing_flatform.domain.review.Review;
@@ -26,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static dblab.sharing_flatform.config.security.util.SecurityUtil.getCurrentUsernameCheck;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -36,30 +39,31 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
     private final TradeRepository tradeRepository;
-
     private final NotificationHelper notificationHelper;
+
+    public static final String REVIEW_COMPLETE_MESSAGE = "님이 거래에 대한 리뷰를 작성했습니다.";
+
 
     @Transactional
     public ReviewResponseDto writeReview(ReviewRequestDto reviewRequestDto, Long tradeId, String username) {
         Trade trade = tradeRepository.findById(tradeId).orElseThrow(TradeNotFoundException::new);
-        Member reviewerMember = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new); // 리뷰 작성자
+        Member writer = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new); // 리뷰 작성자
         Member member = memberRepository.findById(trade.getRenderMember().getId()).orElseThrow(MemberNotFoundException::new); // 리뷰 받는 사람
 
         validate(username, trade);
 
         Review review = new Review(reviewRequestDto.getContent(),
                 member,
-                reviewerMember);
+                writer);
 
         reviewRepository.save(review);
         trade.addReview(review);
-        notificationHelper.notificationIfSubscribe(reviewerMember, member, NotificationType.REVIEW, "님이 거래에 대한 리뷰를 작성했습니다.");
-
+        notificationHelper.notificationIfSubscribe(writer, member, NotificationType.REVIEW, REVIEW_COMPLETE_MESSAGE);
         return ReviewResponseDto.toDto(review);
     }
 
     @Transactional
-    public void deleteReview(Long tradeId){
+    public void deleteReview(Long tradeId) {
         Trade trade = tradeRepository.findById(tradeId).orElseThrow(TradeNotFoundException::new);
         Review review = reviewRepository.findById(trade.getReview().getId()).orElseThrow(ReviewNotFoundException::new);
         trade.deleteReview();
@@ -67,15 +71,15 @@ public class ReviewService {
         reviewRepository.delete(review);
     }
 
-    public PagedReviewListDto findAllReviews(ReviewPagingCondition cond){
+    public PagedReviewListDto findAllReviews(ReviewPagingCondition cond) {
         return PagedReviewListDto.toDto(reviewRepository.findAllReviews(cond));
     }
 
-    public PagedReviewListDto findCurrentUserReviews(ReviewPagingCondition cond){
+    public PagedReviewListDto findCurrentUserReviews(ReviewPagingCondition cond) {
         return PagedReviewListDto.toDto(reviewRepository.findAllWithMemberByCurrentUsername(cond));
     }
 
-    public PagedReviewListDto findAllReviewsByUsername(ReviewPagingCondition cond){
+    public PagedReviewListDto findAllReviewsByUsername(ReviewPagingCondition cond) {
         return PagedReviewListDto.toDto(reviewRepository.findAllByUsername(cond));
     }
 

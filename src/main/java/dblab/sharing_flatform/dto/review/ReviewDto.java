@@ -16,11 +16,12 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReviewDto {
 
+    private String receiver;
     private String writer;
     private String content;
 
     public static ReviewDto toDto(Review review) {
-        return new ReviewDto(review.getReviewerMember().getNickname(), review.getContent());
+        return new ReviewDto(review.getMember().getNickname(), review.getWriter().getNickname(), review.getContent());
     }
 
     public static List<ReviewDto> toDtoList(List<Review> reviews) {

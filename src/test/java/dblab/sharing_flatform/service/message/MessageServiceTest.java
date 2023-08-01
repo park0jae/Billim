@@ -4,6 +4,7 @@ import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.message.Message;
 import dblab.sharing_flatform.dto.message.crud.create.MessageCreateRequestDto;
 import dblab.sharing_flatform.dto.message.MessageDto;
+import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.message.MessageNotFoundException;
 import dblab.sharing_flatform.factory.member.MemberFactory;
 import dblab.sharing_flatform.factory.message.MessageFactory;
@@ -59,10 +60,10 @@ public class MessageServiceTest {
     @DisplayName("메세지 생성 및 전송 테스트")
     public void sendMessageTest() {
         // Given
-        MessageCreateRequestDto messageCreateRequestDto = new MessageCreateRequestDto("HelloWorld", "receiver");
+        MessageCreateRequestDto messageCreateRequestDto = new MessageCreateRequestDto("HelloWorld", receiveMember.getNickname());
 
         given(memberRepository.findByUsername(sendMember.getUsername())).willReturn(Optional.of(sendMember));
-        given(memberRepository.findByNickname("receiver")).willReturn(Optional.of(receiveMember));
+        given(memberRepository.findByNickname(receiveMember.getNickname())).willReturn(Optional.of(receiveMember));
 
         // When
         MessageDto result = messageService.sendMessage(messageCreateRequestDto, sendMember.getUsername());
@@ -109,8 +110,10 @@ public class MessageServiceTest {
         messages.add(createMessageWithMeber(receiveMember, sendMember));
         messages.add(createMessageWithMeber(receiveMember, sendMember));
 
+        given(memberRepository.findByUsername(sendMember.getUsername())).willReturn(Optional.of(sendMember));
         given(memberRepository.findByNickname(receiveMember.getNickname())).willReturn(Optional.of(receiveMember));
-        given(messageRepository.findAllBySendAndReceiverMembers(sendMember.getUsername(), receiveMember.getNickname())).willReturn(messages);
+
+        given(messageRepository.findAllBySendAndReceiverMembers(sendMember.getNickname(), receiveMember.getNickname())).willReturn(messages);
 
         // When
         List<MessageDto> result = messageService.findSendMessageToMember(sendMember.getUsername(), receiveMember.getNickname());
