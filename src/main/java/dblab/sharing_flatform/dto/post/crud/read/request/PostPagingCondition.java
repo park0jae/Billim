@@ -22,6 +22,7 @@ public class PostPagingCondition {
     // 검색 조건
     private String categoryName;
     private String title;
+    private String username;
 
     public PostPagingCondition() {
         this.page = getDefaultPageNum();

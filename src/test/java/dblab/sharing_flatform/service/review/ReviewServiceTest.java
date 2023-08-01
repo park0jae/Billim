@@ -130,6 +130,7 @@ public class ReviewServiceTest {
     @Test
     @DisplayName("현재 유저의 리뷰 조회 테스트")
     public void findCurrentUserReviewsTest(){
+        // Given
         List<Review> reviews = new ArrayList<>();
         List<ReviewDto> reviewDtoList = new ArrayList<>();
 

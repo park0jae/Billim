@@ -53,11 +53,12 @@ public class PostService {
         return PagedPostListDto.toDto(postRepository.findAllByCategoryAndTitle(cond));
     }
 
-    public List<PostDto> readAllLikePost(Long id) {
-        List<Post> posts = postRepository.findAllById(
-                likePostRepository.findAllByMemberId(id).stream().map(lp -> lp.getPost().getId()).collect(Collectors.toList()));
+    public PagedPostListDto readAllLikePost(PostPagingCondition cond) {
+        return PagedPostListDto.toDto(likePostRepository.findAllLikesByCurrentUsername(cond));
+    }
 
-        return PostDto.toDtoList(posts);
+    public PagedPostListDto readAllWriteByCurrentUser(PostPagingCondition cond) {
+        return PagedPostListDto.toDto(postRepository.findAllWithMemberByCurrentUsername(cond));
     }
 
     public PostReadResponseDto read(Long id) {
@@ -180,5 +181,6 @@ public class PostService {
                 .filter(lp -> lp.getMember().equals(member))
                 .findFirst();
     }
+
 
 }

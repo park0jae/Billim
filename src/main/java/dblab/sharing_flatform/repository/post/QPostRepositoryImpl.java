@@ -18,6 +18,7 @@ import java.util.List;
 
 import static com.querydsl.core.types.Projections.constructor;
 import static dblab.sharing_flatform.domain.post.QPost.post;
+import static dblab.sharing_flatform.domain.review.QReview.review;
 
 
 @Repository
@@ -37,6 +38,13 @@ public class QPostRepositoryImpl extends QuerydslRepositorySupport implements QP
         return new PageImpl<>(fetchAll(predicate, pageable), pageable, fetchCount(predicate));
     }
 
+    @Override
+    public Page<PostDto> findAllWithMemberByCurrentUsername(PostPagingCondition cond) {
+        Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize());
+        Predicate predicate = createPredicateByCurrentUsername(cond);
+        return new PageImpl<>(fetchAll(predicate, pageable), pageable, fetchCount(predicate));
+    }
+
     private Predicate createPredicate(PostPagingCondition cond) {
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -46,6 +54,13 @@ public class QPostRepositoryImpl extends QuerydslRepositorySupport implements QP
 
         if (StringUtils.hasText(cond.getCategoryName())) {
             builder.and(post.category.name.equalsIgnoreCase(cond.getCategoryName()));
+        }
+        return builder;
+    }
+    private Predicate createPredicateByCurrentUsername(PostPagingCondition cond){
+        BooleanBuilder builder = new BooleanBuilder();
+        if (StringUtils.hasText(cond.getUsername())) {
+            builder.and(post.member.username.eq(cond.getUsername()));
         }
         return builder;
     }

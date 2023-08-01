@@ -39,12 +39,20 @@ public class PostController {
         return Response.success(postService.read(postId));
     }
 
+    @ApiOperation(value = "본인 작성 게시글 조회", notes = "현재 로그인한 유저가 작성한 게시글을 조회합니다.")
+    @GetMapping("/my")
+    @ResponseStatus(HttpStatus.OK)
+    public Response readAllWriteByCurrentUser(@Valid PostPagingCondition cond){
+        cond.setUsername(getCurrentUsernameCheck());
+        return Response.success(postService.readAllWriteByCurrentUser(cond));
+    }
+
     @ApiOperation(value ="본인의 좋아요 누른 게시글 전체 조회", notes = "현재 사용자가 좋아요 누른 게시글을 전체 조회합니다.")
     @GetMapping("/like")
     @ResponseStatus(HttpStatus.OK)
-    public Response readAllLikePost() {
-        Long memberId = Long.valueOf(SecurityUtil.getCurrentUserIdCheck());
-        return Response.success(postService.readAllLikePost(memberId));
+    public Response readAllLikePost(@Valid PostPagingCondition cond) {
+        cond.setUsername(getCurrentUsernameCheck());
+        return Response.success(postService.readAllLikePost(cond));
     }
 
     @ApiOperation(value = "게시글 생성", notes = "게시글을 생성합니다.")

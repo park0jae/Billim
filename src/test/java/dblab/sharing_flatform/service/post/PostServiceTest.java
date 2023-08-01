@@ -12,6 +12,7 @@ import dblab.sharing_flatform.dto.post.crud.read.response.PagedPostListDto;
 import dblab.sharing_flatform.dto.post.crud.read.response.PostReadResponseDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.crud.update.PostUpdateResponseDto;
+import dblab.sharing_flatform.dto.review.ReviewDto;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
 import dblab.sharing_flatform.factory.category.CategoryFactory;
 import dblab.sharing_flatform.helper.NotificationHelper;
@@ -146,7 +147,7 @@ public class PostServiceTest {
         postDtoList.add(PostDto.toDto(posts.get(0)));
         postDtoList.add(PostDto.toDto(posts.get(1)));
 
-        PostPagingCondition cond = new PostPagingCondition(0,10, null, null);
+        PostPagingCondition cond = new PostPagingCondition(0,10, null, null, null);
 
         Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize(), Sort.by("post_id").ascending());
         Page<PostDto> resultPage = new PageImpl<>(postDtoList, pageable, posts.size());
@@ -176,7 +177,7 @@ public class PostServiceTest {
         posts.add(new Post("title 1", "post 1", category, createItem(), List.of(), member));
         posts.add(new Post("title 2", "post 2", category, createItem(), List.of(), member));
 
-        PostPagingCondition cond = new PostPagingCondition(0, 10, null, "title 1");
+        PostPagingCondition cond = new PostPagingCondition(0, 10, null, "title 1", null);
 
         // 이 부분을 변경하여 title이 "title 1"인 포스트만 가져오도록 하세요.
         given(postRepository.findAllByCategoryAndTitle(cond)).willReturn(new PageImpl<>(List.of(PostDto.toDto(posts.get(0))), PageRequest.of(cond.getPage(), cond.getSize()), 1));
@@ -199,7 +200,7 @@ public class PostServiceTest {
         posts.add(new Post("title 1", "post 1", createCategoryWithName("category 1"), createItem(), List.of(), member));
         posts.add(new Post("title 2", "post 2", createCategoryWithName("category 2"), createItem(), List.of(), member));
 
-        PostPagingCondition cond = new PostPagingCondition(0, 10, "category 1", null);
+        PostPagingCondition cond = new PostPagingCondition(0, 10, "category 1", null, null);
 
         given(postRepository.findAllByCategoryAndTitle(cond)).willReturn(new PageImpl<>(List.of(PostDto.toDto(posts.get(0))), PageRequest.of(cond.getPage(), cond.getSize()), 1));
 
@@ -212,6 +213,68 @@ public class PostServiceTest {
         PostDto postDto1 = result.getPostList().get(0);
         assertThat(postDto1.getTitle()).isEqualTo("title 1");
         assertThat(postDto1.getNickname()).isEqualTo(member.getNickname());
+    }
+
+    @Test
+    @DisplayName("현재 로그인 한 유저가 작성한 글 조회 테스트")
+    public void readAllPostByCurrentUser(){
+        // Given
+        List<Post> posts = new ArrayList<>();
+        List<PostDto> postDtoList = new ArrayList<>();
+        posts.add(new Post("title 1", "post 1", createCategoryWithName("category 1"), createItem(), List.of(), member));
+        posts.add(new Post("title 2", "post 2", createCategoryWithName("category 2"), createItem(), List.of(), member));
+
+        postDtoList.add(PostDto.toDto(posts.get(0)));
+        postDtoList.add(PostDto.toDto(posts.get(1)));
+
+        PostPagingCondition cond = new PostPagingCondition(0, 10, null, null, member.getUsername());
+        Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize(), Sort.by("post_id").ascending());
+
+        Page<PostDto> resultPage = new PageImpl<>(postDtoList, pageable, posts.size());
+
+        given(postRepository.findAllWithMemberByCurrentUsername(cond)).willReturn(resultPage);
+
+        // When
+        PagedPostListDto result = postService.readAllWriteByCurrentUser(cond);
+
+        // Then
+        assertThat(result.getPostList()).hasSize(2);
+        PostDto postDto = result.getPostList().get(0);
+        assertThat(postDto.getTitle()).isEqualTo("title 1");
+
+        PostDto postDto2 = result.getPostList().get(1);
+        assertThat(postDto2.getTitle()).isEqualTo("title 2");
+    }
+
+    @Test
+    @DisplayName("현재 로그인 한 유저가 좋아요 누른 글 조회하기")
+    public void readAllLikesPostByCurrentUser(){
+        // Given
+        List<LikePost> likePosts = new ArrayList<>();
+        likePosts.add(new LikePost(member, new Post("title 1", "post 1", category, createItem(), List.of(), member)));
+        likePosts.add(new LikePost(member, new Post("title 2", "post 2", category, createItem(), List.of(), member)));
+
+        List<PostDto> likePostDtoList = new ArrayList<>();
+        likePostDtoList.add(PostDto.toDto(likePosts.get(0).getPost()));
+        likePostDtoList.add(PostDto.toDto(likePosts.get(1).getPost()));
+
+        PostPagingCondition cond = new PostPagingCondition(0, 10, null, null, member.getUsername());
+        Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize(), Sort.by("post_id").ascending());
+
+        Page<PostDto> resultPage = new PageImpl<>(likePostDtoList, pageable, likePosts.size());
+
+        given(likePostRepository.findAllLikesByCurrentUsername(cond)).willReturn(resultPage);
+
+        // When
+        PagedPostListDto result = postService.readAllLikePost(cond);
+
+        // Then
+        assertThat(result.getPostList()).hasSize(2);
+        PostDto postDto = result.getPostList().get(0);
+        assertThat(postDto.getTitle()).isEqualTo("title 1");
+
+        PostDto postDto2 = result.getPostList().get(1);
+        assertThat(postDto2.getTitle()).isEqualTo("title 2");
     }
 
     @Test
