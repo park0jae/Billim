@@ -26,17 +26,17 @@ public class Report {
 
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reporter_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member reporter;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reported_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "reported_id", nullable = true)
     private Member reported;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "post_id", nullable = true)
     private Post post;
 
     public Report(ReportType reportType, String content, Member reporter, Post post, Member reported) {

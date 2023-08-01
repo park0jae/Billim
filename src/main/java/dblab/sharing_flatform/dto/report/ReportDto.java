@@ -21,8 +21,6 @@ public class ReportDto {
     private Long postId;
     private String reportedName;
 
-
-
     public static ReportDto toDto(Report report) {
          return new ReportDto(report.getReporter().getNickname(), report.getReportType(), report.getContent(), report.getPost().getId(), report.getReported().getNickname());
      }

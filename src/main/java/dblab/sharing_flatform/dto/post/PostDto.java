@@ -23,7 +23,6 @@ public class PostDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdTime;
 
-
     public static PostDto toDto(Post post) {
         return new PostDto(post.getId(),
                 post.getTitle(),

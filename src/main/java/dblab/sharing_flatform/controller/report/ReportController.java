@@ -1,6 +1,8 @@
 package dblab.sharing_flatform.controller.report;
 
 import dblab.sharing_flatform.config.security.util.SecurityUtil;
+import dblab.sharing_flatform.dto.report.PagedReportListDto;
+import dblab.sharing_flatform.dto.report.ReportPagingCondition;
 import dblab.sharing_flatform.dto.report.create.ReportCreateRequestDto;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.exception.auth.AccessDeniedException;
@@ -27,8 +29,8 @@ public class ReportController {
     @ApiOperation(value = "Report 전체 조회 (ADMIN) ", notes = "ADMIN 권한으로 Report를 조회합니다.")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Response readAll() {
-        return Response.success(reportService.readAll());
+    public Response readAll(@Valid ReportPagingCondition cond) {
+        return Response.success(reportService.readAll(cond));
     }
 
     @ApiOperation(value = "게시글 또는 회원에 대한 Report를 생성", notes = "현재 로그인한 유저 정보로 게시글/회원에 대한 Report를 생성합니다.")

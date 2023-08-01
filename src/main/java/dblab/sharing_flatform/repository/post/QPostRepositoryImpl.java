@@ -57,6 +57,7 @@ public class QPostRepositoryImpl extends QuerydslRepositorySupport implements QP
         }
         return builder;
     }
+
     private Predicate createPredicateByCurrentUsername(PostPagingCondition cond){
         BooleanBuilder builder = new BooleanBuilder();
         if (StringUtils.hasText(cond.getUsername())) {

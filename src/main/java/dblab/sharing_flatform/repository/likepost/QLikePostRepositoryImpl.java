@@ -47,7 +47,7 @@ public class QLikePostRepositoryImpl extends QuerydslRepositorySupport implement
                 pageable,
                 query
                         .select(constructor(PostDto.class,
-                                likePost.id,
+                                likePost.post.id,
                                 likePost.post.title,
                                 likePost.post.member.username,
                                 likePost.post.createdTime))
