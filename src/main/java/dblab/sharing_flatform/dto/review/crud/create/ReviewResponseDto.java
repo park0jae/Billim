@@ -14,14 +14,14 @@ public class ReviewResponseDto {
 
     private Long id;
     private String content;
-    private String reviewerMember;
+    private String writer;
 
     public static ReviewResponseDto toDto(Review review) {
         if (review != null) {
             return new ReviewResponseDto(
                     review.getId(),
                     review.getContent(),
-                    review.getReviewerMember().getNickname());
+                    review.getWriter().getNickname());
         } else {
             return null;
         }

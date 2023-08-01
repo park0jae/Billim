@@ -89,7 +89,7 @@ public class MessageRepositoryTest {
 
         // when
         List<Message> result = messageRepository.findAllBySendAndReceiverMembers(
-                message.getSendMember().getUsername(),
+                message.getSendMember().getNickname(),
                 message.getReceiveMember().getNickname());
         // then
         assertThat(result.get(0).getSendMember().getUsername()).isEqualTo("sender");

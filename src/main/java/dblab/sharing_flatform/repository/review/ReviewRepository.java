@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long>, QReviewRepository {
 
-    @Query("select count(r) from Review r where r.reviewerMember.id =:memberId")
+    @Query("select count(r) from Review r where r.writer.id =:memberId")
     Long countByMemberId(@Param("memberId") Long memberId);
 }

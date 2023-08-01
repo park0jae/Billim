@@ -106,7 +106,7 @@ public class ReviewServiceTest {
         reviewDtoList.add(ReviewDto.toDto(reviews.get(1)));
 
 
-        ReviewPagingCondition cond = new ReviewPagingCondition(1, 5, null);
+        ReviewPagingCondition cond = new ReviewPagingCondition(1, 5, null, null);
 
         Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize(), Sort.by("review_id").ascending());
 
@@ -140,7 +140,7 @@ public class ReviewServiceTest {
         reviewDtoList.add(ReviewDto.toDto(reviews.get(1)));
 
 
-        ReviewPagingCondition cond = new ReviewPagingCondition(1, 5, member.getUsername());
+        ReviewPagingCondition cond = new ReviewPagingCondition(1, 5, member.getUsername(), null);
         Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize(), Sort.by("review_id").ascending());
 
         Page<ReviewDto> resultPage = new PageImpl<>(reviewDtoList, pageable, reviews.size());
@@ -173,7 +173,7 @@ public class ReviewServiceTest {
         reviewDtoList.add(ReviewDto.toDto(reviews.get(0)));
         reviewDtoList.add(ReviewDto.toDto(reviews.get(1)));
 
-        ReviewPagingCondition cond = new ReviewPagingCondition(1, 5, member.getUsername());
+        ReviewPagingCondition cond = new ReviewPagingCondition(1, 5, null, member.getNickname());
         Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize(), Sort.by("review_id").ascending());
 
         Page<ReviewDto> resultPage = new PageImpl<>(reviewDtoList, pageable, reviews.size());
@@ -212,17 +212,17 @@ public class ReviewServiceTest {
     public void writeReviewImpossibleWriteReviewExceptionTest(){
         // Given
         review = createReviewWithMember(reviewerMember, reviewerMember);
-        trade = new Trade(review.getMember(), review.getReviewerMember(), LocalDate.now(), LocalDate.now(), post);
+        trade = new Trade(review.getMember(), review.getWriter(), LocalDate.now(), LocalDate.now(), post);
 
         trade.isTradeComplete(true);
         ReviewRequestDto reviewRequestDto = new ReviewRequestDto(review.getContent());
 
         given(tradeRepository.findById(trade.getId())).willReturn(Optional.of(trade));
-        given(memberRepository.findByUsername(review.getReviewerMember().getUsername())).willReturn(Optional.of(review.getReviewerMember()));
+        given(memberRepository.findByUsername(review.getWriter().getUsername())).willReturn(Optional.of(review.getWriter()));
         given(memberRepository.findById(review.getMember().getId())).willReturn(Optional.of(review.getMember()));
 
         // When & Then
-        assertThatThrownBy(() -> reviewService.writeReview(reviewRequestDto, trade.getId(), review.getReviewerMember().getUsername())).isInstanceOf(ImpossibleWriteReviewException.class);
+        assertThatThrownBy(() -> reviewService.writeReview(reviewRequestDto, trade.getId(), review.getWriter().getUsername())).isInstanceOf(ImpossibleWriteReviewException.class);
     }
 
     @Test
@@ -234,11 +234,11 @@ public class ReviewServiceTest {
         ReviewRequestDto reviewRequestDto = new ReviewRequestDto(review.getContent());
 
         given(tradeRepository.findById(trade.getId())).willReturn(Optional.of(trade));
-        given(memberRepository.findByUsername(review.getReviewerMember().getUsername())).willReturn(Optional.of(reviewerMember));
+        given(memberRepository.findByUsername(review.getWriter().getUsername())).willReturn(Optional.of(reviewerMember));
         given(memberRepository.findById(review.getMember().getId())).willReturn(Optional.of(member));
 
         // When & Then
-        assertThatThrownBy(() -> reviewService.writeReview(reviewRequestDto, trade.getId(), review.getReviewerMember().getUsername())).isInstanceOf(ExistReviewException.class);
+        assertThatThrownBy(() -> reviewService.writeReview(reviewRequestDto, trade.getId(), review.getWriter().getUsername())).isInstanceOf(ExistReviewException.class);
     }
     @Test
     @DisplayName("거래 미완료 리뷰 작성 불가 예외 테스트")
@@ -247,10 +247,10 @@ public class ReviewServiceTest {
         ReviewRequestDto reviewRequestDto = new ReviewRequestDto(review.getContent());
 
         given(tradeRepository.findById(trade.getId())).willReturn(Optional.of(trade));
-        given(memberRepository.findByUsername(review.getReviewerMember().getUsername())).willReturn(Optional.of(reviewerMember));
+        given(memberRepository.findByUsername(review.getWriter().getUsername())).willReturn(Optional.of(reviewerMember));
         given(memberRepository.findById(review.getMember().getId())).willReturn(Optional.of(member));
 
         // When & Then
-        assertThatThrownBy(() -> reviewService.writeReview(reviewRequestDto, trade.getId(), review.getReviewerMember().getUsername())).isInstanceOf(TradeNotCompleteException.class);
+        assertThatThrownBy(() -> reviewService.writeReview(reviewRequestDto, trade.getId(), review.getWriter().getUsername())).isInstanceOf(TradeNotCompleteException.class);
     }
 }

@@ -32,6 +32,7 @@ public class ReviewController {
     @GetMapping("/myPage")
     @ResponseStatus(HttpStatus.OK)
     public Response findCurrentUserReviews(@Valid ReviewPagingCondition cond){
+        cond.setUsername(getCurrentUsernameCheck());
         return Response.success(reviewService.findCurrentUserReviews(cond));
     }
 

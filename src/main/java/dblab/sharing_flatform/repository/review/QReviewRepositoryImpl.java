@@ -39,7 +39,7 @@ public class QReviewRepositoryImpl extends QuerydslRepositorySupport implements 
     @Override
     public Page<ReviewDto> findAllWithMemberByCurrentUsername(ReviewPagingCondition cond) {
         Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize());
-        Predicate predicate = createPredicateByNickname(cond); // 검색 조건
+        Predicate predicate = createPredicateByCurrentUsername(cond); // 검색 조건
         return new PageImpl<>(fetchAll(predicate, pageable), pageable, fetchCount(predicate));
     }
 
@@ -54,9 +54,16 @@ public class QReviewRepositoryImpl extends QuerydslRepositorySupport implements 
     private Predicate createPredicateByNickname(ReviewPagingCondition cond) {
         BooleanBuilder builder = new BooleanBuilder();
         if (StringUtils.hasText(cond.getNickname())) {
-            builder.and(review.reviewerMember.nickname.eq(cond.getNickname()));
+            builder.and(review.writer.nickname.eq(cond.getNickname()));
         }
+        return builder;
+    }
 
+    private Predicate createPredicateByCurrentUsername(ReviewPagingCondition cond) {
+        BooleanBuilder builder = new BooleanBuilder();
+        if (StringUtils.hasText(cond.getUsername())) {
+            builder.and(review.member.username.eq(cond.getUsername()));
+        }
         return builder;
     }
 
@@ -70,10 +77,11 @@ public class QReviewRepositoryImpl extends QuerydslRepositorySupport implements 
                 pageable,
                 query
                         .select(constructor(ReviewDto.class,
-                                review.reviewerMember.nickname,
+                                review.member.nickname,
+                                review.writer.nickname,
                                 review.content))
                         .from(review)
-                        .join(review.reviewerMember)
+                        .join(review.writer)
                         .where(predicate)
                         .orderBy(review.id.asc())
         ).fetch();
