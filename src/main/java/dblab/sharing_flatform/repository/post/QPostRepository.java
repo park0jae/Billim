@@ -11,4 +11,6 @@ public interface QPostRepository {
     // 검색조건 : 카테고리 name + 글 제목 -> Paging
     Page<PostDto> findAllByCategoryAndTitle(PostPagingCondition cond);
 
+    Page<PostDto> findAllWithMemberByCurrentUsername(PostPagingCondition cond);
+
 }

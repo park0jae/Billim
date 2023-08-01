@@ -1,7 +1,6 @@
 package dblab.sharing_flatform.domain.review;
 
 import dblab.sharing_flatform.domain.member.Member;
-import dblab.sharing_flatform.domain.trade.Trade;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
