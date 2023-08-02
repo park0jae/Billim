@@ -20,6 +20,8 @@ spring:
       mode: always
 
   security:
+    headers:
+      frame: false
     oauth2:
       client:
         registration:
