@@ -28,6 +28,7 @@ public class Member {
     private String password;
     private String phoneNumber;
 
+    @Nullable
     private String nickname;
     @Embedded
     @Nullable

@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PagedReviewListDto {
+
     private Long totalElements;
     private Integer totalPage;
     private boolean hasNextPage;

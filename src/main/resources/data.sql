@@ -102,3 +102,8 @@ INSERT INTO TRADE (render_id, start_date, end_date, trade_complete, written_revi
 values
     (3, now(), now(), true, true, 4, 2, 1),
     (3, now(), now(), true, true, 5, 3, 2);
+
+INSERT INTO REPORT (content, report_type, post_id, reported_id, reporter_id)
+values
+    ('좋아요 누른 게시글 조회가 안됩니다.', 'BUG', null, null, 2),
+    ('적절하지 않은 게시물 입니다...', 'POST_REPORT', 3, 3, 2);

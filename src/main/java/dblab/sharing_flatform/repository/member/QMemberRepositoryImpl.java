@@ -54,8 +54,7 @@ public class QMemberRepositoryImpl extends QuerydslRepositorySupport implements 
                                 constructor(MemberDto.class,
                                             member.id,
                                             member.nickname,
-                                            member
-                                            ))
+                                            member))
                         .from(member)
                         .where(predicate)
                         .orderBy(member.id.asc())

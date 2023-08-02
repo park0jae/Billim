@@ -13,11 +13,14 @@ import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
 import dblab.sharing_flatform.repository.report.ReportRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -29,8 +32,8 @@ public class ReportService {
     @Transactional
     public void create(ReportCreateRequestDto requestDto, String username) {
         Post post = requestDto.getPostId() == null ? null : postRepository.findById(requestDto.getPostId()).orElseThrow(PostNotFoundException::new);
-        reportRepository.save(new Report(
-                requestDto.getReportType(), requestDto.getContent(),
+        reportRepository.save(new Report(requestDto.getReportType(),
+                requestDto.getContent(),
                 memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new),
                 post,
                 post == null ? null : post.getMember()));

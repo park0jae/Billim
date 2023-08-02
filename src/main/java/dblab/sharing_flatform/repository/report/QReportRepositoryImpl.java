@@ -1,9 +1,13 @@
 package dblab.sharing_flatform.repository.report;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import dblab.sharing_flatform.domain.report.Report;
+import dblab.sharing_flatform.dto.member.MemberDto;
 import dblab.sharing_flatform.dto.report.ReportDto;
 import dblab.sharing_flatform.dto.report.ReportPagingCondition;
 import org.springframework.data.domain.Page;
@@ -36,6 +40,7 @@ public class QReportRepositoryImpl extends QuerydslRepositorySupport implements 
 
     private Predicate createPredicate(ReportPagingCondition cond) {
         BooleanBuilder builder = new BooleanBuilder();
+
         if (StringUtils.hasText(cond.getReported())) {
             builder.and(report.reported.nickname.eq(cond.getReported()));
         }
@@ -46,14 +51,15 @@ public class QReportRepositoryImpl extends QuerydslRepositorySupport implements 
         return getQuerydsl().applyPagination(
                 pageable,
                 query
-                        .select(constructor(ReportDto.class,
-                                report.reporter.nickname,
-                                report.reportType,
-                                report.content,
-                                report.post.id,
-                                report.reported.nickname))
+                        .select(
+                                constructor(ReportDto.class,
+                                        report.reporter.nickname,
+                                        report.reportType,
+                                        report.content,
+                                        report.post.id,
+                                        report
+                                ))
                         .from(report)
-                        .join(report.reported)
                         .where(predicate)
                         .orderBy(report.id.asc())
         ).fetch();
