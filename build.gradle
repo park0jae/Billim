@@ -80,7 +80,17 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+	// mail 추가 시작
 	implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.1'
+	// mail 추가 끝
+
+	// websocket 추가 시작
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	// websocket 추가 끝
+
+	implementation 'org.webjars:sockjs-client:1.0.2'
+	implementation 'org.webjars:stomp-websocket:2.3.3'
+
 }
 
 tasks.named('test') {
