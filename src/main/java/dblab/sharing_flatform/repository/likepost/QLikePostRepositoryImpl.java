@@ -5,7 +5,7 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import dblab.sharing_flatform.domain.likepost.LikePost;
 import dblab.sharing_flatform.dto.post.PostDto;
-import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
+import dblab.sharing_flatform.dto.post.PostPagingCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;

@@ -1,8 +1,6 @@
 package dblab.sharing_flatform.config.listener;
 
-import dblab.sharing_flatform.dto.notification.crud.create.NotificationRequestDto;
-import dblab.sharing_flatform.repository.emitter.EmitterRepository;
-import dblab.sharing_flatform.repository.member.MemberRepository;
+import dblab.sharing_flatform.dto.notification.NotificationRequestDto;
 import dblab.sharing_flatform.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;

@@ -1,6 +1,6 @@
 package dblab.sharing_flatform.controller.category;
 
-import dblab.sharing_flatform.dto.category.crud.create.CategoryCreateRequestDto;
+import dblab.sharing_flatform.dto.category.CategoryCreateRequestDto;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.service.category.CategoryService;
 import io.swagger.annotations.Api;

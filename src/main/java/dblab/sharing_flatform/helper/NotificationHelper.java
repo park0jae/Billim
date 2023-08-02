@@ -2,7 +2,7 @@ package dblab.sharing_flatform.helper;
 
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.notification.NotificationType;
-import dblab.sharing_flatform.dto.notification.crud.create.NotificationRequestDto;
+import dblab.sharing_flatform.dto.notification.NotificationRequestDto;
 import dblab.sharing_flatform.repository.emitter.EmitterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;

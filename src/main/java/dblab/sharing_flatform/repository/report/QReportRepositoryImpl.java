@@ -53,6 +53,7 @@ public class QReportRepositoryImpl extends QuerydslRepositorySupport implements 
                 query
                         .select(
                                 constructor(ReportDto.class,
+                                        report.id,
                                         report.reporter.nickname,
                                         report.reportType,
                                         report.content,

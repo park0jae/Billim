@@ -1,11 +1,8 @@
 package dblab.sharing_flatform.controller.message;
 
-import dblab.sharing_flatform.dto.message.crud.create.MessageCreateRequestDto;
-import dblab.sharing_flatform.dto.message.MessageDto;
+import dblab.sharing_flatform.dto.message.MessageCreateRequestDto;
 import dblab.sharing_flatform.dto.response.Response;
-import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.service.message.MessageService;
-import dblab.sharing_flatform.config.security.util.SecurityUtil;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 import static dblab.sharing_flatform.config.security.util.SecurityUtil.getCurrentUsernameCheck;
 

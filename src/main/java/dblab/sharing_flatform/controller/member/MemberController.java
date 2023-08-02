@@ -1,14 +1,10 @@
 package dblab.sharing_flatform.controller.member;
 
-import dblab.sharing_flatform.dto.member.MemberPrivateDto;
-import dblab.sharing_flatform.dto.member.MemberProfileDto;
-import dblab.sharing_flatform.dto.member.crud.read.request.MemberPagingCondition;
-import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
-import dblab.sharing_flatform.dto.member.crud.update.OAuthMemberUpdateRequestDto;
+import dblab.sharing_flatform.dto.member.MemberPagingCondition;
+import dblab.sharing_flatform.dto.member.MemberUpdateRequestDto;
+import dblab.sharing_flatform.dto.member.OAuthMemberUpdateRequestDto;
 import dblab.sharing_flatform.dto.response.Response;
-import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.service.member.MemberService;
-import dblab.sharing_flatform.config.security.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

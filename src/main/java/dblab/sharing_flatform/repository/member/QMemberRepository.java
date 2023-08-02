@@ -1,7 +1,7 @@
 package dblab.sharing_flatform.repository.member;
 
 import dblab.sharing_flatform.dto.member.MemberDto;
-import dblab.sharing_flatform.dto.member.crud.read.request.MemberPagingCondition;
+import dblab.sharing_flatform.dto.member.MemberPagingCondition;
 import org.springframework.data.domain.Page;
 
 public interface QMemberRepository {

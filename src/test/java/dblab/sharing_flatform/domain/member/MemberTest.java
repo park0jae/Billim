@@ -1,16 +1,9 @@
 package dblab.sharing_flatform.domain.member;
 
 import dblab.sharing_flatform.domain.embedded.address.Address;
-import dblab.sharing_flatform.domain.post.Post;
-import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
-import org.assertj.core.api.Assertions;
+import dblab.sharing_flatform.dto.member.MemberUpdateRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.List;
 
 import static dblab.sharing_flatform.factory.member.MemberFactory.createMember;
 import static org.assertj.core.api.Assertions.assertThat;

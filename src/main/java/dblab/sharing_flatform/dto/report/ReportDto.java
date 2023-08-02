@@ -19,18 +19,19 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReportDto {
 
+    private Long reportId;
     private String reporter_nickname;
     private ReportType reportType;
     private String content;
     private Long postId;
     private String reported_nickname;
 
-    public ReportDto(String reporter_nickname, ReportType reportType, String content, Long postId, Report report) {
+    public ReportDto(Long reportId, String reporter_nickname, ReportType reportType, String content, Long postId, Report report) {
+        this.reportId = reportId;
         this.reporter_nickname = reporter_nickname;
         this.reportType = reportType;
         this.content = content;
         this.postId = postId;
         this.reported_nickname = (report.getReported() == null ? null : report.getReported().getNickname());
     }
-
 }

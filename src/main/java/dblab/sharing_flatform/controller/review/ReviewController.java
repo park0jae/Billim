@@ -1,12 +1,8 @@
 package dblab.sharing_flatform.controller.review;
 
-import dblab.sharing_flatform.config.security.util.SecurityUtil;
-import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
 import dblab.sharing_flatform.dto.response.Response;
-import dblab.sharing_flatform.dto.review.crud.create.ReviewRequestDto;
-import dblab.sharing_flatform.dto.review.crud.create.ReviewResponseDto;
-import dblab.sharing_flatform.dto.review.crud.read.request.ReviewPagingCondition;
-import dblab.sharing_flatform.exception.auth.AccessDeniedException;
+import dblab.sharing_flatform.dto.review.ReviewRequestDto;
+import dblab.sharing_flatform.dto.review.ReviewPagingCondition;
 import dblab.sharing_flatform.service.review.ReviewService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -16,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 import static dblab.sharing_flatform.config.security.util.SecurityUtil.getCurrentUsernameCheck;
 

@@ -1,4 +1,5 @@
 package dblab.sharing_flatform.dto.report;
+import dblab.sharing_flatform.dto.trade.TradeDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -5,7 +5,7 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.dto.member.MemberDto;
-import dblab.sharing_flatform.dto.member.crud.read.request.MemberPagingCondition;
+import dblab.sharing_flatform.dto.member.MemberPagingCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;

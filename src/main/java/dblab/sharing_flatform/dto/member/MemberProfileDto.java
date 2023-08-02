@@ -1,11 +1,8 @@
 package dblab.sharing_flatform.dto.member;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import dblab.sharing_flatform.domain.member.Member;
-import dblab.sharing_flatform.domain.member.MemberRole;
-import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.domain.role.RoleType;
-import dblab.sharing_flatform.dto.image.profileImage.ProfileImageDto;
+import dblab.sharing_flatform.dto.image.ProfileImageDto;
 import dblab.sharing_flatform.dto.post.PostDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

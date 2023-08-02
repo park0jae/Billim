@@ -6,7 +6,7 @@ import dblab.sharing_flatform.domain.image.PostImage;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.post.PostDto;
-import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
+import dblab.sharing_flatform.dto.post.PostPagingCondition;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
 import dblab.sharing_flatform.repository.image.PostImageRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;

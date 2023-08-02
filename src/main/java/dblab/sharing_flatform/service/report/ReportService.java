@@ -3,22 +3,18 @@ package dblab.sharing_flatform.service.report;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.report.Report;
 import dblab.sharing_flatform.dto.report.PagedReportListDto;
-import dblab.sharing_flatform.dto.report.ReportDto;
 import dblab.sharing_flatform.dto.report.ReportPagingCondition;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
 import dblab.sharing_flatform.exception.report.ReportNotFoundException;
-import dblab.sharing_flatform.dto.report.create.ReportCreateRequestDto;
+import dblab.sharing_flatform.dto.report.ReportCreateRequestDto;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
 import dblab.sharing_flatform.repository.report.ReportRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Slf4j
 @Service

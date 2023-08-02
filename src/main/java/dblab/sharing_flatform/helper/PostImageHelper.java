@@ -2,7 +2,7 @@ package dblab.sharing_flatform.helper;
 
 import dblab.sharing_flatform.domain.image.PostImage;
 import dblab.sharing_flatform.domain.post.Post;
-import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
+import dblab.sharing_flatform.dto.post.PostUpdateRequestDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;

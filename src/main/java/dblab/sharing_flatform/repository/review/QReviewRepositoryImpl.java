@@ -5,12 +5,11 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import dblab.sharing_flatform.domain.review.Review;
 import dblab.sharing_flatform.dto.review.ReviewDto;
-import dblab.sharing_flatform.dto.review.crud.read.request.ReviewPagingCondition;
+import dblab.sharing_flatform.dto.review.ReviewPagingCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -77,6 +76,7 @@ public class QReviewRepositoryImpl extends QuerydslRepositorySupport implements 
                 pageable,
                 query
                         .select(constructor(ReviewDto.class,
+                                review.id,
                                 review.member.nickname,
                                 review.writer.nickname,
                                 review.content))

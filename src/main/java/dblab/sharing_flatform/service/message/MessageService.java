@@ -3,25 +3,19 @@ package dblab.sharing_flatform.service.message;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.message.Message;
 import dblab.sharing_flatform.domain.notification.NotificationType;
-import dblab.sharing_flatform.dto.message.crud.create.MessageCreateRequestDto;
+import dblab.sharing_flatform.dto.message.MessageCreateRequestDto;
 import dblab.sharing_flatform.dto.message.MessageDto;
-import dblab.sharing_flatform.dto.notification.crud.create.NotificationRequestDto;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.message.MessageNotFoundException;
 import dblab.sharing_flatform.helper.NotificationHelper;
-import dblab.sharing_flatform.repository.emitter.EmitterRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.message.MessageRepository;
-import dblab.sharing_flatform.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service

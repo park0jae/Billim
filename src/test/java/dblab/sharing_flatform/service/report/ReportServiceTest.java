@@ -1,18 +1,14 @@
 package dblab.sharing_flatform.service.report;
 
-import dblab.sharing_flatform.domain.category.Category;
 import dblab.sharing_flatform.domain.embedded.report_type.ReportType;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.report.Report;
-import dblab.sharing_flatform.dto.report.create.ReportCreateRequestDto;
+import dblab.sharing_flatform.dto.report.ReportCreateRequestDto;
 import dblab.sharing_flatform.factory.member.MemberFactory;
-import dblab.sharing_flatform.repository.category.CategoryRepository;
-import dblab.sharing_flatform.repository.likepost.LikePostRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
 import dblab.sharing_flatform.repository.report.ReportRepository;
-import dblab.sharing_flatform.service.file.PostFileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,12 +19,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static dblab.sharing_flatform.factory.post.PostFactory.creatPostWithMemberRole;
 import static dblab.sharing_flatform.factory.post.PostFactory.createPost;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 

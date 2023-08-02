@@ -5,7 +5,7 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.post.PostDto;
-import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
+import dblab.sharing_flatform.dto.post.PostPagingCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +18,6 @@ import java.util.List;
 
 import static com.querydsl.core.types.Projections.constructor;
 import static dblab.sharing_flatform.domain.post.QPost.post;
-import static dblab.sharing_flatform.domain.review.QReview.review;
 
 
 @Repository

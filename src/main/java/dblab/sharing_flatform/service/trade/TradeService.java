@@ -2,8 +2,10 @@ package dblab.sharing_flatform.service.trade;
 
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.trade.Trade;
-import dblab.sharing_flatform.dto.trade.crud.create.TradeRequestDto;
-import dblab.sharing_flatform.dto.trade.crud.create.TradeResponseDto;
+import dblab.sharing_flatform.dto.trade.PagedTradeListDto;
+import dblab.sharing_flatform.dto.trade.TradePagingCondition;
+import dblab.sharing_flatform.dto.trade.TradeRequestDto;
+import dblab.sharing_flatform.dto.trade.TradeResponseDto;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
 import dblab.sharing_flatform.exception.trade.ExistTradeException;
@@ -44,7 +46,6 @@ public class TradeService {
 
         tradeRepository.save(trade);
         return TradeResponseDto.toDto(trade);
-
     }
 
     @Transactional
@@ -58,8 +59,16 @@ public class TradeService {
         return TradeResponseDto.toDto(tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new));
     }
 
-    public List<TradeResponseDto> findAllTrade() {
-        return tradeRepository.findAll().stream().map(trade -> TradeResponseDto.toDto(trade)).collect(Collectors.toList());
+    public PagedTradeListDto findAllByCond(TradePagingCondition cond) {
+        return PagedTradeListDto.toDto(tradeRepository.findAllByCond(cond));
+    }
+
+    public PagedTradeListDto findAllByMyRendTrade(TradePagingCondition cond) {
+        return PagedTradeListDto.toDto((tradeRepository.findAllByMyRend(cond)));
+    }
+
+    public PagedTradeListDto findAllByMyBorrowTrade(TradePagingCondition cond) {
+        return PagedTradeListDto.toDto((tradeRepository.findAllByMyBorrow(cond)));
     }
 
     @Transactional
@@ -72,8 +81,10 @@ public class TradeService {
         tradeRepository.findByPostId(id).ifPresent(e -> {
             throw new ExistTradeException();
         });
+
         if (render.getNickname().equals(borrower.getNickname())) {
             throw new ImpossibleCreateTradeException();
         }
     }
+
 }

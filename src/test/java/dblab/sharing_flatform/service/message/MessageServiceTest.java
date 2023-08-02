@@ -2,14 +2,10 @@ package dblab.sharing_flatform.service.message;
 
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.message.Message;
-import dblab.sharing_flatform.dto.message.crud.create.MessageCreateRequestDto;
+import dblab.sharing_flatform.dto.message.MessageCreateRequestDto;
 import dblab.sharing_flatform.dto.message.MessageDto;
-import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.message.MessageNotFoundException;
-import dblab.sharing_flatform.factory.member.MemberFactory;
-import dblab.sharing_flatform.factory.message.MessageFactory;
 import dblab.sharing_flatform.helper.NotificationHelper;
-import dblab.sharing_flatform.repository.emitter.EmitterRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.message.MessageRepository;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,24 +1,15 @@
 package dblab.sharing_flatform.service.member;
 
-import dblab.sharing_flatform.domain.embedded.address.Address;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.member.MemberDto;
 import dblab.sharing_flatform.dto.member.MemberPrivateDto;
 import dblab.sharing_flatform.dto.member.MemberProfileDto;
-import dblab.sharing_flatform.dto.member.crud.read.request.MemberPagingCondition;
-import dblab.sharing_flatform.dto.member.crud.read.response.PagedMemberListDto;
-import dblab.sharing_flatform.dto.member.crud.update.MemberUpdateRequestDto;
-import dblab.sharing_flatform.dto.post.PostDto;
-import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
-import dblab.sharing_flatform.dto.post.crud.read.response.PagedPostListDto;
+import dblab.sharing_flatform.dto.member.MemberPagingCondition;
+import dblab.sharing_flatform.dto.member.MemberUpdateRequestDto;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
-import dblab.sharing_flatform.factory.category.CategoryFactory;
-import dblab.sharing_flatform.factory.item.ItemFactory;
-import dblab.sharing_flatform.factory.post.PostFactory;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
-import dblab.sharing_flatform.repository.post.QPostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

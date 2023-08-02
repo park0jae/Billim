@@ -3,10 +3,8 @@ package dblab.sharing_flatform.service.trade;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.trade.Trade;
-import dblab.sharing_flatform.dto.trade.crud.create.TradeRequestDto;
-import dblab.sharing_flatform.dto.trade.crud.create.TradeResponseDto;
-import dblab.sharing_flatform.exception.trade.ExistTradeException;
-import dblab.sharing_flatform.exception.trade.ImpossibleCreateTradeException;
+import dblab.sharing_flatform.dto.trade.TradeRequestDto;
+import dblab.sharing_flatform.dto.trade.TradeResponseDto;
 import dblab.sharing_flatform.exception.trade.TradeNotFoundException;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
@@ -15,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -27,7 +24,6 @@ import java.util.Optional;
 
 import static dblab.sharing_flatform.factory.trade.TradeFactory.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 

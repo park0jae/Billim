@@ -1,11 +1,10 @@
 package dblab.sharing_flatform.controller.post;
 
-import dblab.sharing_flatform.dto.post.crud.create.PostCreateRequestDto;
-import dblab.sharing_flatform.dto.post.crud.read.request.PostPagingCondition;
-import dblab.sharing_flatform.dto.post.crud.update.PostUpdateRequestDto;
+import dblab.sharing_flatform.dto.post.PostCreateRequestDto;
+import dblab.sharing_flatform.dto.post.PostPagingCondition;
+import dblab.sharing_flatform.dto.post.PostUpdateRequestDto;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.service.post.PostService;
-import dblab.sharing_flatform.config.security.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
