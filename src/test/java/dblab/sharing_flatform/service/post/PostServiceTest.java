@@ -173,7 +173,6 @@ public class PostServiceTest {
 
         PostPagingCondition cond = new PostPagingCondition(0, 10, null, "title 1", null);
 
-        // 이 부분을 변경하여 title이 "title 1"인 포스트만 가져오도록 하세요.
         given(postRepository.findAllByCategoryAndTitle(cond)).willReturn(new PageImpl<>(List.of(PostDto.toDto(posts.get(0))), PageRequest.of(cond.getPage(), cond.getSize()), 1));
 
         // When

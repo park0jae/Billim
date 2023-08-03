@@ -5,6 +5,8 @@ import dblab.sharing_flatform.domain.message.Message;
 import dblab.sharing_flatform.domain.notification.NotificationType;
 import dblab.sharing_flatform.dto.message.MessageCreateRequestDto;
 import dblab.sharing_flatform.dto.message.MessageDto;
+import dblab.sharing_flatform.dto.message.MessagePagingCondition;
+import dblab.sharing_flatform.dto.message.PagedMessageListDto;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.message.MessageNotFoundException;
 import dblab.sharing_flatform.helper.NotificationHelper;
@@ -39,32 +41,12 @@ public class MessageService {
         return MessageDto.toDto(message);
     }
 
-
-    public List<MessageDto> findSendMessage(String senderName){
-        List<Message> messages = messageRepository.findAllBySendMember(senderName);
-
-        return messages.stream().map(message-> MessageDto.toDto(message)).collect(Collectors.toList());
+    public PagedMessageListDto findSendMessage(MessagePagingCondition cond){
+        return PagedMessageListDto.toDto(messageRepository.findAllBySendMember(cond));
     }
 
-    public List<MessageDto> findReceiveMessage(String ReceiverName){
-        List<Message> messages = messageRepository.findAllByReceiverMember(ReceiverName);
-
-        return messages.stream().map(message -> MessageDto.toDto(message)).collect(Collectors.toList());
-
-    }
-
-    public List<MessageDto> findSendMessageToMember(String username, String receiverNickname){
-        memberRepository.findByNickname(receiverNickname).orElseThrow(MemberNotFoundException::new);
-        Member sender = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
-        List<Message> messages = messageRepository.findAllBySendAndReceiverMembers(sender.getNickname(), receiverNickname);
-        return messages.stream().map(message -> MessageDto.toDto(message)).collect(Collectors.toList());
-    }
-
-    public List<MessageDto> findReceiveMessageFromMember(String username, String senderNickName){
-        memberRepository.findByNickname(senderNickName).orElseThrow(MemberNotFoundException::new);
-        Member receiver = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
-        List<Message> messages = messageRepository.findAllBySendAndReceiverMembers(senderNickName, receiver.getNickname());
-        return messages.stream().map(message -> MessageDto.toDto(message)).collect(Collectors.toList());
+    public PagedMessageListDto findReceiveMessage(MessagePagingCondition cond){
+        return PagedMessageListDto.toDto(messageRepository.findAllByReceiverMember(cond));
     }
 
     @Transactional

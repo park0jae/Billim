@@ -18,7 +18,7 @@ public class PostDto {
 
     private Long id;
     private String title;
-    private String writer;
+    private String nickname;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdTime;

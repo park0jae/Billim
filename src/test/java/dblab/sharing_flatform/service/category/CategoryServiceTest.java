@@ -1,8 +1,8 @@
 package dblab.sharing_flatform.service.category;
 
 import dblab.sharing_flatform.domain.category.Category;
-import dblab.sharing_flatform.dto.category.crud.CategoryDto;
-import dblab.sharing_flatform.dto.category.crud.CategoryCreateRequestDto;
+import dblab.sharing_flatform.dto.category.CategoryCreateRequestDto;
+import dblab.sharing_flatform.dto.category.CategoryDto;
 import dblab.sharing_flatform.repository.category.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

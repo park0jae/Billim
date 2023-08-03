@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface MessageRepository extends JpaRepository<Message, Long> {
+public interface MessageRepository extends JpaRepository<Message, Long>, QMessageRepository {
 
     @Query("select m from Message m join fetch m.sendMember sm where sm.username =:senderName")
     List<Message> findAllBySendMember(@Param("senderName") String senderName);
