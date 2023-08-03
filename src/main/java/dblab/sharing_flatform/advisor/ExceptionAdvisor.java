@@ -4,6 +4,7 @@ import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.exception.auth.ValidateTokenException;
 import dblab.sharing_flatform.exception.auth.*;
 import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
+import dblab.sharing_flatform.exception.chat.ChatRoomNotFoundException;
 import dblab.sharing_flatform.exception.comment.CommentNotFoundException;
 import dblab.sharing_flatform.exception.comment.RootCommentNotFoundException;
 import dblab.sharing_flatform.exception.file.FileUploadFailureException;
@@ -335,6 +336,15 @@ public class ExceptionAdvisor {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response tokenNotFoundException(TokenNotFoundException e) {
         return getFailureResponse("NOT_FOUND.CODE", "TOKEN_NOT_FOUND.MSG");
+    }
+
+    /**
+     * ChatRoom Exception
+     */
+    @ExceptionHandler(ChatRoomNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response chatRoomNotFoundException(ChatRoomNotFoundException e){
+        return getFailureResponse("NOT_FOUND.CODE", "CHATROOM_NOT_FOUND_MSG");
     }
 
     private Response getFailureResponse(String code, String msg) {
