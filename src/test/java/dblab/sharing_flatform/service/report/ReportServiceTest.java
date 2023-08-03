@@ -57,10 +57,7 @@ class ReportServiceTest {
     public void createPostReportTest() throws Exception {
         //given
         ReportCreateRequestDto requestDto = new ReportCreateRequestDto(ReportType.POST_REPORT, post.getId(), "content");
-
         given(memberRepository.findByUsername(reporter.getUsername())).willReturn(Optional.ofNullable(reporter));
-        given(postRepository.findById(requestDto.getPostId())).willReturn(Optional.ofNullable(post));
-
 
         //when
         reportService.create(requestDto, reporter.getUsername());

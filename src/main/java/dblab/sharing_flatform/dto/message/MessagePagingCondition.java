@@ -1,10 +1,9 @@
-package dblab.sharing_flatform.dto.trade;
+package dblab.sharing_flatform.dto.message;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.convert.DataSizeUnit;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -12,7 +11,8 @@ import javax.validation.constraints.PositiveOrZero;
 
 @Data
 @AllArgsConstructor
-public class TradePagingCondition {
+public class MessagePagingCondition {
+
     @NotNull(message = "페이지 번호를 입력해주세요.")
     @PositiveOrZero(message = "0 이상의 올바른 페이지 번호를 입력해주세요.")
     private Integer page;
@@ -22,13 +22,13 @@ public class TradePagingCondition {
     private Integer size;
 
     // 검색 조건
-    private Long postId; // 게시글 ID
-    private String renderMember;
-    private String borrowerMember;
-    private Boolean tradeComplete; // 거래 완료 여부
-    private String categoryName; // 카테고리 이름
+    private String senderUsername;
+    private String receiverUsername;
 
-    public TradePagingCondition() {
+    private String senderName;
+    private String receiverName;
+
+    public MessagePagingCondition() {
         this.page = getDefaultPageNum();
         this.size = getDefaultPageSize();
     }

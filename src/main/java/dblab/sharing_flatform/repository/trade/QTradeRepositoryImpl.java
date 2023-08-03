@@ -61,12 +61,12 @@ public class QTradeRepositoryImpl extends QuerydslRepositorySupport implements Q
     private Predicate createPredicateByCurrentNicknameBorrow(TradePagingCondition cond) {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(trade.borrowerMember.username.eq(cond.getBorrowerMember()));
-
         return builder;
     }
 
     private Predicate createPredicate(TradePagingCondition cond) {
         BooleanBuilder builder = new BooleanBuilder();
+
         if (StringUtils.hasText(cond.getRenderMember())) {
             builder.and(trade.renderMember.nickname.eq(cond.getRenderMember()));
         }
@@ -75,6 +75,12 @@ public class QTradeRepositoryImpl extends QuerydslRepositorySupport implements Q
         }
         if (StringUtils.hasText(cond.getCategoryName())) {
             builder.and(trade.post.category.name.eq(cond.getCategoryName()));
+        }
+        if (cond.getTradeComplete() != null) {
+            builder.and(trade.tradeComplete.eq(cond.getTradeComplete()));
+        }
+        if (cond.getPostId() != null) {
+            builder.and(trade.post.id.eq(cond.getPostId()));
         }
         return builder;
     }
