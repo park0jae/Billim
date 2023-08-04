@@ -29,7 +29,6 @@ public class KakaoUserInfo implements OAuth2UserInfo {
         ObjectMapper objectMapper = new ObjectMapper();
         Object kakaoAccount = attributes.get("kakao_account");
         Map<String, Object> account = objectMapper.convertValue(kakaoAccount, new TypeReference<Map<String, Object>>() {});
-
         return (String) account.get("email");
     }
 
