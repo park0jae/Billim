@@ -1,6 +1,7 @@
 package dblab.sharing_flatform.dto.member;
 
 import dblab.sharing_flatform.domain.embedded.address.Address;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @ApiModel(value = "회원가입 요청")
+@EqualsAndHashCode(callSuper=true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

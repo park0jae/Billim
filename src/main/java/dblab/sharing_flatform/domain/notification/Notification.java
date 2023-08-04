@@ -12,7 +12,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 
 @Getter
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "id", callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Notification extends BaseTime {
