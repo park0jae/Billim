@@ -1,5 +1,7 @@
 package dblab.sharing_flatform.config.oauth;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dblab.sharing_flatform.config.oauth.provider.GoogleUserInfo;
 import dblab.sharing_flatform.config.oauth.provider.KakaoUserInfo;
 import dblab.sharing_flatform.config.oauth.provider.NaverUserInfo;
@@ -14,14 +16,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -48,7 +47,10 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
                 oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
                 break;
             case "naver":
-                oAuth2UserInfo = new NaverUserInfo((Map<String, Object>) oAuth2User.getAttributes().get("response"));
+                ObjectMapper objectMapper = new ObjectMapper();
+                Object naverAccount = oAuth2User.getAttributes().get("response");
+                Map<String, Object> account = objectMapper.convertValue(naverAccount, new TypeReference<Map<String, Object>>() {});
+                oAuth2UserInfo = new NaverUserInfo(account);
                 break;
             case "google":
                 oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
