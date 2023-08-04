@@ -91,6 +91,9 @@ dependencies {
 	implementation 'org.webjars:sockjs-client:1.0.2'
 	implementation 'org.webjars:stomp-websocket:2.3.3'
 
+	// mysql 추가 시작
+	runtimeOnly 'mysql:mysql-connector-java:8.0.32'
+	// mysql 추가 끝
 }
 
 tasks.named('test') {

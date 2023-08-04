@@ -15,7 +15,6 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class ChatRoomController {
 
-
     @GetMapping("/chat/{username}")
     public String chat(@PathVariable String username, Model model){
         model.addAttribute("username", username);
