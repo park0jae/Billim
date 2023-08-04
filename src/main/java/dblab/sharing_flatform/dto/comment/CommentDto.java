@@ -28,7 +28,7 @@ public class CommentDto {
     @ApiModelProperty(value = "자식 댓글 리스트")
     private List<CommentDto> children;
 
-
+    @SuppressWarnings("unchecked")
     public static List<CommentDto> toDtoList(List<Comment> replies) {
         FlatListToHierarchicalHelper helper = FlatListToHierarchicalHelper.newInstance(
                 replies,

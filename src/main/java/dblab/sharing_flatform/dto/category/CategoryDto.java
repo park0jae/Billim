@@ -26,6 +26,7 @@ public class CategoryDto {
     @ApiModelProperty(value = "자식 카테고리 리스트")
     private List<CategoryDto> children;
 
+    @SuppressWarnings("unchecked")
     public static List<CategoryDto> toList(List<Category> categoryList) {
         FlatListToHierarchicalHelper helper = FlatListToHierarchicalHelper.newInstance(
                 categoryList,

@@ -2,6 +2,7 @@ package dblab.sharing_flatform.config.oauth.provider;
 
 import dblab.sharing_flatform.domain.embedded.address.Address;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class KakaoUserInfo implements OAuth2UserInfo {
@@ -24,7 +25,7 @@ public class KakaoUserInfo implements OAuth2UserInfo {
 
     @Override
     public String getEmail() {
-        Map<String,Object> account = (Map<String, Object>) attributes.get("kakao_account");
+        Map<String, Object> account = (HashMap<String, Object>) attributes.get("kakao_account");
         return (String) account.get("email");
     }
 
