@@ -78,7 +78,7 @@ public class OAuthService {
                 result += line;
             }
 
-            //Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
+            // Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
             JsonElement element = JsonParser.parseString(result);
             access_Token = element.getAsJsonObject().get("access_token").getAsString();
 
