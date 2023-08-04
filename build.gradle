@@ -76,7 +76,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	// thymeleaf 추가 끝
 
-	implementation 'com.google.code.gson:gson'
+	implementation 'com.google.code.gson:gson:2.9.0'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
@@ -88,12 +88,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	// websocket 추가 끝
 
-	implementation 'org.webjars:sockjs-client:1.0.2'
-	implementation 'org.webjars:stomp-websocket:2.3.3'
-
 	// mysql 추가 시작
 	runtimeOnly 'mysql:mysql-connector-java:8.0.32'
 	// mysql 추가 끝
+
+	//
+	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+	//
 }
 
 tasks.named('test') {
