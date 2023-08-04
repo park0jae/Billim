@@ -1,6 +1,8 @@
 package dblab.sharing_flatform.config.oauth.provider;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dblab.sharing_flatform.domain.embedded.address.Address;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.Map;
 
@@ -24,7 +26,10 @@ public class KakaoUserInfo implements OAuth2UserInfo {
 
     @Override
     public String getEmail() {
-        Map<String,Object> account = (Map<String, Object>) attributes.get("kakao_account");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Object kakaoAccount = attributes.get("kakao_account");
+        Map<String, Object> account = objectMapper.convertValue(kakaoAccount, new TypeReference<Map<String, Object>>() {});
+
         return (String) account.get("email");
     }
 
