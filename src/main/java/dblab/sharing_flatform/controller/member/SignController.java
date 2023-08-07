@@ -45,7 +45,6 @@ public class SignController {
 
     @ApiOperation(value = "비밀번호 재설정", notes = "비밀번호를 재설정합니다.") // 2
     @PostMapping("/reset/password")
-    @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public Response resetPassword(@Valid @ModelAttribute PasswordResetRequestDto passwordResetRequestDto){
         signService.resetPassword(passwordResetRequestDto);
@@ -53,24 +52,24 @@ public class SignController {
     }
 
     @ApiOperation(value = "회원가입을 위한 이메일 인증" , notes = "회원가입에서 이메일 인증을 위한 엔드포인트")
-    @ResponseBody
     @PostMapping("/sign-up/email")
+    @ResponseStatus(HttpStatus.OK)
     public Response signUpMailConfirm(@RequestParam(name = "email") String email)  {
         mailService.sendSignUpMail(email);
         return Response.success();
     }
 
     @ApiOperation(value = "비밀번호 재설정을 위한 이메일 인증" , notes = "비밀번호 재설정 페이지에서 이메일 인증을 위한 엔드포인트")
-    @ResponseBody
     @PostMapping("/reset-password/mail")
+    @ResponseStatus(HttpStatus.OK)
     public Response resetPasswordMailConfirm(@RequestParam(name = "email") String email)  {
         mailService.sendResetPasswordMail(email);
         return Response.success();
     }
 
     @ApiOperation(value = "카카오 로그인", notes = "OAuth2.0 카카오로 소셜 로그인을 진행합니다.")
-    @ResponseBody
     @GetMapping("/oauth2/callback/kakao")
+    @ResponseStatus(HttpStatus.OK)
     public Response oauth2Login(@RequestParam String code,
                                 @Value("${spring.security.oauth2.client.registration.kakao.client-id}") String clientId,
                                 @Value("${spring.security.oauth2.client.registration.kakao.client-secret}") String clientSecret,
@@ -83,8 +82,8 @@ public class SignController {
 
 
     @ApiOperation(value = "구글 로그인", notes = "OAuth2.0 구글로 소셜 로그인을 진행합니다.")
-    @ResponseBody
     @GetMapping("/oauth2/callback/google")
+    @ResponseStatus(HttpStatus.OK)
     public Response oauth2LoginByGoogle(@RequestParam String code,
                                       @Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId,
                                       @Value("${spring.security.oauth2.client.registration.google.client-secret}") String clientSecret,
@@ -96,8 +95,8 @@ public class SignController {
     }
 
     @ApiOperation(value = "네이버 로그인", notes = "OAuth2.0 네이버로 소셜 로그인을 진행합니다.")
-    @ResponseBody
     @GetMapping("/oauth2/callback/naver")
+    @ResponseStatus(HttpStatus.OK)
     public Response oauth2LoginByNaver(@RequestParam String code,
                                      @Value("${spring.security.oauth2.client.registration.naver.client-id}") String clientId,
                                      @Value("${spring.security.oauth2.client.registration.naver.client-secret}") String clientSecret,
