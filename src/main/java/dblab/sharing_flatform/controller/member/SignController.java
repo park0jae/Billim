@@ -13,14 +13,12 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @Api(value = "Sign Controller", tags = "Sign")
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class SignController {
     private final SignService signService;
@@ -52,14 +50,6 @@ public class SignController {
     public Response resetPassword(@Valid @ModelAttribute PasswordResetRequestDto passwordResetRequestDto){
         signService.resetPassword(passwordResetRequestDto);
         return Response.success();
-    }
-
-    @ApiOperation(value = "OAuth2.0 메인 페이지", notes = "OAuth2.0 로그인을 위한 메인 페이지입니다.")
-    @GetMapping("/")
-    public String mainPage(@RequestParam(required = false) String username, @RequestParam(required = false) String code,  Model model) {
-        model.addAttribute("username", username);
-        model.addAttribute("code", code);
-        return "/index";
     }
 
     @ApiOperation(value = "회원가입을 위한 이메일 인증" , notes = "회원가입에서 이메일 인증을 위한 엔드포인트")
@@ -127,6 +117,4 @@ public class SignController {
             return signService.oauth2Login(req);
         }
     }
-
-
 }
