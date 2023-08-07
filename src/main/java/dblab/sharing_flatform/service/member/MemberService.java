@@ -3,12 +3,7 @@ package dblab.sharing_flatform.service.member;
 
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
-import dblab.sharing_flatform.dto.member.MemberPrivateDto;
-import dblab.sharing_flatform.dto.member.MemberProfileDto;
-import dblab.sharing_flatform.dto.member.MemberPagingCondition;
-import dblab.sharing_flatform.dto.member.PagedMemberListDto;
-import dblab.sharing_flatform.dto.member.MemberUpdateRequestDto;
-import dblab.sharing_flatform.dto.member.OAuthMemberUpdateRequestDto;
+import dblab.sharing_flatform.dto.member.*;
 import dblab.sharing_flatform.dto.post.PostDto;
 import dblab.sharing_flatform.exception.auth.DuplicateNicknameException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
@@ -16,7 +11,6 @@ import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
 import dblab.sharing_flatform.service.file.MemberFileService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

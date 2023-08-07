@@ -14,7 +14,6 @@ import dblab.sharing_flatform.exception.oauth.OAuthUserNotFoundException;
 import dblab.sharing_flatform.exception.oauth.SocialAgreementException;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -23,9 +22,12 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+<<<<<<< HEAD
 import static dblab.sharing_flatform.config.oauth.provider.OAuthInfo.*;
 
 @Slf4j
+=======
+>>>>>>> 76279c3dc32399b033232fee412b10c6178590aa
 @Service
 @RequiredArgsConstructor
 public class OAuthService {
@@ -181,7 +183,6 @@ public class OAuthService {
         ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 
         if(response.getStatusCode() == HttpStatus.OK){
-            log.info("unlink = {}", response.getBody());
             return;
         }
         throw new OAuthCommunicationException();

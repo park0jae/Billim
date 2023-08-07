@@ -2,7 +2,6 @@ package dblab.sharing_flatform.service.file;
 
 
 import dblab.sharing_flatform.exception.file.FileUploadFailureException;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 
 @Service
-@Slf4j
 public class PostFileService {
 
     private static final String UPLOAD_POST_IMAGE_LOCATION = "${upload.post.image.location}";

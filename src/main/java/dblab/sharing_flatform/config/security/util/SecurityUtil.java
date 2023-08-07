@@ -1,34 +1,26 @@
 package dblab.sharing_flatform.config.security.util;
 
 import dblab.sharing_flatform.config.security.details.MemberDetails;
-import dblab.sharing_flatform.domain.member.Member;
-import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.domain.role.RoleType;
 import dblab.sharing_flatform.exception.auth.AccessDeniedException;
 import dblab.sharing_flatform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_flatform.exception.auth.IllegalAuthenticationException;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import javax.swing.text.html.Option;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
-@Slf4j
 public class SecurityUtil {
 
     public static Optional<String> getCurrentUsername(){
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if(authentication == null){
-            log.info("Security Context에 인증정보가 없습니다.");
             return Optional.empty();
         }
 
@@ -46,7 +38,6 @@ public class SecurityUtil {
     public static Optional<String> getCurrentUserId(){
         Authentication authentication = getAuthenticationFromContext();
         if(authentication == null){
-            log.info("No Authentication Found");
             return Optional.empty();
         }
         Object principal = authentication.getPrincipal();

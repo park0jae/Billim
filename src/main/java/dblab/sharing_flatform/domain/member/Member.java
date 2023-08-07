@@ -5,12 +5,14 @@ import dblab.sharing_flatform.domain.image.ProfileImage;
 import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.dto.member.MemberUpdateRequestDto;
 import dblab.sharing_flatform.dto.member.OAuthMemberUpdateRequestDto;
-import lombok.*;
-import org.springframework.lang.Nullable;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
@@ -25,18 +27,21 @@ public class Member {
 
     @Column(nullable = false, updatable = false)
     private String username;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private String phoneNumber;
-
-    @Nullable
     private String nickname;
     @Embedded
-    @Nullable
     private Address address;
+
+    @Column(nullable = false)
     private String provider;
+
+    @Column(nullable = false)
     private String introduce;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<MemberRole> roles = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -49,7 +54,8 @@ public class Member {
         this.nickname = nickname;
         this.phoneNumber = phoneNumber;
         this.address = address;
-        this.provider = provider;
+        this.provider = "None";
+        this.introduce = "자기소개가 없습니다.";
         this.profileImage = null;
         addRoles(roles);
     }
@@ -65,7 +71,6 @@ public class Member {
         this.phoneNumber = memberUpdateRequestDto.getPhoneNumber();
         this.address = memberUpdateRequestDto.getAddress();
         this.introduce = memberUpdateRequestDto.getIntroduce();
-
         String existedImageName = updateProfileImage(memberUpdateRequestDto.getImage());
 
         return existedImageName;

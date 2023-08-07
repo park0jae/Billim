@@ -14,9 +14,9 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class NotificationHelper {
-
     private final EmitterRepository emitterRepository;
     private final ApplicationEventPublisher eventPublisher;
+
     public void notificationIfSubscribe(Member sendMember, Member member, NotificationType notificationType, String msg) {
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartsWithByMemberId(String.valueOf(member.getId()));
         if(!emitters.isEmpty()){

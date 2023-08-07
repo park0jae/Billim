@@ -17,10 +17,10 @@ public class EmailAuth {
     @Column(name = "email_key", nullable = false)
     private String key;
 
-    @Column(name = "email", nullable = false)
+    @Column(nullable = false)
     private String email;
 
-    @Column(name = "purpose", nullable = false)
+    @Column(nullable = false)
     private String purpose;
 
     public EmailAuth(String key, String email, String purpose) {

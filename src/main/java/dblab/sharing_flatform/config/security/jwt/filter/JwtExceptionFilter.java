@@ -3,7 +3,6 @@ package dblab.sharing_flatform.config.security.jwt.filter;
 import dblab.sharing_flatform.exception.auth.ValidateTokenException;
 import dblab.sharing_flatform.exception.guard.GuardException;
 import dblab.sharing_flatform.exception.token.TokenNotFoundException;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-@Slf4j
 public class JwtExceptionFilter extends OncePerRequestFilter {
     private static final String EXCEPTION_INVALID_TOKEN = "/exception/invalid-token";
     private static final String EXCEPTION_GUARD = "/exception/guard";

@@ -1,10 +1,6 @@
 package dblab.sharing_flatform.controller.member;
 
-import dblab.sharing_flatform.dto.member.OAuth2MemberCreateRequestDto;
-import dblab.sharing_flatform.dto.member.PasswordResetRequestDto;
-import dblab.sharing_flatform.dto.member.LogInResponseDto;
-import dblab.sharing_flatform.dto.member.LoginRequestDto;
-import dblab.sharing_flatform.dto.member.MemberCreateRequestDto;
+import dblab.sharing_flatform.dto.member.*;
 import dblab.sharing_flatform.dto.oauth.AccessTokenRequestDto;
 import dblab.sharing_flatform.dto.response.Response;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
@@ -15,7 +11,6 @@ import dblab.sharing_flatform.service.oauth.OAuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -25,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @Api(value = "Sign Controller", tags = "Sign")
-@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class SignController {

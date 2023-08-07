@@ -23,36 +23,37 @@ repositories {
 
 dependencies {
 
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 	// spring data jpa 추가 시작
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	// spring data jpa 추가 끝
-
 
 	// validation 추가 시작
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	// validation 추가 끝
 
+	// OAuth2 추가 시작
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    compileOnly 'org.projectlombok:lombok'
+	// OAuth2 추가 끝
 
 	// spring web 추가 시작
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	// spring web  끝
 
+	// 테스트 전용 DB H2 추가 시작
 	runtimeOnly 'com.h2database:h2'
-	// h2 데이터베이스 끝
+	// 테스트 전용 DB H2 추가 끝
 
 	// lombok 추가 시작
 	annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
 	// lombok 추가 끝
 
-
 	// 시큐리티 추가 시작
     implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.springframework.security:spring-security-test'
 	// 시큐리티 추가 끝
-
 
 	// JWT 추가
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
@@ -76,31 +77,24 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	// thymeleaf 추가 끝
 
+	// gson Parser 추가 시작
 	implementation 'com.google.code.gson:gson:2.9.0'
-
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// gson Parser 추가 끝
 
 	// mail 추가 시작
 	implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.1'
 	// mail 추가 끝
 
-	// websocket 추가 시작
-	implementation 'org.springframework.boot:spring-boot-starter-websocket'
-	// websocket 추가 끝
-
 	// mysql 추가 시작
 	runtimeOnly 'mysql:mysql-connector-java:8.0.32'
 	// mysql 추가 끝
 
-	//
+	// EqualsAndHash build Error solver 추가 시작
 	implementation 'com.google.code.findbugs:jsr305:3.0.2'
-	//
+	// EqualsAndHash build Error solver 추가 시작 끝
+
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
-}
-
-tasks.withType(JavaCompile) {
-	options.compilerArgs += ["-Xlint:unchecked"]
 }
