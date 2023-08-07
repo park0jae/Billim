@@ -21,13 +21,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-<<<<<<< HEAD
 import static dblab.sharing_flatform.config.oauth.provider.OAuthInfo.*;
 
-@Slf4j
-=======
->>>>>>> 76279c3dc32399b033232fee412b10c6178590aa
 @Service
 @RequiredArgsConstructor
 public class OAuthService {
