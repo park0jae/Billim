@@ -90,14 +90,18 @@ public class SignService {
     @Transactional
     public LogInResponseDto oauth2Login(OAuth2MemberCreateRequestDto requestDto) {
         List<String> tokens = jwtLoginRequest(new LoginRequestDto(requestDto.getEmail(), requestDto.getEmail()));
-        return LogInResponseDto.toDto(tokens.get(0), tokens.get(1));
+        String accessToken = tokens.get(0);
+        String refreshToken = tokens.get(1);
+        return LogInResponseDto.toDto(accessToken, refreshToken);
     }
 
     @Transactional
     public LogInResponseDto login(LoginRequestDto requestDto) {
         memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(MemberNotFoundException::new);
         List<String> tokens = jwtLoginRequest(requestDto);
-        return LogInResponseDto.toDto(tokens.get(0), tokens.get(1));
+        String accessToken = tokens.get(0);
+        String refreshToken = tokens.get(1);
+        return LogInResponseDto.toDto(accessToken, refreshToken);
     }
 
     @Transactional

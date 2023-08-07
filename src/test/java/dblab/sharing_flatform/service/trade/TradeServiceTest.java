@@ -3,7 +3,6 @@ package dblab.sharing_flatform.service.trade;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.trade.Trade;
-import dblab.sharing_flatform.dto.post.PostDto;
 import dblab.sharing_flatform.dto.trade.*;
 import dblab.sharing_flatform.exception.trade.ExistTradeException;
 import dblab.sharing_flatform.exception.trade.ImpossibleCreateTradeException;
@@ -27,7 +26,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static dblab.sharing_flatform.factory.trade.TradeFactory.*;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -163,6 +163,7 @@ public class TradeServiceTest {
 
         given(memberRepository.findByUsername(trade.getRenderMember().getUsername())).willReturn(Optional.of(renderMember));
         given(memberRepository.findByNickname(trade.getBorrowerMember().getNickname())).willReturn(Optional.of(borrowerMember));
+        given(postRepository.findById(trade.getPost().getId())).willReturn(Optional.of(post));
         given(tradeRepository.findByPostId(post.getId())).willReturn(Optional.of(trade));
 
         // When & Then
@@ -178,6 +179,7 @@ public class TradeServiceTest {
 
         given(memberRepository.findByUsername(trade.getRenderMember().getUsername())).willReturn(Optional.of(renderMember));
         given(memberRepository.findByNickname(trade.getBorrowerMember().getNickname())).willReturn(Optional.of(renderMember));
+        given(postRepository.findById(trade.getPost().getId())).willReturn(Optional.of(post));
 
         // When & Then
         assertThatThrownBy(() -> tradeService.createTrade(tradeRequestDto, trade.getPost().getId(), renderMember.getUsername())).isInstanceOf(ImpossibleCreateTradeException.class);

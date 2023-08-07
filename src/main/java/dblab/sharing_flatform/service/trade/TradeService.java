@@ -1,6 +1,7 @@
 package dblab.sharing_flatform.service.trade;
 
 import dblab.sharing_flatform.domain.member.Member;
+import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.trade.Trade;
 import dblab.sharing_flatform.dto.trade.PagedTradeListDto;
 import dblab.sharing_flatform.dto.trade.TradePagingCondition;
@@ -31,13 +32,14 @@ public class TradeService {
     public TradeResponseDto createTrade(TradeRequestDto tradeRequestDto, Long id, String username){
         Member render = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
         Member borrower = memberRepository.findByNickname(tradeRequestDto.getBorrowerName()).orElseThrow(MemberNotFoundException::new);
+        Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
 
         validateCreateTrade(id, borrower, render);
 
         Trade trade = new Trade(render, borrower,
                         tradeRequestDto.getStartDate(),
                         tradeRequestDto.getEndDate(),
-                        postRepository.findById(id).orElseThrow(PostNotFoundException::new));
+                        post);
 
         tradeRepository.save(trade);
         return TradeResponseDto.toDto(trade);
