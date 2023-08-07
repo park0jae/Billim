@@ -82,7 +82,7 @@ public class PostServiceTest {
         given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
 
         // when
-        PostCreateResponseDto result = postService.create(postCreateRequestDto, member.getUsername());
+        PostCreateResponseDto result = postService.createPost(postCreateRequestDto, member.getUsername());
 
         assertThat(result.getId()).isEqualTo(post.getId());
     }
@@ -96,7 +96,7 @@ public class PostServiceTest {
         given(postRepository.findById(post.getId())).willReturn(Optional.of(post));
 
         // When
-        PostUpdateResponseDto result = postService.update(post.getId(), postUpdateRequestDto);
+        PostUpdateResponseDto result = postService.updatePost(post.getId(), postUpdateRequestDto);
 
         // Then
         assertThat(result.getTitle()).isEqualTo("업데이트 타이틀");
@@ -109,7 +109,7 @@ public class PostServiceTest {
         given(postRepository.findById(post.getId())).willReturn(Optional.of(post));
 
         // When
-        postService.delete(post.getId());
+        postService.deletePostByPostId(post.getId());
 
         // Then
         verify(postRepository).delete(post);
@@ -122,7 +122,7 @@ public class PostServiceTest {
         given(postRepository.findById(post.getId())).willReturn(Optional.of(post));
 
         // When
-        PostReadResponseDto result = postService.read(post.getId());
+        PostReadResponseDto result = postService.readSinglePostByPostId(post.getId());
 
         // Then
         assertThat(result.getTitle()).isEqualTo("title");
@@ -149,7 +149,7 @@ public class PostServiceTest {
         given(postRepository.findAllByCategoryAndTitle(cond)).willReturn(resultPage);
 
         // When
-        PagedPostListDto result = postService.readAll(cond);
+        PagedPostListDto result = postService.readAllPostByCond(cond);
 
         // Then
         assertThat(result.getPostList()).hasSize(2);
@@ -176,7 +176,7 @@ public class PostServiceTest {
         given(postRepository.findAllByCategoryAndTitle(cond)).willReturn(new PageImpl<>(List.of(PostDto.toDto(posts.get(0))), PageRequest.of(cond.getPage(), cond.getSize()), 1));
 
         // When
-        PagedPostListDto result = postService.readAll(cond);
+        PagedPostListDto result = postService.readAllPostByCond(cond);
 
         // Then
         assertThat(result.getPostList()).hasSize(1);
@@ -198,7 +198,7 @@ public class PostServiceTest {
         given(postRepository.findAllByCategoryAndTitle(cond)).willReturn(new PageImpl<>(List.of(PostDto.toDto(posts.get(0))), PageRequest.of(cond.getPage(), cond.getSize()), 1));
 
         // When
-        PagedPostListDto result = postService.readAll(cond);
+        PagedPostListDto result = postService.readAllPostByCond(cond);
 
         // Then
         assertThat(result.getPostList()).hasSize(1);
@@ -259,7 +259,7 @@ public class PostServiceTest {
         given(likePostRepository.findAllLikesByCurrentUsername(cond)).willReturn(resultPage);
 
         // When
-        PagedPostListDto result = postService.readAllLikePost(cond);
+        PagedPostListDto result = postService.readAllLikePostByCurrentUser(cond);
 
         // Then
         assertThat(result.getPostList()).hasSize(2);
@@ -316,6 +316,6 @@ public class PostServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         // When & Then
-        assertThatThrownBy(() -> postService.read(postId)).isInstanceOf(PostNotFoundException.class);
+        assertThatThrownBy(() -> postService.readSinglePostByPostId(postId)).isInstanceOf(PostNotFoundException.class);
     }
 }

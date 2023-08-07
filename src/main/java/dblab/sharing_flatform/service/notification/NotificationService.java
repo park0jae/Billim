@@ -26,7 +26,7 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final MemberRepository memberRepository;
 
-    public SseEmitter subscribe(Long memberId, String lastEventId){
+    public SseEmitter subscribeNotification(Long memberId, String lastEventId){
         String emitterId = makeTimeIncludeId(memberId);
         SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(DEFAULT_TIMEOUT));
 
@@ -43,7 +43,7 @@ public class NotificationService {
         return emitter;
     }
 
-    public void unSubscribe(Long memberId){
+    public void unSubscribeNotification(Long memberId){
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartsWithByMemberId(String.valueOf(memberId));
         Iterator<Map.Entry<String, SseEmitter>> iterator = emitters.entrySet().iterator();
         while (iterator.hasNext()) {

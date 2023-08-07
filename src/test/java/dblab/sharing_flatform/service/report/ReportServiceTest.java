@@ -20,7 +20,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static dblab.sharing_flatform.factory.post.PostFactory.createPost;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -60,7 +59,7 @@ class ReportServiceTest {
         given(memberRepository.findByUsername(reporter.getUsername())).willReturn(Optional.ofNullable(reporter));
 
         //when
-        reportService.create(requestDto, reporter.getUsername());
+        reportService.createReportToPostOrUser(requestDto, reporter.getUsername());
 
         //then
         verify(reportRepository).save(any(Report.class));
@@ -74,7 +73,7 @@ class ReportServiceTest {
         given(memberRepository.findByUsername(reporter.getUsername())).willReturn(Optional.ofNullable(reporter));
 
         //when
-        reportService.create(requestDto, reporter.getUsername());
+        reportService.createReportToPostOrUser(requestDto, reporter.getUsername());
 
         //then
         verify(reportRepository).save(any(Report.class));

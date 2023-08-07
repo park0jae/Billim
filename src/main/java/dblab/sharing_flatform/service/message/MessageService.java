@@ -26,7 +26,7 @@ public class MessageService {
     private static final String ARRIVE_MESSAGE = "님으로부터 메시지가 도착했습니다.";
 
     @Transactional
-    public MessageDto sendMessage(MessageCreateRequestDto requestDto, String username) {
+    public MessageDto sendMessageToReceiverByCurrentUser(MessageCreateRequestDto requestDto, String username) {
         Member sender = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
         Member receiver = memberRepository.findByNickname(requestDto.getReceiveMember()).orElseThrow(MemberNotFoundException::new);
         Message message = new Message(requestDto.getContent(), receiver, sender);
@@ -37,11 +37,11 @@ public class MessageService {
         return MessageDto.toDto(message);
     }
 
-    public PagedMessageListDto findSendMessage(MessagePagingCondition cond){
+    public PagedMessageListDto findSendMessageByCurrentUser(MessagePagingCondition cond){
         return PagedMessageListDto.toDto(messageRepository.findAllBySendMember(cond));
     }
 
-    public PagedMessageListDto findReceiveMessage(MessagePagingCondition cond){
+    public PagedMessageListDto findReceiveMessageByCurrentUser(MessagePagingCondition cond){
         return PagedMessageListDto.toDto(messageRepository.findAllByReceiverMember(cond));
     }
 

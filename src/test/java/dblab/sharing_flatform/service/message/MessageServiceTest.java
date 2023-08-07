@@ -4,8 +4,6 @@ import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.message.Message;
 import dblab.sharing_flatform.dto.message.MessageCreateRequestDto;
 import dblab.sharing_flatform.dto.message.MessageDto;
-import dblab.sharing_flatform.dto.message.MessagePagingCondition;
-import dblab.sharing_flatform.dto.message.PagedMessageListDto;
 import dblab.sharing_flatform.exception.message.MessageNotFoundException;
 import dblab.sharing_flatform.helper.NotificationHelper;
 import dblab.sharing_flatform.repository.member.MemberRepository;
@@ -18,14 +16,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static dblab.sharing_flatform.factory.member.MemberFactory.createReceiveMember;
 import static dblab.sharing_flatform.factory.member.MemberFactory.createSendMember;
-import static dblab.sharing_flatform.factory.message.MessageFactory.*;
-import static org.assertj.core.api.Assertions.*;
+import static dblab.sharing_flatform.factory.message.MessageFactory.createMessageWithMeber;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,22 +51,22 @@ public class MessageServiceTest {
         message = createMessageWithMeber(receiveMember, sendMember);
     }
 
-//    @Test
-//    @DisplayName("메세지 생성 및 전송 테스트")
-//    public void sendMessageTest() {
-//        // Given
-//        MessageCreateRequestDto messageCreateRequestDto = new MessageCreateRequestDto("HelloWorld", receiveMember.getNickname());
-//
-//        given(memberRepository.findByUsername(sendMember.getUsername())).willReturn(Optional.of(sendMember));
-//        given(memberRepository.findByNickname(receiveMember.getNickname())).willReturn(Optional.of(receiveMember));
-//
-//        // When
-//        MessageDto result = messageService.sendMessage(messageCreateRequestDto, sendMember.getUsername());
-//
-//        // Then
-//        assertThat(result.getContent()).isEqualTo("HelloWorld");
-//    }
-//
+    @Test
+    @DisplayName("메세지 생성 및 전송 테스트")
+    public void sendMessageTest() {
+        // Given
+        MessageCreateRequestDto messageCreateRequestDto = new MessageCreateRequestDto("HelloWorld", receiveMember.getNickname());
+
+        given(memberRepository.findByUsername(sendMember.getUsername())).willReturn(Optional.of(sendMember));
+        given(memberRepository.findByNickname(receiveMember.getNickname())).willReturn(Optional.of(receiveMember));
+
+        // When
+        MessageDto result = messageService.sendMessageToReceiverByCurrentUser(messageCreateRequestDto, sendMember.getUsername());
+
+        // Then
+        assertThat(result.getContent()).isEqualTo("HelloWorld");
+    }
+
 //    @Test
 //    @DisplayName("송신 메세지 조회 테스트")
 //    public void findSendMessageTest() {
@@ -79,7 +76,7 @@ public class MessageServiceTest {
 //        given(messageRepository.findAllBySendMember(sendMember.getUsername())).willReturn(messages);
 //
 //        // When
-//        List<MessageDto> result = messageService.findSendMessage(message.getSendMember().getUsername());
+//        List<MessageDto> result = messageService.findSendMessageByCurrentUser(message.getSendMember().getUsername());
 //
 //        // Then
 //        assertThat(result.get(0).getContent()).isEqualTo("content");
@@ -93,7 +90,7 @@ public class MessageServiceTest {
 //        messages.add(message);
 //        given(messageRepository.findAllByReceiverMember(receiveMember.getUsername())).willReturn(messages);
 //        // When
-//        PagedMessageListDto result = messageService.findReceiveMessage(new MessagePagingCondition(0,0,));
+//        PagedMessageListDto result = messageService.findReceiveMessageByCurrentUser(new MessagePagingCondition(0,0,));
 //        // Then
 //        assertThat(result.getMessageList().get(0).getContent()).isEqualTo("content");
 //    }
@@ -112,7 +109,7 @@ public class MessageServiceTest {
 //        given(messageRepository.findAllBySendAndReceiverMembers(sendMember.getNickname(), receiveMember.getNickname())).willReturn(messages);
 //
 //        // When
-//        List<MessageDto> result = messageService.findSendMessageToMember(sendMember.getUsername(), receiveMember.getNickname());
+//        List<MessageDto> result = messageService.findSendMessageByCurrentUser(sendMember.getUsername(), receiveMember.getNickname());
 //
 //        // Then
 //        assertThat(result).hasSize(2);

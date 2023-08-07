@@ -4,11 +4,7 @@ import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.domain.review.Review;
 import dblab.sharing_flatform.domain.trade.Trade;
-import dblab.sharing_flatform.dto.review.ReviewDto;
-import dblab.sharing_flatform.dto.review.ReviewRequestDto;
-import dblab.sharing_flatform.dto.review.ReviewResponseDto;
-import dblab.sharing_flatform.dto.review.ReviewPagingCondition;
-import dblab.sharing_flatform.dto.review.PagedReviewListDto;
+import dblab.sharing_flatform.dto.review.*;
 import dblab.sharing_flatform.exception.review.ExistReviewException;
 import dblab.sharing_flatform.exception.review.ImpossibleWriteReviewException;
 import dblab.sharing_flatform.exception.trade.TradeNotCompleteException;
@@ -31,9 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static dblab.sharing_flatform.factory.review.ReviewFactory.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static dblab.sharing_flatform.factory.review.ReviewFactory.createReview;
+import static dblab.sharing_flatform.factory.review.ReviewFactory.createReviewWithMember;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -82,7 +79,7 @@ public class ReviewServiceTest {
         given(memberRepository.findById(member.getId())).willReturn(Optional.of(member));
 
         // When
-        ReviewResponseDto result = reviewService.writeReview(reviewRequestDto, trade.getId(), reviewerMember.getUsername());
+        ReviewResponseDto result = reviewService.writeReviewByTradeId(reviewRequestDto, trade.getId(), reviewerMember.getUsername());
 
         // Then
         assertThat(result.getContent()).isEqualTo("테스트 리뷰입니다.");
@@ -111,7 +108,7 @@ public class ReviewServiceTest {
         given(reviewRepository.findAllReviews(cond)).willReturn(resultPage);
 
         // When
-        PagedReviewListDto result = reviewService.findAllReviews(cond);
+        PagedReviewListDto result = reviewService.findAllReviewsWriteByAdmin(cond);
 
         // Then
         assertThat(result.getReviewList()).hasSize(2);
@@ -198,7 +195,7 @@ public class ReviewServiceTest {
         given(reviewRepository.findById(trade.getReview().getId())).willReturn(Optional.of(review));
 
         // When
-        reviewService.deleteReview(trade.getId());
+        reviewService.deleteReviewByTradeId(trade.getId());
 
         //Then
         verify(reviewRepository).delete(review);
@@ -219,7 +216,7 @@ public class ReviewServiceTest {
         given(memberRepository.findById(review.getMember().getId())).willReturn(Optional.of(review.getMember()));
 
         // When & Then
-        assertThatThrownBy(() -> reviewService.writeReview(reviewRequestDto, trade.getId(), review.getWriter().getUsername())).isInstanceOf(ImpossibleWriteReviewException.class);
+        assertThatThrownBy(() -> reviewService.writeReviewByTradeId(reviewRequestDto, trade.getId(), review.getWriter().getUsername())).isInstanceOf(ImpossibleWriteReviewException.class);
     }
 
     @Test
@@ -235,7 +232,7 @@ public class ReviewServiceTest {
         given(memberRepository.findById(review.getMember().getId())).willReturn(Optional.of(member));
 
         // When & Then
-        assertThatThrownBy(() -> reviewService.writeReview(reviewRequestDto, trade.getId(), review.getWriter().getUsername())).isInstanceOf(ExistReviewException.class);
+        assertThatThrownBy(() -> reviewService.writeReviewByTradeId(reviewRequestDto, trade.getId(), review.getWriter().getUsername())).isInstanceOf(ExistReviewException.class);
     }
     @Test
     @DisplayName("거래 미완료 리뷰 작성 불가 예외 테스트")
@@ -248,6 +245,6 @@ public class ReviewServiceTest {
         given(memberRepository.findById(review.getMember().getId())).willReturn(Optional.of(member));
 
         // When & Then
-        assertThatThrownBy(() -> reviewService.writeReview(reviewRequestDto, trade.getId(), review.getWriter().getUsername())).isInstanceOf(TradeNotCompleteException.class);
+        assertThatThrownBy(() -> reviewService.writeReviewByTradeId(reviewRequestDto, trade.getId(), review.getWriter().getUsername())).isInstanceOf(TradeNotCompleteException.class);
     }
 }

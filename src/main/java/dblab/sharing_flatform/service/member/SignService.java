@@ -4,6 +4,7 @@ import dblab.sharing_flatform.config.security.jwt.provider.TokenProvider;
 import dblab.sharing_flatform.domain.emailAuth.EmailAuth;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.refresh.RefreshToken;
+import dblab.sharing_flatform.domain.role.Role;
 import dblab.sharing_flatform.domain.role.RoleType;
 import dblab.sharing_flatform.dto.member.*;
 import dblab.sharing_flatform.exception.auth.*;
@@ -51,6 +52,7 @@ public class SignService {
     public void signUp(MemberCreateRequestDto requestDto){
         validateDuplicateUsernameAndNickname(requestDto);
         validateEmailAuthKey(requestDto, AUTH_KEY_SIGN_UP);
+        List<Role> roles = List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new));
 
         Member member = new Member(requestDto.getUsername(),
                 passwordEncoder.encode(requestDto.getPassword()),
@@ -58,7 +60,7 @@ public class SignService {
                 requestDto.getPhoneNumber(),
                 requestDto.getAddress(),
                 NONE,
-                List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)));
+                roles);
 
         memberRepository.save(member);
         emailAuthRepository.deleteByEmail(requestDto.getUsername());
@@ -77,13 +79,15 @@ public class SignService {
 
     @Transactional
     public void oAuth2Signup(OAuth2MemberCreateRequestDto requestDto) {
+        List<Role> roles = List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new));
+
         Member member = new Member(requestDto.getEmail(),
                 passwordEncoder.encode(requestDto.getEmail()),
                 null,
                 null,
                 null,
                 requestDto.getProvider(),
-                List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new)));
+                roles);
         memberRepository.save(member);
     }
 

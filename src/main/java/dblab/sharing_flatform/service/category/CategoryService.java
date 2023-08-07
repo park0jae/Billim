@@ -17,12 +17,12 @@ import java.util.List;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    public List<CategoryDto> readAll() {
+    public List<CategoryDto> readAllCategory() {
         return CategoryDto.toList(categoryRepository.findAllOrderByParentIdAscNullsFirstCategoryIdAsc());
     }
 
     @Transactional
-    public Long create(CategoryCreateRequestDto requestDto) {
+    public Long createCategory(CategoryCreateRequestDto requestDto) {
         if (requestDto.getParentCategoryName() != null) {
             Category parentCategory = categoryRepository.findByName(requestDto.getParentCategoryName()).orElseThrow(CategoryNotFoundException::new);
             Category category = categoryRepository.save(CategoryCreateRequestDto.toEntity(requestDto, parentCategory));
@@ -33,7 +33,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public void delete(String categoryName) {
+    public void deleteCategoryByCategoryName(String categoryName) {
         categoryRepository.delete(categoryRepository.findByName(categoryName).orElseThrow(CategoryNotFoundException::new));
     }
 }

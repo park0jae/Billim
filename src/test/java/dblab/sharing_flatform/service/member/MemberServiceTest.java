@@ -61,7 +61,7 @@ public class MemberServiceTest {
         given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
 
         //when
-        MemberPrivateDto memberInfo = memberService.readMyInfo(member.getUsername());
+        MemberPrivateDto memberInfo = memberService.readCurrentUserInfoByUsername(member.getUsername());
 
         //then
         assertThat(memberInfo.getUsername()).isEqualTo("username");
@@ -79,7 +79,7 @@ public class MemberServiceTest {
         given(memberRepository.findByNickname(member.getNickname())).willReturn(Optional.of(member));
 
         // Then
-        MemberProfileDto result = memberService.readMemberProfile(member.getNickname());
+        MemberProfileDto result = memberService.readMemberProfileByNickname(member.getNickname());
 
         // When
         assertThat(result.getNickname()).isEqualTo("nickname");
@@ -115,7 +115,7 @@ public class MemberServiceTest {
         given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
 
         // When
-        memberService.delete(member.getUsername());
+        memberService.deleteMemberByUsername(member.getUsername());
 
         // Then
         verify(memberRepository).delete(member);
@@ -129,7 +129,7 @@ public class MemberServiceTest {
         given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
 
         // When
-        MemberPrivateDto updateMember = memberService.update(member.getUsername(), memberUpdateRequestDto);
+        MemberPrivateDto updateMember = memberService.updateMember(member.getUsername(), memberUpdateRequestDto);
 
         // Then
         assertThat(updateMember.getPhoneNumber()).isEqualTo("updatedPN");
@@ -143,7 +143,7 @@ public class MemberServiceTest {
         given(memberRepository.findByUsername(username)).willReturn(Optional.empty());
 
         // When & Then
-        assertThatThrownBy(() -> memberService.readMyInfo(username)).isInstanceOf(MemberNotFoundException.class);
+        assertThatThrownBy(() -> memberService.readCurrentUserInfoByUsername(username)).isInstanceOf(MemberNotFoundException.class);
     }
 
 

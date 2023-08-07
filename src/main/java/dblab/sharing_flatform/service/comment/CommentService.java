@@ -5,13 +5,13 @@ import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.comment.CommentCreateRequestDto;
 import dblab.sharing_flatform.dto.comment.CommentDto;
+import dblab.sharing_flatform.exception.comment.CommentNotFoundException;
+import dblab.sharing_flatform.exception.comment.RootCommentNotFoundException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.post.PostNotFoundException;
-import dblab.sharing_flatform.exception.comment.RootCommentNotFoundException;
-import dblab.sharing_flatform.exception.comment.CommentNotFoundException;
+import dblab.sharing_flatform.repository.comment.CommentRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
-import dblab.sharing_flatform.repository.comment.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,24 +28,28 @@ public class CommentService {
     private final PostRepository postRepository;
 
     @Transactional
-    public Long create(Long postId, CommentCreateRequestDto requestDto, String username) {
-        Comment comment = commentRepository.save(
+    public Long createCommentWithPostId(Long postId, CommentCreateRequestDto requestDto, String username) {
+        Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
+        Member member = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
+        Comment parent = requestDto.getParentCommentId() == null ? null : commentRepository.findById(requestDto.getParentCommentId()).orElseThrow(RootCommentNotFoundException::new);
+
+        Comment createComment = commentRepository.save(
                 new Comment(requestDto.getContent(),
                 requestDto.getParentCommentId() == null ? true : false,
-                postRepository.findById(postId).orElseThrow(PostNotFoundException::new),
-                memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new),
-                requestDto.getParentCommentId() == null ? null : commentRepository.findById(requestDto.getParentCommentId()).orElseThrow(RootCommentNotFoundException::new)));
-        return comment.getId();
+                post,
+                member,
+                parent));
+        return createComment.getId();
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void deleteCommentByCommentId(Long id) {
         Comment comment = commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
         comment.delete();
     }
 
     // read
-    public List<CommentDto> readAll(Long postId) {
+    public List<CommentDto> readAllCommentByPostId(Long postId) {
         return CommentDto.toDtoList(commentRepository.findAllOrderByParentIdAscNullsFirstByPostId(postId));
     }
 }

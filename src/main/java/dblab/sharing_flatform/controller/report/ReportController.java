@@ -26,23 +26,23 @@ public class ReportController {
     @ApiOperation(value = "Report 전체 조회 (ADMIN) ", notes = "ADMIN 권한으로 Report를 조회합니다.")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Response readAll(@Valid ReportPagingCondition cond) {
-        return Response.success(reportService.readAll(cond));
+    public Response readAllReportByCond(@Valid ReportPagingCondition cond) {
+        return Response.success(reportService.readAllReportByCond(cond));
     }
 
     @ApiOperation(value = "게시글 또는 회원에 대한 Report를 생성", notes = "현재 로그인한 유저 정보로 게시글/회원에 대한 Report를 생성합니다.")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Response create(@Valid @RequestBody ReportCreateRequestDto requestDto) {
-        reportService.create(requestDto, getCurrentUsernameCheck());
+    public Response createReportToPostOrUser(@Valid @RequestBody ReportCreateRequestDto requestDto) {
+        reportService.createReportToPostOrUser(requestDto, getCurrentUsernameCheck());
         return Response.success();
     }
 
     @ApiOperation(value = "Report ID로 Report를 삭제합니다.", notes = "현재 로그인한 유저 정보로 게시글/회원에 대한 Report를 생성합니다.")
     @DeleteMapping("/{reportId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Response delete(@ApiParam(name = "삭제할 Report의 ID", required = true) @PathVariable Long reportId) {
-        reportService.delete(reportId);
+    public Response deleteReportByReportId(@ApiParam(name = "삭제할 Report의 ID", required = true) @PathVariable Long reportId) {
+        reportService.deleteReportByReportId(reportId);
         return Response.success();
     }
 
