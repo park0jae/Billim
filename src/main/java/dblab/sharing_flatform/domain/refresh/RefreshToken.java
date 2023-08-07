@@ -16,7 +16,10 @@ public class RefreshToken {
     @Column(name = "refresh_token_id")
     private Long id;
 
+    @Column(nullable = false)
     private String username;
+
+    @Column(nullable = false)
     private String token;
 
     private RefreshToken(String username, String token) {

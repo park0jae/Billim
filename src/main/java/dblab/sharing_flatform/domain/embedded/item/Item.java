@@ -8,11 +8,13 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Item {
-
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private Long price;
 
+    @Column(nullable = false)
     private Long quantity;
 
     public void updateItem(String name, Long price, Long quantity) {

@@ -21,15 +21,14 @@ public class Notification extends BaseTime {
     @Column(name = "notification_id")
     private Long id;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String content;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private NotificationType notificationType;
 
-    @Column(nullable = false)
-    private Boolean isRead;
+    private boolean isRead;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id")

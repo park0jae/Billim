@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -48,7 +47,6 @@ public class Post extends BaseTime {
     private Category category;
 
     @Embedded
-    @Nullable
     private Item item;
 
     @ManyToOne(fetch = FetchType.LAZY)

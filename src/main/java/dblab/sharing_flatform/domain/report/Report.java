@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
@@ -25,6 +24,7 @@ public class Report {
     @Enumerated(value = EnumType.STRING)
     private ReportType reportType;
 
+    @Column(nullable = false)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,11 +33,11 @@ public class Report {
     private Member reporter;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reported_id", nullable = true)
+    @JoinColumn(name = "reported_id")
     private Member reported;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = true)
+    @JoinColumn(name = "post_id")
     private Post post;
 
     public Report(ReportType reportType, String content, Member reporter, Post post, Member reported) {
