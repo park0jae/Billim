@@ -5,15 +5,9 @@ import dblab.sharing_flatform.domain.likepost.LikePost;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.notification.NotificationType;
 import dblab.sharing_flatform.domain.post.Post;
-import dblab.sharing_flatform.dto.item.ItemCreateRequestDto;
-import dblab.sharing_flatform.dto.post.PostCreateRequestDto;
-import dblab.sharing_flatform.dto.post.PostCreateResponseDto;
-import dblab.sharing_flatform.dto.post.PostPagingCondition;
-import dblab.sharing_flatform.dto.post.PagedPostListDto;
-import dblab.sharing_flatform.dto.post.PostReadResponseDto;
-import dblab.sharing_flatform.dto.post.PostUpdateRequestDto;
-import dblab.sharing_flatform.dto.post.PostUpdateResponseDto;
 import dblab.sharing_flatform.dto.image.PostImageDto;
+import dblab.sharing_flatform.dto.item.ItemCreateRequestDto;
+import dblab.sharing_flatform.dto.post.*;
 import dblab.sharing_flatform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
@@ -25,7 +19,6 @@ import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
 import dblab.sharing_flatform.service.file.PostFileService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,7 +30,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-@Slf4j
 public class PostService {
 
     private final PostRepository postRepository;

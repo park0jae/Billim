@@ -4,10 +4,10 @@ import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.notification.NotificationType;
 import dblab.sharing_flatform.domain.review.Review;
 import dblab.sharing_flatform.domain.trade.Trade;
+import dblab.sharing_flatform.dto.review.PagedReviewListDto;
+import dblab.sharing_flatform.dto.review.ReviewPagingCondition;
 import dblab.sharing_flatform.dto.review.ReviewRequestDto;
 import dblab.sharing_flatform.dto.review.ReviewResponseDto;
-import dblab.sharing_flatform.dto.review.ReviewPagingCondition;
-import dblab.sharing_flatform.dto.review.PagedReviewListDto;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.review.ExistReviewException;
 import dblab.sharing_flatform.exception.review.ImpossibleWriteReviewException;
@@ -19,12 +19,10 @@ import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.review.ReviewRepository;
 import dblab.sharing_flatform.repository.trade.TradeRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)

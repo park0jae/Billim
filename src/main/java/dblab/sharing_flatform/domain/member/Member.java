@@ -22,21 +22,19 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
-
     @Column(nullable = false, updatable = false)
     private String username;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private String phoneNumber;
-
-    @Nullable
     private String nickname;
     @Embedded
-    @Nullable
     private Address address;
     private String provider;
     private String introduce;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<MemberRole> roles = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -65,7 +63,6 @@ public class Member {
         this.phoneNumber = memberUpdateRequestDto.getPhoneNumber();
         this.address = memberUpdateRequestDto.getAddress();
         this.introduce = memberUpdateRequestDto.getIntroduce();
-
         String existedImageName = updateProfileImage(memberUpdateRequestDto.getImage());
 
         return existedImageName;

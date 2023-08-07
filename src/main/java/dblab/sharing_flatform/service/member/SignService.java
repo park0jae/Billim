@@ -5,27 +5,15 @@ import dblab.sharing_flatform.domain.emailAuth.EmailAuth;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.refresh.RefreshToken;
 import dblab.sharing_flatform.domain.role.RoleType;
-import dblab.sharing_flatform.dto.member.EmailAuthRequest;
-import dblab.sharing_flatform.dto.member.OAuth2MemberCreateRequestDto;
-import dblab.sharing_flatform.dto.member.PasswordResetRequestDto;
-import dblab.sharing_flatform.dto.member.LogInResponseDto;
-import dblab.sharing_flatform.dto.member.LoginRequestDto;
-import dblab.sharing_flatform.dto.member.MemberCreateRequestDto;
-import dblab.sharing_flatform.exception.auth.EmailAuthNotEqualsException;
-import dblab.sharing_flatform.exception.auth.EmailAuthNotFoundException;
-import dblab.sharing_flatform.exception.auth.LoginFailureException;
-import dblab.sharing_flatform.exception.auth.DuplicateNicknameException;
-import dblab.sharing_flatform.exception.auth.DuplicateUsernameException;
+import dblab.sharing_flatform.dto.member.*;
+import dblab.sharing_flatform.exception.auth.*;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
-import dblab.sharing_flatform.exception.auth.NotEqualsPasswordToVerifiedException;
 import dblab.sharing_flatform.exception.role.RoleNotFoundException;
 import dblab.sharing_flatform.repository.emailAuth.EmailAuthRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.refresh.RefreshTokenRepository;
 import dblab.sharing_flatform.repository.role.RoleRepository;
-
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -41,7 +29,6 @@ import java.util.List;
 
 import static dblab.sharing_flatform.domain.refresh.RefreshToken.createToken;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

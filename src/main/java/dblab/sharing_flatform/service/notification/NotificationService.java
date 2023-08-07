@@ -10,7 +10,6 @@ import dblab.sharing_flatform.repository.emitter.EmitterRepositoryImpl;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.notification.NotificationRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -18,7 +17,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class NotificationService {

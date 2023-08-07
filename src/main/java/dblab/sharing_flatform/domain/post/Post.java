@@ -2,29 +2,30 @@ package dblab.sharing_flatform.domain.post;
 
 import dblab.sharing_flatform.domain.base.BaseTime;
 import dblab.sharing_flatform.domain.category.Category;
+import dblab.sharing_flatform.domain.embedded.item.Item;
 import dblab.sharing_flatform.domain.image.PostImage;
 import dblab.sharing_flatform.domain.member.Member;
-import dblab.sharing_flatform.domain.embedded.item.Item;
 import dblab.sharing_flatform.dto.item.ItemUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.PostUpdateRequestDto;
 import dblab.sharing_flatform.dto.post.PostUpdateResponseDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-import static dblab.sharing_flatform.helper.PostImageHelper.*;
+import static dblab.sharing_flatform.helper.PostImageHelper.addImages;
+import static dblab.sharing_flatform.helper.PostImageHelper.updateImage;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Slf4j
 public class Post extends BaseTime {
 
     @Id

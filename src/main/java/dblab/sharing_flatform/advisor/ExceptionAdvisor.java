@@ -1,7 +1,6 @@
 package dblab.sharing_flatform.advisor;
 
 import dblab.sharing_flatform.dto.response.Response;
-import dblab.sharing_flatform.exception.auth.ValidateTokenException;
 import dblab.sharing_flatform.exception.auth.*;
 import dblab.sharing_flatform.exception.category.CategoryNotFoundException;
 import dblab.sharing_flatform.exception.chat.ChatRoomNotFoundException;
@@ -12,9 +11,6 @@ import dblab.sharing_flatform.exception.guard.GuardException;
 import dblab.sharing_flatform.exception.helper.ConvertException;
 import dblab.sharing_flatform.exception.image.NoExtException;
 import dblab.sharing_flatform.exception.image.UnSupportExtException;
-import dblab.sharing_flatform.exception.auth.AlreadyExistsMemberException;
-import dblab.sharing_flatform.exception.auth.DuplicateNicknameException;
-import dblab.sharing_flatform.exception.auth.DuplicateUsernameException;
 import dblab.sharing_flatform.exception.member.MemberNotFoundException;
 import dblab.sharing_flatform.exception.message.MessageNotFoundException;
 import dblab.sharing_flatform.exception.oauth.OAuthCommunicationException;
@@ -32,7 +28,6 @@ import dblab.sharing_flatform.exception.trade.ImpossibleCreateTradeException;
 import dblab.sharing_flatform.exception.trade.TradeNotCompleteException;
 import dblab.sharing_flatform.exception.trade.TradeNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
@@ -44,7 +39,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
-@Slf4j
 public class ExceptionAdvisor {
 
     private final MessageSource ms;

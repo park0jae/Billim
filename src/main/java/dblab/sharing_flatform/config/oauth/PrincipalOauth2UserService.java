@@ -13,7 +13,6 @@ import dblab.sharing_flatform.exception.role.RoleNotFoundException;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
@@ -36,10 +34,8 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
     @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-
         OAuth2User oAuth2User = super.loadUser(userRequest);
         OAuth2UserInfo oAuth2UserInfo = null;
-
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
         switch (registrationId){
@@ -55,15 +51,8 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             case "google":
                 oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
         }
-
         Optional<Member> memberEntity = memberRepository.findByProviderAndUsername(oAuth2UserInfo.getProvider(), oAuth2UserInfo.getEmail());
-
-        log.info("memberEntity={}", memberEntity);
-
         Member member = saveOrUpdate(oAuth2UserInfo, memberEntity);
-
-        log.info("oauth2UserInfo={}" , oAuth2UserInfo);
-
         return new MemberDetails(Long.toString(member.getId()), member.getUsername(), null, List.of(), oAuth2User.getAttributes());
     }
 
