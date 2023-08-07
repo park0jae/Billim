@@ -35,9 +35,8 @@ public class ReviewService {
 
     public static final String REVIEW_COMPLETE_MESSAGE = "님이 거래에 대한 리뷰를 작성했습니다.";
 
-
     @Transactional
-    public ReviewResponseDto writeReview(ReviewRequestDto reviewRequestDto, Long tradeId, String username) {
+    public ReviewResponseDto writeReviewByTradeId(ReviewRequestDto reviewRequestDto, Long tradeId, String username) {
         Trade trade = tradeRepository.findById(tradeId).orElseThrow(TradeNotFoundException::new);
         Member writer = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new); // 리뷰 작성자
         Member member = memberRepository.findById(trade.getRenderMember().getId()).orElseThrow(MemberNotFoundException::new); // 리뷰 받는 사람
@@ -55,7 +54,7 @@ public class ReviewService {
     }
 
     @Transactional
-    public void deleteReview(Long tradeId) {
+    public void deleteReviewByTradeId(Long tradeId) {
         Trade trade = tradeRepository.findById(tradeId).orElseThrow(TradeNotFoundException::new);
         Review review = reviewRepository.findById(trade.getReview().getId()).orElseThrow(ReviewNotFoundException::new);
         trade.deleteReview();
@@ -63,7 +62,7 @@ public class ReviewService {
         reviewRepository.delete(review);
     }
 
-    public PagedReviewListDto findAllReviews(ReviewPagingCondition cond) {
+    public PagedReviewListDto findAllReviewsWriteByAdmin(ReviewPagingCondition cond) {
         return PagedReviewListDto.toDto(reviewRepository.findAllReviews(cond));
     }
 

@@ -26,7 +26,7 @@ public class ReviewController {
     @ApiOperation(value = "현재 로그인한 유저의 리뷰를 조회", notes = "현재 로그인한 유저에게 작성된 리뷰를 조회합니다.")
     @GetMapping("/myPage")
     @ResponseStatus(HttpStatus.OK)
-    public Response findCurrentUserReviews(@Valid ReviewPagingCondition cond){
+    public Response findAllReviewsWriteByCurrentUser(@Valid ReviewPagingCondition cond){
         cond.setUsername(getCurrentUsernameCheck());
         return Response.success(reviewService.findCurrentUserReviews(cond));
     }
@@ -34,32 +34,30 @@ public class ReviewController {
     @ApiOperation(value = "모든 리뷰 조회 (ADMIN 권한)", notes = "(ADMIN 권한으로) 작성된 모든 리뷰를 조회합니다.")
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public Response findAllReviews(@Valid ReviewPagingCondition cond){
-        return Response.success(reviewService.findAllReviews(cond));
+    public Response findAllReviewWriteByAdmin(@Valid ReviewPagingCondition cond){
+        return Response.success(reviewService.findAllReviewsWriteByAdmin(cond));
     }
 
     @ApiOperation(value = "특정 회원에 대한 리뷰를 페이징", notes = "특정 회원에 대한 리뷰를 페이징합니다.")
     @GetMapping
-    public Response findAllReviewByMemberId(@Valid ReviewPagingCondition cond){
+    public Response findAllReviewByUsername(@Valid ReviewPagingCondition cond){
         return Response.success(reviewService.findAllReviewsByUsername(cond));
     }
 
     @ApiOperation(value = "거래에 대한 리뷰 생성", notes = "거래에 대한 리뷰를 생성합니다.")
     @PostMapping("/{tradeId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Response writeReview(@ApiParam(value = "생성할 리뷰의 Trade Id", required = true) @PathVariable Long tradeId,
+    public Response writeReviewByTradeId(@ApiParam(value = "생성할 리뷰의 Trade Id", required = true) @PathVariable Long tradeId,
                                 @Valid @RequestBody ReviewRequestDto reviewRequestDto){
-        reviewService.writeReview(reviewRequestDto, tradeId, getCurrentUsernameCheck());
+        reviewService.writeReviewByTradeId(reviewRequestDto, tradeId, getCurrentUsernameCheck());
         return Response.success();
     }
 
     @ApiOperation(value = "거래에 대해 작성한 리뷰 삭제", notes = "현재 로그인한 유저에게 작성된 리뷰를 조회합니다.")
     @DeleteMapping("/{tradeId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response deleteReview(@ApiParam(value = "삭제할 리뷰의 Trade Id", required = true) @PathVariable Long tradeId){
-        reviewService.deleteReview(tradeId);
+    public Response deleteReviewTradeId(@ApiParam(value = "삭제할 리뷰의 Trade Id", required = true) @PathVariable Long tradeId){
+        reviewService.deleteReviewByTradeId(tradeId);
         return Response.success();
     }
-
-
 }

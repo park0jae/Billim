@@ -1,5 +1,6 @@
 package dblab.sharing_flatform.service.post;
 
+import dblab.sharing_flatform.domain.category.Category;
 import dblab.sharing_flatform.domain.image.PostImage;
 import dblab.sharing_flatform.domain.likepost.LikePost;
 import dblab.sharing_flatform.domain.member.Member;
@@ -41,11 +42,11 @@ public class PostService {
 
     private static final String LIKE_POST_MESSAGE = "님이 이 글을 좋아합니다.";
 
-    public PagedPostListDto readAll(PostPagingCondition cond) {
+    public PagedPostListDto readAllPostByCond(PostPagingCondition cond) {
         return PagedPostListDto.toDto(postRepository.findAllByCategoryAndTitle(cond));
     }
 
-    public PagedPostListDto readAllLikePost(PostPagingCondition cond) {
+    public PagedPostListDto readAllLikePostByCurrentUser(PostPagingCondition cond) {
         return PagedPostListDto.toDto(likePostRepository.findAllLikesByCurrentUsername(cond));
     }
 
@@ -53,21 +54,23 @@ public class PostService {
         return PagedPostListDto.toDto(postRepository.findAllWithMemberByCurrentUsername(cond));
     }
 
-    public PostReadResponseDto read(Long id) {
+    public PostReadResponseDto readSinglePostByPostId(Long id) {
         return PostReadResponseDto.toDto(postRepository.findById(id).orElseThrow(PostNotFoundException::new));
     }
 
     // create
     @Transactional
-    public PostCreateResponseDto create(PostCreateRequestDto requestDto, String username) {
+    public PostCreateResponseDto createPost(PostCreateRequestDto requestDto, String username) {
         List<PostImage> postImages = getImages(requestDto);
+        Category category = categoryRepository.findByName(requestDto.getCategoryName()).orElseThrow(CategoryNotFoundException::new);
+        Member member = memberRepository.findByUsername(username).orElseThrow(AuthenticationEntryPointException::new);
 
         Post post = new Post(requestDto.getTitle(),
                 requestDto.getContent(),
-                categoryRepository.findByName(requestDto.getCategoryName()).orElseThrow(CategoryNotFoundException::new),
+                category,
                 requestDto.getItemCreateRequestDto() != null ? ItemCreateRequestDto.toEntity(requestDto.getItemCreateRequestDto()) : null,
                 postImages,
-                memberRepository.findByUsername(username).orElseThrow(AuthenticationEntryPointException::new));
+                member);
 
         postRepository.save(post);
 
@@ -75,14 +78,14 @@ public class PostService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void deletePostByPostId(Long id) {
         Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
         postRepository.delete(post);
         deleteImagesFromServer(post);
     }
 
     @Transactional
-    public PostUpdateResponseDto update(Long id, PostUpdateRequestDto requestDto) {
+    public PostUpdateResponseDto updatePost(Long id, PostUpdateRequestDto requestDto) {
         Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
         PostUpdateResponseDto responseDto = post.updatePost(requestDto);
 

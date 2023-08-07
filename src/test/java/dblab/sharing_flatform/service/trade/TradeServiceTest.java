@@ -72,7 +72,7 @@ public class TradeServiceTest {
         given(postRepository.findById(trade.getPost().getId())).willReturn(Optional.of(post));
 
         // When
-        TradeResponseDto result = tradeService.createTrade(tradeRequestDto, post.getId(), renderMember.getUsername());
+        TradeResponseDto result = tradeService.createTradeByPostId(tradeRequestDto, post.getId(), renderMember.getUsername());
 
         // Then
         assertThat(result.getRenderMember()).isEqualTo("render");
@@ -85,7 +85,7 @@ public class TradeServiceTest {
         given(tradeRepository.findById(trade.getId())).willReturn(Optional.of(trade));
 
         // When
-        tradeService.completeTrade(trade.getId());
+        tradeService.completeTradeByTradeId(trade.getId());
 
         // Then
         assertThat(trade.isTradeComplete()).isTrue();
@@ -98,7 +98,7 @@ public class TradeServiceTest {
         given(tradeRepository.findById(trade.getId())).willReturn(Optional.of(trade));
 
         // When
-        TradeResponseDto result = tradeService.findTradeById(trade.getId());
+        TradeResponseDto result = tradeService.findSingleTradeById(trade.getId());
 
         // Then
         assertThat(result.getPostId()).isEqualTo(trade.getId());
@@ -118,7 +118,7 @@ public class TradeServiceTest {
                         TradeDto.toDto(tradeList.get(1))), PageRequest.of(cond.getPage(), cond.getSize()), 1));
 
         // When
-        PagedTradeListDto result = tradeService.findAllByCond(cond);
+        PagedTradeListDto result = tradeService.findAllTradeByAdmin(cond);
 
         // Then
         assertThat(result.getTradeList().size()).isEqualTo(2);
@@ -138,7 +138,7 @@ public class TradeServiceTest {
         given(tradeRepository.findById(trade.getId())).willReturn(Optional.of(trade));
 
         // When
-        tradeService.deleteTrade(trade.getId());
+        tradeService.deleteTradeByRenderWithTradeId(trade.getId());
 
         // Then
         verify(tradeRepository).delete(trade);
@@ -152,7 +152,7 @@ public class TradeServiceTest {
         given(tradeRepository.findById(tradeId)).willReturn(Optional.empty());
 
         // When & Then
-        assertThatThrownBy(() -> tradeService.findTradeById(tradeId)).isInstanceOf(TradeNotFoundException.class);
+        assertThatThrownBy(() -> tradeService.findSingleTradeById(tradeId)).isInstanceOf(TradeNotFoundException.class);
     }
 
     @Test
@@ -167,7 +167,7 @@ public class TradeServiceTest {
         given(tradeRepository.findByPostId(post.getId())).willReturn(Optional.of(trade));
 
         // When & Then
-        assertThatThrownBy(() -> tradeService.createTrade(tradeRequestDto, trade.getPost().getId(), renderMember.getUsername())).isInstanceOf(ExistTradeException.class);
+        assertThatThrownBy(() -> tradeService.createTradeByPostId(tradeRequestDto, trade.getPost().getId(), renderMember.getUsername())).isInstanceOf(ExistTradeException.class);
     }
 
     @Test
@@ -182,6 +182,6 @@ public class TradeServiceTest {
         given(postRepository.findById(trade.getPost().getId())).willReturn(Optional.of(post));
 
         // When & Then
-        assertThatThrownBy(() -> tradeService.createTrade(tradeRequestDto, trade.getPost().getId(), renderMember.getUsername())).isInstanceOf(ImpossibleCreateTradeException.class);
+        assertThatThrownBy(() -> tradeService.createTradeByPostId(tradeRequestDto, trade.getPost().getId(), renderMember.getUsername())).isInstanceOf(ImpossibleCreateTradeException.class);
     }
 }

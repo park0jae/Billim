@@ -32,7 +32,7 @@ public class SignController {
     @PostMapping("/sign-up")
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public Response signup(@Valid @ModelAttribute MemberCreateRequestDto memberCreateRequestDto){
+    public Response signUp(@Valid @ModelAttribute MemberCreateRequestDto memberCreateRequestDto){
         signService.signUp(memberCreateRequestDto);
         return Response.success();
     }
@@ -56,7 +56,7 @@ public class SignController {
 
     @ApiOperation(value = "OAuth2.0 메인 페이지", notes = "OAuth2.0 로그인을 위한 메인 페이지입니다.")
     @GetMapping("/")
-    public String index(@RequestParam(required = false) String username, @RequestParam(required = false) String code,  Model model) {
+    public String mainPage(@RequestParam(required = false) String username, @RequestParam(required = false) String code,  Model model) {
         model.addAttribute("username", username);
         model.addAttribute("code", code);
         return "/index";
@@ -65,7 +65,7 @@ public class SignController {
     @ApiOperation(value = "회원가입을 위한 이메일 인증" , notes = "회원가입에서 이메일 인증을 위한 엔드포인트")
     @ResponseBody
     @PostMapping("/sign-up/email")
-    public Response mailConfirmSignUp(@RequestParam(name = "email") String email)  {
+    public Response signUpMailConfirm(@RequestParam(name = "email") String email)  {
         mailService.sendSignUpMail(email);
         return Response.success();
     }
@@ -73,7 +73,7 @@ public class SignController {
     @ApiOperation(value = "비밀번호 재설정을 위한 이메일 인증" , notes = "비밀번호 재설정 페이지에서 이메일 인증을 위한 엔드포인트")
     @ResponseBody
     @PostMapping("/reset-password/mail")
-    public Response mailConfirm(@RequestParam(name = "email") String email)  {
+    public Response resetPasswordMailConfirm(@RequestParam(name = "email") String email)  {
         mailService.sendResetPasswordMail(email);
         return Response.success();
     }
@@ -95,7 +95,7 @@ public class SignController {
     @ApiOperation(value = "구글 로그인", notes = "OAuth2.0 구글로 소셜 로그인을 진행합니다.")
     @ResponseBody
     @GetMapping("/oauth2/callback/google")
-    public Response oauth2LoginGoogle(@RequestParam String code,
+    public Response oauth2LoginByGoogle(@RequestParam String code,
                                       @Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId,
                                       @Value("${spring.security.oauth2.client.registration.google.client-secret}") String clientSecret,
                                       @Value("${spring.security.oauth2.client.registration.google.redirect-uri}") String redirectUri) {
@@ -108,7 +108,7 @@ public class SignController {
     @ApiOperation(value = "네이버 로그인", notes = "OAuth2.0 네이버로 소셜 로그인을 진행합니다.")
     @ResponseBody
     @GetMapping("/oauth2/callback/naver")
-    public Response oauth2LoginNaver(@RequestParam String code,
+    public Response oauth2LoginByNaver(@RequestParam String code,
                                      @Value("${spring.security.oauth2.client.registration.naver.client-id}") String clientId,
                                      @Value("${spring.security.oauth2.client.registration.naver.client-secret}") String clientSecret,
                                      @Value("${spring.security.oauth2.client.registration.naver.redirect-uri}") String redirectUri) {
@@ -120,7 +120,7 @@ public class SignController {
 
     private LogInResponseDto signUpAndLogin(OAuth2MemberCreateRequestDto req) {
         try {
-            memberService.readMyInfo(req.getEmail());
+            memberService.readCurrentUserInfoByUsername(req.getEmail());
         } catch (MemberNotFoundException e) {
             signService.oAuth2Signup(req);
         } finally {

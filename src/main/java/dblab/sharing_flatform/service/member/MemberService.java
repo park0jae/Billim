@@ -28,26 +28,26 @@ public class MemberService {
     private final PostRepository postRepository;
     private final MemberFileService postFileService;
 
-    public MemberPrivateDto readMyInfo(String username){
+    public MemberPrivateDto readCurrentUserInfoByUsername(String username){
         return MemberPrivateDto.toDto(memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new));
     }
 
-    public MemberProfileDto readMemberProfile(String nickname) {
+    public MemberProfileDto readMemberProfileByNickname(String nickname) {
         List<Post> posts = postRepository.findAllWithMemberByNickname(nickname);
         return MemberProfileDto.toDto(memberRepository.findByNickname(nickname).orElseThrow(MemberNotFoundException::new), PostDto.toDtoList(posts));
     }
 
-    public PagedMemberListDto readAll(MemberPagingCondition cond) {
+    public PagedMemberListDto readAllMemberByCond(MemberPagingCondition cond) {
         return PagedMemberListDto.toDto(memberRepository.findAllBySearch(cond));
     }
 
     @Transactional
-    public void delete(String username){
+    public void deleteMemberByUsername(String username){
         memberRepository.delete(memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new));
     }
 
     @Transactional
-    public MemberPrivateDto update(String username, MemberUpdateRequestDto requestDto){
+    public MemberPrivateDto updateMember(String username, MemberUpdateRequestDto requestDto){
         Member member = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
         memberUpdate(requestDto, member);
         return MemberPrivateDto.toDto(member);

@@ -14,7 +14,7 @@ import springfox.documentation.annotations.ApiIgnore;
 public class ExceptionController {
 
     @GetMapping("/exception/access-denied")
-    public void accessDenied() {
+    public void accessDeniedException() {
         throw new AccessDeniedException();
     }
 

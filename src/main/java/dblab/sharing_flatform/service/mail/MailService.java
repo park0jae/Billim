@@ -36,13 +36,13 @@ public class MailService {
 
     @Transactional
     public void sendSignUpMail(String email) {
-        ePw = createKey();
+        ePw = createAuthKey();
         sendMail(email, SIGN_UP);
     }
 
     @Transactional
     public void sendResetPasswordMail(String email) {
-        ePw = createKey();
+        ePw = createAuthKey();
         memberRepository.findByUsername(email).orElseThrow(MemberNotFoundException::new);
         sendMail(email, RESET_PASSWORD);
     }
@@ -52,7 +52,7 @@ public class MailService {
         return message;
     }
 
-    public String createKey() {
+    public String createAuthKey() {
         int leftLimit = 48;
         int rightLimit = 122;
         int targetStringLength = 10;

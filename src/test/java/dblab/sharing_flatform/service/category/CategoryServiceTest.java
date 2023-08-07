@@ -51,7 +51,7 @@ public class CategoryServiceTest {
         });
 
         // When
-        categoryService.create(categoryCreateRequestDto);
+        categoryService.createCategory(categoryCreateRequestDto);
 
         // Then
         verify(categoryRepository).save(any(Category.class));
@@ -69,7 +69,7 @@ public class CategoryServiceTest {
         });
 
         // When
-        categoryService.create(categoryCreateRequestDto);
+        categoryService.createCategory(categoryCreateRequestDto);
 
         // Then
         verify(categoryRepository).save(any(Category.class));
@@ -82,7 +82,7 @@ public class CategoryServiceTest {
         given(categoryRepository.findByName(childCategory.getName())).willReturn(Optional.of(childCategory));
 
         // When
-        categoryService.delete(childCategory.getName());
+        categoryService.deleteCategoryByCategoryName(childCategory.getName());
 
         // Then
         verify(categoryRepository).delete(childCategory);
@@ -98,7 +98,7 @@ public class CategoryServiceTest {
         given(categoryRepository.findAllOrderByParentIdAscNullsFirstCategoryIdAsc()).willReturn(categoryList);
 
         // When
-        List<CategoryDto> result = categoryService.readAll();
+        List<CategoryDto> result = categoryService.readAllCategory();
 
         // Then
         assertThat(result).hasSize(1);

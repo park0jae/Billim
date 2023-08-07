@@ -122,8 +122,7 @@ public class OAuthService {
             conn.setRequestProperty(AUTHORIZATION, BEARER + accessToken); //전송할 header 작성, access_token전송
 
             //결과 코드가 200이라면 성공
-            int responseCode = conn.getResponseCode();
-//            System.out.println("responseCode : " + responseCode);
+            conn.getResponseCode();
 
             //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -133,7 +132,6 @@ public class OAuthService {
             while ((line = br.readLine()) != null) {
                 result += line;
             }
-//            System.out.println("response body : " + result);
 
             if(provider == KAKAO){
                 KakaoProfile kakaoProfile = gson.fromJson(result, KakaoProfile.class);

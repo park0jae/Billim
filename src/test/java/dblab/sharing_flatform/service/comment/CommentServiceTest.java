@@ -1,18 +1,13 @@
 package dblab.sharing_flatform.service.comment;
 
-import dblab.sharing_flatform.domain.category.Category;
 import dblab.sharing_flatform.domain.comment.Comment;
 import dblab.sharing_flatform.domain.member.Member;
 import dblab.sharing_flatform.domain.post.Post;
 import dblab.sharing_flatform.dto.comment.CommentCreateRequestDto;
 import dblab.sharing_flatform.dto.comment.CommentDto;
-import dblab.sharing_flatform.factory.comment.CommentFactory;
-import dblab.sharing_flatform.factory.member.MemberFactory;
-import dblab.sharing_flatform.factory.post.PostFactory;
 import dblab.sharing_flatform.repository.comment.CommentRepository;
 import dblab.sharing_flatform.repository.member.MemberRepository;
 import dblab.sharing_flatform.repository.post.PostRepository;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,12 +24,10 @@ import static dblab.sharing_flatform.factory.comment.CommentFactory.createCommen
 import static dblab.sharing_flatform.factory.member.MemberFactory.createMember;
 import static dblab.sharing_flatform.factory.post.PostFactory.createPost;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CommentServiceTest {
@@ -72,7 +65,7 @@ class CommentServiceTest {
         given(commentRepository.save(any())).willReturn(createComment(null));
 
         // when
-        commentService.create(post.getId(), new CommentCreateRequestDto("content", null), member.getUsername());
+        commentService.createCommentWithPostId(post.getId(), new CommentCreateRequestDto("content", null), member.getUsername());
 
         // then
         verify(commentRepository).save(any(Comment.class));
@@ -89,7 +82,7 @@ class CommentServiceTest {
                 );
 
         // when
-        List<CommentDto> result = commentService.readAll(post.getId());
+        List<CommentDto> result = commentService.readAllCommentByPostId(post.getId());
 
         // then
         assertThat(result.size()).isEqualTo(2);

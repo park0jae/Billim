@@ -29,7 +29,7 @@ public class TradeService {
     private final PostRepository postRepository;
 
     @Transactional
-    public TradeResponseDto createTrade(TradeRequestDto tradeRequestDto, Long id, String username){
+    public TradeResponseDto createTradeByPostId(TradeRequestDto tradeRequestDto, Long id, String username){
         Member render = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
         Member borrower = memberRepository.findByNickname(tradeRequestDto.getBorrowerName()).orElseThrow(MemberNotFoundException::new);
         Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
@@ -46,30 +46,30 @@ public class TradeService {
     }
 
     @Transactional
-    public TradeResponseDto completeTrade(Long id) {
+    public TradeResponseDto completeTradeByTradeId(Long id) {
         Trade trade = tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new);
         trade.isTradeComplete(true);
         return TradeResponseDto.toDto(trade);
     }
 
-    public TradeResponseDto findTradeById(Long id) {
+    public TradeResponseDto findSingleTradeById(Long id) {
         return TradeResponseDto.toDto(tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new));
     }
 
-    public PagedTradeListDto findAllByCond(TradePagingCondition cond) {
+    public PagedTradeListDto findAllTradeByAdmin(TradePagingCondition cond) {
         return PagedTradeListDto.toDto(tradeRepository.findAllByCond(cond));
     }
 
-    public PagedTradeListDto findAllByMyRendTrade(TradePagingCondition cond) {
+    public PagedTradeListDto findAllRendTradeByCurrentUser(TradePagingCondition cond) {
         return PagedTradeListDto.toDto((tradeRepository.findAllByMyRend(cond)));
     }
 
-    public PagedTradeListDto findAllByMyBorrowTrade(TradePagingCondition cond) {
+    public PagedTradeListDto findAllBorrowTradeByCurrentUser(TradePagingCondition cond) {
         return PagedTradeListDto.toDto((tradeRepository.findAllByMyBorrow(cond)));
     }
 
     @Transactional
-    public void deleteTrade(Long id) {
+    public void deleteTradeByRenderWithTradeId(Long id) {
         Trade trade = tradeRepository.findById(id).orElseThrow(TradeNotFoundException::new);
         tradeRepository.delete(trade);
     }
