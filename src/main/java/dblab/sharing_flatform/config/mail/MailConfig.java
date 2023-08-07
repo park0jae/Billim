@@ -7,6 +7,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
+import static dblab.sharing_flatform.config.mail.MailConfigInfo.*;
+
 @Configuration
 public class MailConfig {
 
@@ -14,24 +16,23 @@ public class MailConfig {
     public JavaMailSender NaverMailService(){
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
-        javaMailSender.setHost("smtp.naver.com");
-        javaMailSender.setUsername("zerozae0926");
-        javaMailSender.setPassword("zerozae0926!");
+        javaMailSender.setHost(HOST);
+        javaMailSender.setUsername(USERNAME);
+        javaMailSender.setPassword(PASSWORD);
 
-        javaMailSender.setPort(465);
+        javaMailSender.setPort(PORT);
         javaMailSender.setJavaMailProperties(getMailProperties());
         return javaMailSender;
     }
 
-
     private Properties getMailProperties(){
         Properties properties = new Properties();
-        properties.setProperty("mail.transport.protocol", "smtp");
-        properties.setProperty("mail.smtp.auth", "true");
-        properties.setProperty("mail.smtp.starttls.enable", "true");
-        properties.setProperty("mail.debug", "true");
-        properties.setProperty("mail.smtp.ssl.trust", "smtp.naver.com");
-        properties.setProperty("mail.smtp.ssl.enable", "true");
+        properties.setProperty(MAIL_TRANSPORT_PROTOCOL, SMTP);
+        properties.setProperty(MAIL_SMTP_AUTH, IS_TRUE);
+        properties.setProperty(MAIL_SMTP_STARTTLS_ENABLE, IS_TRUE);
+        properties.setProperty(MAIL_DEBUG, IS_TRUE);
+        properties.setProperty(MAIL_SMTP_SSL_TRUST, HOST);
+        properties.setProperty(MAIL_SMTP_SSL_ENABLE, IS_TRUE);
 
         return properties;
     }

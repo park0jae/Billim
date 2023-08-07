@@ -24,12 +24,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static dblab.sharing_flatform.config.oauth.provider.OAuthInfo.*;
+
 @Service
 @RequiredArgsConstructor
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
+    private static final String RESPONSE = "response";
 
     @Transactional
     @Override
@@ -39,16 +42,16 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
         switch (registrationId){
-            case "kakao":
+            case KAKAO:
                 oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
                 break;
-            case "naver":
+            case NAVER:
                 ObjectMapper objectMapper = new ObjectMapper();
-                Object naverAccount = oAuth2User.getAttributes().get("response");
+                Object naverAccount = oAuth2User.getAttributes().get(RESPONSE);
                 Map<String, Object> account = objectMapper.convertValue(naverAccount, new TypeReference<Map<String, Object>>() {});
                 oAuth2UserInfo = new NaverUserInfo(account);
                 break;
-            case "google":
+            case GOOGLE:
                 oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
         }
         Optional<Member> memberEntity = memberRepository.findByProviderAndUsername(oAuth2UserInfo.getProvider(), oAuth2UserInfo.getEmail());

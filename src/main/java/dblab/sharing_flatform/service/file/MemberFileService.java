@@ -12,7 +12,10 @@ import java.io.IOException;
 
 @Service
 public class MemberFileService {
-    @Value("${upload.member.image.location}")
+
+    private static final String UPLOAD_MEMBER_IMAGE_LOCATION = "${upload.member.image.location}";
+
+    @Value(UPLOAD_MEMBER_IMAGE_LOCATION)
     private String location;
 
     @PostConstruct

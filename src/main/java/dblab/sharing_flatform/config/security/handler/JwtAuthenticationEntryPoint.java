@@ -12,8 +12,9 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
+    private static final String EXCEPTION_ENTRY_POINT = "/exception/entry-point";
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        response.sendRedirect("/exception/entry-point");
+        response.sendRedirect(EXCEPTION_ENTRY_POINT);
     }
 }

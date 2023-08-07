@@ -20,13 +20,23 @@ import java.util.List;
 @Import(BeanValidatorPluginsConfiguration.class)
 @Configuration
 public class SwaggerConfig {
+    private static final String TITLE = "STR BOOT SharingPlatform";
+    private static final String DESCRIPTION = "SharingPlatform REST API Documentation";
+    private static final String LICENSE_URL = "https://github.com/Dongwoongkim/Sharing_PlatForm";
+    private static final String VERSION = "1.0";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER_TOKEN = "Bearer Token";
+    private static final String HEADER = "header";
+    private static final String BASE_PACKAGE = "dblab.sharing_flatform.controller";
+    private static final String SCOPE = "global";
+    private static final String SCOPE_DESCRIPTION = "global access";
 
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.OAS_30)
                 .apiInfo(apiInfo()) // 2
                 .select() // 3
-                .apis(RequestHandlerSelectors.basePackage("dblab.sharing_flatform.controller"))
+                .apis(RequestHandlerSelectors.basePackage(BASE_PACKAGE))
                 .paths(PathSelectors.any())
                 .build()
                 .securitySchemes(List.of(apiKey())) // 4
@@ -35,17 +45,17 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("STR BOOT SharingPlatform")
-                .description("SharingPlatform REST API Documentation")
+                .title(TITLE)
+                .description(DESCRIPTION)
                 .license("rlaehddnd0422@naver.com")
-                .licenseUrl("https://github.com/Dongwoongkim/Sharing_PlatForm")
+                .licenseUrl(LICENSE_URL)
                 .license("okvv26@naver.com")
-                .version("1.0")
+                .version(VERSION)
                 .build();
     }
 
     private static ApiKey apiKey() {
-        return new ApiKey("Authorization", "Bearer Token", "header");
+        return new ApiKey(AUTHORIZATION, BEARER_TOKEN, HEADER);
     }
 
     private SecurityContext securityContext() {
@@ -54,8 +64,8 @@ public class SwaggerConfig {
     }
 
     private List<SecurityReference> defaultAuth() {
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "global access");
-        return List.of(new SecurityReference("Authorization", new AuthorizationScope[] {authorizationScope}));
+        AuthorizationScope authorizationScope = new AuthorizationScope(SCOPE, SCOPE_DESCRIPTION);
+        return List.of(new SecurityReference(AUTHORIZATION, new AuthorizationScope[] {authorizationScope}));
     }
 
 }

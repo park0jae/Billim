@@ -1,8 +1,8 @@
 package dblab.sharing_flatform.service.oauth;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import dblab.sharing_flatform.dto.member.OAuth2MemberCreateRequestDto;
 import dblab.sharing_flatform.dto.oauth.AccessTokenRequestDto;
 import dblab.sharing_flatform.dto.oauth.GoogleProfile;
@@ -21,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import static dblab.sharing_flatform.config.oauth.provider.OAuthInfo.*;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +30,12 @@ public class OAuthService {
     private final Gson gson;
     private final RestTemplate restTemplate;
     private final MemberRepository memberRepository;
-
+    private static final String NONE = "None";
+    private static final String ACCESS_TOKEN = "access_token";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
+    private static final String POST = "POST";
+    private static final String GET = "GET";
 
     public OAuth2MemberCreateRequestDto getAccessToken(String code, String provider, AccessTokenRequestDto accessTokenRequestDto){
         String access_Token = "";
@@ -37,14 +43,14 @@ public class OAuthService {
         String reqURL = "";
 
         switch (provider){
-            case "kakao":
-                reqURL = "https://kauth.kakao.com/oauth/token";
+            case KAKAO:
+                reqURL = ACCESS_TOKEN_URL_KAKAO;
                 break;
-            case "google":
-                reqURL = "https://oauth2.googleapis.com/token";
+            case GOOGLE:
+                reqURL = ACCESS_TOKEN_URL_GOOGLE;
                 break;
-            case "naver":
-                reqURL = "https://nid.naver.com/oauth2.0/token";
+            case NAVER:
+                reqURL = ACCESS_TOKEN_URL_NAVER;
                 break;
         }
 
@@ -53,17 +59,17 @@ public class OAuthService {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             //POST 요청을 위해 기본값이 false인 setDoOutput을 true로
-            conn.setRequestMethod("POST");
+            conn.setRequestMethod(POST);
             conn.setDoOutput(true);
 
             //POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
-            sb.append("grant_type=authorization_code");
-            sb.append("&client_id="+ accessTokenRequestDto.getClientId()); // TODO REST_API_KEY 입력
-            sb.append("&client_secret="+ accessTokenRequestDto.getClientSecret());
-            sb.append("&redirect_uri=" + accessTokenRequestDto.getRedirectUri()); // TODO 인가코드 받은 redirect_uri 입력
-            sb.append("&code=" + code);
+            sb.append(GRANT_TYPE);
+            sb.append(CLIENT_ID+ accessTokenRequestDto.getClientId()); // TODO REST_API_KEY 입력
+            sb.append(CLIENT_SECRET+ accessTokenRequestDto.getClientSecret());
+            sb.append(REDIRECT_URI + accessTokenRequestDto.getRedirectUri()); // TODO 인가코드 받은 redirect_uri 입력
+            sb.append(CODE + code);
             bw.write(sb.toString());
             bw.flush();
 
@@ -78,7 +84,7 @@ public class OAuthService {
 
             // Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
             JsonElement element = JsonParser.parseString(result);
-            access_Token = element.getAsJsonObject().get("access_token").getAsString();
+            access_Token = element.getAsJsonObject().get(ACCESS_TOKEN).getAsString();
 
             br.close();
             bw.close();
@@ -95,14 +101,14 @@ public class OAuthService {
         String reqURL = "";
 
         switch (provider){
-            case "kakao":
-                reqURL = "https://kapi.kakao.com/v2/user/me";
+            case KAKAO:
+                reqURL = USER_INFO_URL_KAKAO;
                 break;
-            case "google":
-                reqURL = "https://www.googleapis.com/oauth2/v1/userinfo";
+            case GOOGLE:
+                reqURL = USER_INFO_URL_GOOGLE;
                 break;
-            case "naver":
-                reqURL = "https://openapi.naver.com/v1/nid/me";
+            case NAVER:
+                reqURL = USER_INFO_URL_NAVER;
                 break;
         }
 
@@ -111,9 +117,9 @@ public class OAuthService {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            conn.setRequestMethod("GET");
+            conn.setRequestMethod(GET);
             conn.setDoOutput(true);
-            conn.setRequestProperty("Authorization", "Bearer " + accessToken); //전송할 header 작성, access_token전송
+            conn.setRequestProperty(AUTHORIZATION, BEARER + accessToken); //전송할 header 작성, access_token전송
 
             //결과 코드가 200이라면 성공
             int responseCode = conn.getResponseCode();
@@ -129,11 +135,11 @@ public class OAuthService {
             }
 //            System.out.println("response body : " + result);
 
-            if(provider == "kakao"){
+            if(provider == KAKAO){
                 KakaoProfile kakaoProfile = gson.fromJson(result, KakaoProfile.class);
                 br.close();
                 return kakaoProfile;
-            }else if(provider == "google"){
+            }else if(provider == GOOGLE){
                 GoogleProfile googleProfile = gson.fromJson(result, GoogleProfile.class);
                 br.close();
                 return googleProfile;
@@ -153,20 +159,19 @@ public class OAuthService {
     public void unlinkOAuthService(String accessToken, String provider){
         String url = "";
         switch (provider){
-            case "kakao" :
-                url = "https://kapi.kakao.com/v1/user/unlink";
+            case KAKAO:
+                url = UNLINK_URL_KAKAO;
                 break;
-            case "naver" :
-                url = "https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=nX6jP4IgsXNpJRqbg0Q5&client_secret=1vNwHm8Yri&access_token="
-                        +accessToken.replaceAll("'", "")+"&service_provider=NAVER";
+            case NAVER:
+                url = UNLINK_URL_NAVER_FRONT +accessToken.replaceAll("'", "") + UNLINK_URL_NAVER_END;
                 break;
-            case "google" :
-                url = "https://oauth2.googleapis.com/revoke?token=" + accessToken;
+            case GOOGLE:
+                url = UNLINK_URL_GOOGLE + accessToken;
         }
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.set("Authorization", "Bearer " + accessToken);
+        headers.set(AUTHORIZATION, BEARER + accessToken);
 
         HttpEntity<String> request = new HttpEntity<>(headers);
 
@@ -182,17 +187,17 @@ public class OAuthService {
     private OAuth2MemberCreateRequestDto getProvideInfo(String provider, String accessToken){
         String email = "";
         switch (provider){
-            case "kakao":
+            case KAKAO:
                 KakaoProfile oAuthKakaoInfo = (KakaoProfile) getOAuthUserInfo(accessToken, provider);
                 if(oAuthKakaoInfo == null) throw new OAuthUserNotFoundException();
                 email = oAuthKakaoInfo.getKakao_account().getEmail();
                 break;
-            case "google" :
+            case GOOGLE:
                 GoogleProfile oAuthGoogleInfo = (GoogleProfile) getOAuthUserInfo(accessToken, provider);
                 if(oAuthGoogleInfo == null) throw new OAuthUserNotFoundException();
                 email = oAuthGoogleInfo.getEmail();
                 break;
-            case "naver":
+            case NAVER:
                 NaverProfile oAuthNaverInfo = (NaverProfile) getOAuthUserInfo(accessToken, provider);
                 if(oAuthNaverInfo == null) throw new OAuthUserNotFoundException();
                 email = oAuthNaverInfo.getResponse().getEmail();
@@ -202,7 +207,7 @@ public class OAuthService {
         if(email == null){
             unlinkOAuthService(accessToken, provider);
             throw new SocialAgreementException();
-        } else if (memberRepository.existsByUsernameAndProvider(email, "None")) {
+        } else if (memberRepository.existsByUsernameAndProvider(email, NONE)) {
             throw new AlreadyExistsMemberException();
         }
 

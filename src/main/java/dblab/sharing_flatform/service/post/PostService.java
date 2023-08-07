@@ -37,8 +37,9 @@ public class PostService {
     private final CategoryRepository categoryRepository;
     private final PostFileService postFileService;
     private final LikePostRepository likePostRepository;
-
     private final NotificationHelper notificationHelper;
+
+    private static final String LIKE_POST_MESSAGE = "님이 이 글을 좋아합니다.";
 
     public PagedPostListDto readAll(PostPagingCondition cond) {
         return PagedPostListDto.toDto(postRepository.findAllByCategoryAndTitle(cond));
@@ -163,7 +164,7 @@ public class PostService {
             likePosts.add(new LikePost(member, post));
             likePostRepository.save(new LikePost(member, post));
             Member writeMember = memberRepository.findByUsername(post.getMember().getUsername()).orElseThrow(MemberNotFoundException::new);
-            notificationHelper.notificationIfSubscribe(member, writeMember, NotificationType.LIKE, "님이 이 글을 좋아합니다.");
+            notificationHelper.notificationIfSubscribe(member, writeMember, NotificationType.LIKE, LIKE_POST_MESSAGE);
         }
     }
 
