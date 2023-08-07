@@ -15,7 +15,6 @@ values
     ('dudwo0926@naver.com', '$2a$10$LGyuYTpUWfDwlBK.rSak3.U.0TuIFl8r5dU8H9w1EOAI0rn0fnqf2', 'dudwo','전주시', '덕진구', '금암동', '709-3', '안녕하세요 박영재입니다. 잘부탁드립니다.', '011-3134-7623', null, 'None');
 
 
--- MEMBER_ROLE
 INSERT INTO MEMBER_ROLE (member_id, role_id)
 values
     (1, 1),

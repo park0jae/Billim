@@ -1,20 +1,22 @@
 package dblab.sharing_flatform.domain.embedded.item;
 
-import lombok.*;
-import javax.persistence.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Embeddable;
 
 @Data
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Item {
-    @Column(nullable = false)
+
     private String name;
 
-    @Column(nullable = false)
     private Long price;
 
-    @Column(nullable = false)
     private Long quantity;
 
     public void updateItem(String name, Long price, Long quantity) {

@@ -85,7 +85,7 @@ public class SignController {
                                 @Value("${spring.security.oauth2.client.registration.kakao.client-id}") String clientId,
                                 @Value("${spring.security.oauth2.client.registration.kakao.client-secret}") String clientSecret,
                                 @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}") String redirectUri) {
-        AccessTokenRequestDto accessTokenRequestDto= new AccessTokenRequestDto(clientId, clientSecret, redirectUri);
+        AccessTokenRequestDto accessTokenRequestDto = new AccessTokenRequestDto(clientId, clientSecret, redirectUri);
         OAuth2MemberCreateRequestDto req = oAuthService.getAccessToken(code, "kakao", accessTokenRequestDto);
 
         return Response.success(signUpAndLogin(req));

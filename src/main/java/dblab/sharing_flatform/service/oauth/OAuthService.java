@@ -163,7 +163,7 @@ public class OAuthService {
                 url = UNLINK_URL_KAKAO;
                 break;
             case NAVER:
-                url = UNLINK_URL_NAVER_FRONT +accessToken.replaceAll("'", "") + UNLINK_URL_NAVER_END;
+                url = UNLINK_URL_NAVER_FRONT + accessToken.replaceAll("'", "") + UNLINK_URL_NAVER_END;
                 break;
             case GOOGLE:
                 url = UNLINK_URL_GOOGLE + accessToken;

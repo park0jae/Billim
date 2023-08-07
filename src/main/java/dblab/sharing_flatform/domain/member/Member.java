@@ -29,8 +29,11 @@ public class Member {
     private String username;
     @Column(nullable = false)
     private String password;
-    @Column(nullable = false)
+
+    @Column(nullable = true)
     private String phoneNumber;
+
+    @Column(nullable = true)
     private String nickname;
     @Embedded
     private Address address;
@@ -41,7 +44,7 @@ public class Member {
     @Column(nullable = false)
     private String introduce;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<MemberRole> roles = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -54,7 +57,7 @@ public class Member {
         this.nickname = nickname;
         this.phoneNumber = phoneNumber;
         this.address = address;
-        this.provider = "None";
+        this.provider = provider;
         this.introduce = "자기소개가 없습니다.";
         this.profileImage = null;
         addRoles(roles);

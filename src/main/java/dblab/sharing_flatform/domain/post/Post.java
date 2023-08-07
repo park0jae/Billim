@@ -47,6 +47,7 @@ public class Post extends BaseTime {
     private Category category;
 
     @Embedded
+    @Column(nullable = true)
     private Item item;
 
     @ManyToOne(fetch = FetchType.LAZY)
