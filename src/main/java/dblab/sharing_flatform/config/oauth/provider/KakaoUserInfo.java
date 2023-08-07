@@ -6,8 +6,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.Map;
 
-public class KakaoUserInfo implements OAuth2UserInfo {
+import static dblab.sharing_flatform.config.oauth.provider.OAuthInfo.*;
 
+public class KakaoUserInfo implements OAuth2UserInfo {
     private Map<String, Object> attributes;
 
     public KakaoUserInfo(Map<String, Object> attributes) {
@@ -16,7 +17,7 @@ public class KakaoUserInfo implements OAuth2UserInfo {
 
     @Override
     public String getProvider() {
-        return "kakao";
+        return KAKAO;
     }
 
     @Override
@@ -27,14 +28,13 @@ public class KakaoUserInfo implements OAuth2UserInfo {
     @Override
     public String getEmail() {
         ObjectMapper objectMapper = new ObjectMapper();
-        Object kakaoAccount = attributes.get("kakao_account");
+        Object kakaoAccount = attributes.get(KAKAO_ACCOUNT);
         Map<String, Object> account = objectMapper.convertValue(kakaoAccount, new TypeReference<Map<String, Object>>() {});
-        return (String) account.get("email");
+        return (String) account.get(EMAIL);
     }
-
     @Override
     public String getName() {
-        return (String) attributes.get("profile_nickname");
+        return (String) attributes.get(PROFILE_NICKNAME);
     }
 
     @Override

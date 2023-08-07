@@ -4,6 +4,8 @@ import dblab.sharing_flatform.domain.embedded.address.Address;
 
 import java.util.Map;
 
+import static dblab.sharing_flatform.config.oauth.provider.OAuthInfo.*;
+
 public class NaverUserInfo implements OAuth2UserInfo {
 
     public NaverUserInfo(Map<String,Object> attributes) {
@@ -14,7 +16,7 @@ public class NaverUserInfo implements OAuth2UserInfo {
 
     @Override
     public String getProvider() {
-        return "naver";
+        return NAVER;
     }
 
     @Override
@@ -24,7 +26,7 @@ public class NaverUserInfo implements OAuth2UserInfo {
 
     @Override
     public String getName() {
-        return attributes.get("name").toString();
+        return attributes.get(NAME).toString();
     }
 
     @Override
@@ -34,6 +36,6 @@ public class NaverUserInfo implements OAuth2UserInfo {
 
     @Override
     public String getEmail() {
-        return attributes.get("email").toString();
+        return attributes.get(EMAIL).toString();
     }
 }

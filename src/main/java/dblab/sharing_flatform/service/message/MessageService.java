@@ -17,9 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -28,6 +25,7 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
     private final NotificationHelper notificationHelper;
+    private static final String ARRIVE_MESSAGE = "님으로부터 메시지가 도착했습니다.";
 
     @Transactional
     public MessageDto sendMessage(MessageCreateRequestDto requestDto, String username) {
@@ -36,7 +34,7 @@ public class MessageService {
         Message message = new Message(requestDto.getContent(), receiver, sender);
 
         messageRepository.save(message);
-        notificationHelper.notificationIfSubscribe(sender, receiver, NotificationType.MESSAGE, "님으로부터 메시지가 도착했습니다.");
+        notificationHelper.notificationIfSubscribe(sender, receiver, NotificationType.MESSAGE, ARRIVE_MESSAGE);
 
         return MessageDto.toDto(message);
     }

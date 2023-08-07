@@ -16,19 +16,22 @@ import java.io.IOException;
 @Component
 @Slf4j
 public class JwtExceptionFilter extends OncePerRequestFilter {
+    private static final String EXCEPTION_INVALID_TOKEN = "/exception/invalid-token";
+    private static final String EXCEPTION_GUARD = "/exception/guard";
+    private static final String EXCEPTION_NO_TOKEN = "/exception/no-token";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
         } catch (ValidateTokenException e) {
-            response.sendRedirect("/exception/invalid-token");
+            response.sendRedirect(EXCEPTION_INVALID_TOKEN);
             return;
         } catch (GuardException e) {
-            response.sendRedirect("/exception/guard");
+            response.sendRedirect(EXCEPTION_GUARD);
             return;
         } catch (TokenNotFoundException e){
-            response.sendRedirect("/exception/no-token");
+            response.sendRedirect(EXCEPTION_NO_TOKEN);
             return;
         }
     }
