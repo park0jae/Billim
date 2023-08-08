@@ -27,8 +27,7 @@ public class SignController {
     private final MailService mailService;
 
     @ApiOperation(value = "일반 회원가입", notes = "일반 회원가입을 한다.") // 2
-    @PostMapping("/sign-up")
-    @ResponseBody
+    @PostMapping("/auth/sign-up")
     @ResponseStatus(HttpStatus.CREATED)
     public Response signUp(@Valid @ModelAttribute MemberCreateRequestDto memberCreateRequestDto){
         signService.signUp(memberCreateRequestDto);
@@ -36,15 +35,14 @@ public class SignController {
     }
 
     @ApiOperation(value = "일반 로그인", notes = "일반 로그인을 한다.") // 2
-    @PostMapping("/login")
-    @ResponseBody
+    @PostMapping("/auth/login")
     @ResponseStatus(HttpStatus.OK)
     public Response login(@Valid @ModelAttribute LoginRequestDto loginRequestDto){
         return Response.success(signService.login(loginRequestDto));
     }
 
     @ApiOperation(value = "비밀번호 재설정", notes = "비밀번호를 재설정합니다.") // 2
-    @PostMapping("/reset/password")
+    @PostMapping("/password-reset")
     @ResponseStatus(HttpStatus.OK)
     public Response resetPassword(@Valid @ModelAttribute PasswordResetRequestDto passwordResetRequestDto){
         signService.resetPassword(passwordResetRequestDto);
@@ -52,7 +50,7 @@ public class SignController {
     }
 
     @ApiOperation(value = "회원가입을 위한 이메일 인증" , notes = "회원가입에서 이메일 인증을 위한 엔드포인트")
-    @PostMapping("/sign-up/email")
+    @PostMapping("/email/registration")
     @ResponseStatus(HttpStatus.OK)
     public Response signUpMailConfirm(@RequestParam(name = "email") String email)  {
         mailService.sendSignUpMail(email);
@@ -60,8 +58,8 @@ public class SignController {
     }
 
     @ApiOperation(value = "비밀번호 재설정을 위한 이메일 인증" , notes = "비밀번호 재설정 페이지에서 이메일 인증을 위한 엔드포인트")
-    @PostMapping("/reset-password/mail")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    @PostMapping("/email/password-reset")
     public Response resetPasswordMailConfirm(@RequestParam(name = "email") String email)  {
         mailService.sendResetPasswordMail(email);
         return Response.success();

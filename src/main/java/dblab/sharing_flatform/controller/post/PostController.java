@@ -19,7 +19,7 @@ import static dblab.sharing_flatform.config.security.util.SecurityUtil.getCurren
 @Api(value = "Post Controller", tags = "Post")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/post")
+@RequestMapping("/posts")
 public class PostController {
 
     private final PostService postService;
@@ -44,7 +44,7 @@ public class PostController {
         return Response.success(postService.readAllWriteByCurrentUser(cond));
     }
     @ApiOperation(value ="본인의 좋아요 누른 게시글 전체 조회", notes = "현재 사용자가 좋아요 누른 게시글을 전체 조회합니다.")
-    @GetMapping("/like")
+    @GetMapping("/likes")
     @ResponseStatus(HttpStatus.OK)
     public Response readAllLikePostByCurrentUser(@Valid PostPagingCondition cond) {
         cond.setUsername(getCurrentUsernameCheck());
@@ -71,7 +71,7 @@ public class PostController {
         return Response.success(postService.updatePost(postId, postUpdateRequestDto));
     }
     @ApiOperation(value = "게시글 좋아요/좋아요 취소", notes = "해당 번호의 게시글에 좋아요 남기기/좋아요 취소")
-    @PostMapping("/like/{postId}")
+    @PostMapping("/{postId}/likes")
     @ResponseStatus(HttpStatus.OK)
     public Response likeUpOrDown(@ApiParam(value = "좋아요할 게시글 id", required = true) @PathVariable Long postId) {
         postService.like(postId, getCurrentUsernameCheck());

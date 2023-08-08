@@ -19,7 +19,7 @@ import static dblab.sharing_flatform.config.security.util.SecurityUtil.getCurren
 @Api(value = "Trade Controller", tags = "Trade")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/trade")
+@RequestMapping("/trades")
 public class TradeController {
     private final TradeService tradeService;
 
@@ -53,7 +53,7 @@ public class TradeController {
     }
 
     @ApiOperation(value = "나의 완료된/완료되지 않은 수여 거래 내역 조회", notes = "내가 대여 해줄 거래 중 완료된/아직 완료되지 않은 거래 내역 조회")
-    @GetMapping("/rend")
+    @GetMapping("/rend-item")
     @ResponseStatus(HttpStatus.OK)
     public Response findAllRendTradeByCurrentUser(@Valid TradePagingCondition cond){
         cond.setRenderMember(SecurityUtil.getCurrentUsernameCheck());
@@ -61,7 +61,7 @@ public class TradeController {
     }
 
     @ApiOperation(value = "나의 완료된/완료되지 않은 대여 거래 내역 조회", notes = "내가 대여 받을 거래 중 완료된/아직 완료되지 않은 거래 내역 조회")
-    @GetMapping("/borrow")
+    @GetMapping("/borrow-item")
     @ResponseStatus(HttpStatus.OK)
     public Response findAllBorrowTradeByCurrentUser(@Valid TradePagingCondition cond){
         cond.setBorrowerMember(SecurityUtil.getCurrentUsernameCheck());
