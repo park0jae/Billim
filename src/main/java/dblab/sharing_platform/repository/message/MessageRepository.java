@@ -9,16 +9,4 @@ import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Long>, QMessageRepository {
 
-    @Query("select m from Message m join fetch m.sendMember sm where sm.username =:senderName")
-    List<Message> findAllBySendMember(@Param("senderName") String senderName);
-
-    @Query("select m from Message m join fetch m.receiveMember rm where rm.username =:receiverName")
-    List<Message> findAllByReceiverMember(@Param("receiverName") String receiverName);
-
-    @Query("select m from Message m " +
-            "join fetch m.sendMember sm " +
-            "join fetch m.receiveMember rm " +
-            "where sm.nickname = :senderNickName and rm.nickname = :receiverNickname")
-    List<Message> findAllBySendAndReceiverMembers(@Param("senderNickName") String senderNickName, @Param("receiverNickname") String receiverNickname);
-
 }

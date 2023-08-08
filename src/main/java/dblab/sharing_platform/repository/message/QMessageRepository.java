@@ -10,4 +10,5 @@ public interface QMessageRepository {
 
     Page<MessageDto> findAllByReceiverMember(MessagePagingCondition cond);
 
+
 }

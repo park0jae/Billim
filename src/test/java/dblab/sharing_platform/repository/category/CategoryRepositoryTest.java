@@ -2,7 +2,6 @@ package dblab.sharing_platform.repository.category;
 
 import dblab.sharing_platform.config.querydsl.QuerydslConfig;
 import dblab.sharing_platform.domain.category.Category;
-import dblab.sharing_platform.exception.category.CategoryNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,8 @@ import org.springframework.context.annotation.Import;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static dblab.sharing_platform.factory.category.CategoryFactory.createCategory;
@@ -29,7 +28,7 @@ class CategoryRepositoryTest {
     @PersistenceContext EntityManager em;
 
     @Test
-    @DisplayName("카테고리 생성")
+    @DisplayName("카테고리 저장")
     void createAndReadTest() {
         // given
         Category category = createCategory();
@@ -38,7 +37,7 @@ class CategoryRepositoryTest {
         Category savedCategory = categoryRepository.save(category);
 
         // then
-        categoryRepository.findById(savedCategory.getId()).orElseThrow(CategoryNotFoundException::new);
+        assertThat(categoryRepository.findById(savedCategory.getId())).isPresent();
     }
 
     @Test
@@ -67,9 +66,9 @@ class CategoryRepositoryTest {
         // when
         categoryRepository.delete(category1);
         clear();
+        List<Category> foundCategories = categoryRepository.findAll();
 
         // then
-        List<Category> foundCategories = categoryRepository.findAll();
         assertThat(foundCategories.size()).isEqualTo(1);
         assertThat(foundCategories.get(0).getId()).isEqualTo(category4.getId());
     }
@@ -117,6 +116,19 @@ class CategoryRepositoryTest {
         assertThat(result.get(6).getId()).isEqualTo(category6.getId());
         assertThat(result.get(7).getId()).isEqualTo(category7.getId());
         assertThat(result.size()).isEqualTo(8);
+    }
+
+    @Test
+    @DisplayName("카테고리 이름으로 카테고리 조회")
+    public void findByNameTest() throws Exception {
+        //given
+        Category category1 = categoryRepository.save(createCategoryWithName("category1"));
+
+        //when
+        Optional<Category> findCategory = categoryRepository.findByName(category1.getName());
+
+        //then
+        assertThat(findCategory.get()).isNotNull();
     }
 
     private void clear() {

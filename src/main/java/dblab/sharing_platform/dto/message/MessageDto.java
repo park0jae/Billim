@@ -12,8 +12,8 @@ public class MessageDto {
 
     private Long id;
     private String content;
-    private String sendMember;
-    private String receiverMember;
+    private String senderNickname;
+    private String recevierNickname;
 
     public static MessageDto toDto(Message message) {
         return new MessageDto(

@@ -3,6 +3,8 @@ package dblab.sharing_platform.repository.message;
 import dblab.sharing_platform.config.querydsl.QuerydslConfig;
 import dblab.sharing_platform.domain.member.Member;
 import dblab.sharing_platform.domain.message.Message;
+import dblab.sharing_platform.dto.message.MessageDto;
+import dblab.sharing_platform.dto.message.MessagePagingCondition;
 import dblab.sharing_platform.factory.member.MemberFactory;
 import dblab.sharing_platform.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,12 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @Import(QuerydslConfig.class)
@@ -33,10 +35,13 @@ public class MessageRepositoryTest {
 
     Message message;
 
+    Member sendMember;
+    Member receiveMember;
+
     @BeforeEach
     public void beforeEach(){
-        Member receiveMember = MemberFactory.createReceiveMember();
-        Member sendMember = MemberFactory.createSendMember();
+        receiveMember = MemberFactory.createReceiveMember();
+        sendMember = MemberFactory.createSendMember();
 
         memberRepository.save(receiveMember);
         flushAndClear();
@@ -44,54 +49,43 @@ public class MessageRepositoryTest {
         flushAndClear();
 
         message = new Message("content", receiveMember, sendMember);
+
     }
 
     @Test
     @DisplayName("송신 메시지 조회")
     public void findAllBySendMemberTest() {
         // given
-        String senderName = message.getSendMember().getUsername();
+        String senderName = message.getSendMember().getNickname();
 
         messageRepository.save(message);
         flushAndClear();
 
         // when
-        List<Message> allSendMessages = messageRepository.findAllBySendMember(senderName);
+        MessagePagingCondition cond = new MessagePagingCondition(0, 10, sendMember.getUsername(), null, null, null);
+        Page<MessageDto> result = messageRepository.findAllBySendMember(cond);
 
         // then
-        assertThat(senderName).isEqualTo(allSendMessages.get(0).getSendMember().getUsername());
+        assertThat(senderName).isEqualTo(result.getContent().get(0).getSenderNickname());
     }
 
     @Test
     @DisplayName("수신 메시지 조회")
     public void findAllByReceiverMemberTest(){
         // given
-        String receiverName = message.getReceiveMember().getUsername();
+        String receiverName = message.getReceiveMember().getNickname();
+
         messageRepository.save(message);
         flushAndClear();
 
         // when
-        List<Message> allReceiveMessages = messageRepository.findAllByReceiverMember(receiverName);
+        MessagePagingCondition cond = new MessagePagingCondition(0, 10, null, receiveMember.getUsername(), null, null);
+        Page<MessageDto> result = messageRepository.findAllByReceiverMember(cond);
 
         // then
-        assertThat(receiverName).isEqualTo(allReceiveMessages.get(0).getReceiveMember().getUsername());
+        assertThat(receiverName).isEqualTo(result.getContent().get(0).getRecevierNickname());
     }
 
-    @Test
-    @DisplayName("특정 회원이 특정 회원에게 보낸 메시지 전체 조회")
-    public void findAllBySendAndReceiverMembersTest(){
-        // given
-        messageRepository.save(message);
-        flushAndClear();
-
-        // when
-        List<Message> result = messageRepository.findAllBySendAndReceiverMembers(
-                message.getSendMember().getNickname(),
-                message.getReceiveMember().getNickname());
-        // then
-        assertThat(result.get(0).getSendMember().getUsername()).isEqualTo("sender");
-        assertThat(result.get(0).getReceiveMember().getUsername()).isEqualTo("receiver");
-    }
 
     public void flushAndClear(){
         em.flush();
