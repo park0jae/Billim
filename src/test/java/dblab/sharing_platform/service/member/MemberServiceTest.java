@@ -90,7 +90,6 @@ public class MemberServiceTest {
     @DisplayName("회원 이름 조건 검색 테스트")
     public void findAllBySearchTest(){
         // Given
-
         List<Member> members = new ArrayList<>();
         members.add(createMemberWithRole());
         members.add(createRenderMember());

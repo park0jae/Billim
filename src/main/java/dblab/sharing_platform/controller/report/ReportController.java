@@ -1,5 +1,6 @@
 package dblab.sharing_platform.controller.report;
 
+import dblab.sharing_platform.config.security.util.SecurityUtil;
 import dblab.sharing_platform.dto.report.ReportPagingCondition;
 import dblab.sharing_platform.dto.report.ReportCreateRequestDto;
 import dblab.sharing_platform.dto.response.Response;
@@ -26,8 +27,16 @@ public class ReportController {
     @ApiOperation(value = "Report 전체 조회 (ADMIN) ", notes = "ADMIN 권한으로 Report를 조회합니다.")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Response readAllReportByCond(@Valid ReportPagingCondition cond) {
+    public Response readAllReportByCondForAdmin(@Valid ReportPagingCondition cond) {
         return Response.success(reportService.readAllReportByCond(cond));
+    }
+
+    @ApiOperation(value = "내가 생성한 Report 전체 조회", notes = "내가 생성한 Report를 모두 조회합니다.")
+    @GetMapping("/myPage")
+    @ResponseStatus(HttpStatus.OK)
+    public Response readAllMyReport(@Valid ReportPagingCondition cond) {
+        cond.setWriterUsername(SecurityUtil.getCurrentUsernameCheck());
+        return Response.success(reportService.readAllMyReport(cond));
     }
 
     @ApiOperation(value = "게시글 또는 회원에 대한 Report를 생성", notes = "현재 로그인한 유저 정보로 게시글/회원에 대한 Report를 생성합니다.")
@@ -45,6 +54,5 @@ public class ReportController {
         reportService.deleteReportByReportId(reportId);
         return Response.success();
     }
-
 
 }

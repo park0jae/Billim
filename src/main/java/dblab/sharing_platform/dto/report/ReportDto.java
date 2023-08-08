@@ -16,6 +16,7 @@ public class ReportDto {
     private String reporter_nickname;
     private ReportType reportType;
     private String content;
+
     private Long postId;
     private String reported_nickname;
 
@@ -26,5 +27,12 @@ public class ReportDto {
         this.content = content;
         this.postId = postId;
         this.reported_nickname = (report.getReported() == null ? null : report.getReported().getNickname());
+    }
+
+    public static ReportDto toDto(Report report) {
+        if (report.getPost() != null) {
+            return new ReportDto(report.getId(), report.getContent(), report.getReportType(), report.getContent(), report.getPost().getId(), report.getReporter().getNickname());
+        }
+        return new ReportDto(report.getId(), report.getContent(), report.getReportType(), report.getContent(), null, report.getReporter().getNickname());
     }
 }
