@@ -19,27 +19,27 @@ import static dblab.sharing_flatform.config.security.util.SecurityUtil.getCurren
 @Api(value = "Member Controller", tags = "Member")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/member")
+@RequestMapping("/members")
 public class MemberController {
 
     private final MemberService memberService;
 
     @ApiOperation(value = "전체 회원 조회", notes = "전체 회원을 조회합니다. (username 검색)")
-    @GetMapping("/search")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Response readAllMemberByCond(@Valid MemberPagingCondition cond) {
         return Response.success(memberService.readAllMemberByCond(cond));
     }
 
     @ApiOperation(value = "나의 개인 정보 조회", notes = "현재 로그인한 회원 정보를 조회합니다.")
-    @GetMapping
+    @GetMapping("/my-profile")
     @ResponseStatus(HttpStatus.OK)
     public Response readInfoCurrentUser() {
         return Response.success(memberService.readCurrentUserInfoByUsername(getCurrentUsernameCheck()));
     }
 
     @ApiOperation(value = "회원 프로필 정보 조회", notes = "회원의 프로필 정보를 조회합니다.")
-    @GetMapping("/profile/{username}")
+    @GetMapping("/{username}")
     @ResponseStatus(HttpStatus.OK)
     public Response findMemberProfileByUsername(@ApiParam(name = "검색할 사용자 아이디", required = true) @PathVariable String username) {
         return Response.success(memberService.readMemberProfileByNickname(username));
@@ -61,7 +61,7 @@ public class MemberController {
     }
 
     @ApiOperation(value = "OAuth 회원 추가 정보 등록(필수) / 수정 ", notes = "OAuth2 유저 최초 로그인 시 OAuth 회원 본인의 정보를 등록합니다. / OAuth2 회원의 정보를 수정합니다.")
-    @PatchMapping("/update/oauth")
+    @PatchMapping("/oauth")
     @ResponseStatus(HttpStatus.OK)
     public Response updateOAuthMemberInfo(@Valid @ModelAttribute OAuthMemberUpdateRequestDto requestDto) {
         return Response.success(memberService.oauthMemberUpdate(getCurrentUsernameCheck(), requestDto));

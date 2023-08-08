@@ -11,20 +11,20 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/notification")
+@RequestMapping("/notifications")
 public class NotificationController {
 
     private final NotificationService notificationService;
 
     @ApiOperation(value = "알림 구독", notes = "알림을 구독한다.")
-    @GetMapping(value = "/subscribe/on", produces = "text/event-stream")
+    @GetMapping(value = "/subscription", produces = "text/event-stream")
     @ResponseStatus(HttpStatus.OK)
     public SseEmitter subscribeNotification(@RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
         return notificationService.subscribeNotification(Long.valueOf(SecurityUtil.getCurrentUserIdCheck()), lastEventId);
     }
 
     @ApiOperation(value = "알림 구독 취소", notes = "알림을 구독 취소한다.")
-    @GetMapping(value = "/subscribe/off")
+    @GetMapping(value = "/unsubscription")
     @ResponseStatus(HttpStatus.OK)
     public Response unSubscribeNotification() {
         notificationService.unSubscribeNotification(Long.valueOf(SecurityUtil.getCurrentUserIdCheck()));

@@ -18,13 +18,13 @@ import static dblab.sharing_flatform.config.security.util.SecurityUtil.getCurren
 @Api(value = "Review Controller", tags = "Review")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/review")
+@RequestMapping("/reviews")
 public class ReviewController {
 
     private final ReviewService reviewService;
 
     @ApiOperation(value = "현재 로그인한 유저의 리뷰를 조회", notes = "현재 로그인한 유저에게 작성된 리뷰를 조회합니다.")
-    @GetMapping("/myPage")
+    @GetMapping("/my")
     @ResponseStatus(HttpStatus.OK)
     public Response findAllReviewsWriteByCurrentUser(@Valid ReviewPagingCondition cond){
         cond.setUsername(getCurrentUsernameCheck());

@@ -18,7 +18,7 @@ import static dblab.sharing_flatform.config.security.util.SecurityUtil.getCurren
 @Api(value = "Report Controller", tags = "Report")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/report")
+@RequestMapping("/reports")
 public class ReportController {
 
     private final ReportService reportService;

@@ -16,7 +16,7 @@ import static dblab.sharing_flatform.config.security.util.SecurityUtil.getCurren
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/message")
+@RequestMapping("/messages")
 public class MessageController {
 
     private final MessageService messageService;
@@ -29,7 +29,7 @@ public class MessageController {
     }
 
     @ApiOperation(value = "송신 메시지 조회", notes = "현재 로그인한 유저가 송신한 메시지를 모두 조회합니다.")
-    @GetMapping("/send")
+    @GetMapping("/sent")
     @ResponseStatus(HttpStatus.OK)
     public Response findSendMessageByCurrentUser(@Valid MessagePagingCondition cond){
         cond.setSenderUsername(getCurrentUsernameCheck());
@@ -37,7 +37,7 @@ public class MessageController {
     }
 
     @ApiOperation(value = "수신 메시지 조회", notes = "현재 로그인한 유저가 수신한 메시지를 모두 조회합니다.")
-    @GetMapping("/receive")
+    @GetMapping("/received")
     @ResponseStatus(HttpStatus.OK)
     public Response findReceiveMessageByCurrentUser(@Valid MessagePagingCondition cond){
         cond.setReceiverUsername(getCurrentUsernameCheck());
@@ -45,7 +45,7 @@ public class MessageController {
     }
 
     @ApiOperation(value = "송신자에 의한 메세지 삭제", notes = "메세지를 보낸 유저가 메세지를 삭제합니다.")
-    @DeleteMapping("/send/{messageId}")
+    @DeleteMapping("/{messageId}/sent")
     @ResponseStatus(HttpStatus.OK)
     public Response deleteMessageBySender(@ApiParam(value = "삭제할 Message Id", required = true) @PathVariable Long messageId) {
         messageService.deleteMessageBySender(messageId);
@@ -53,7 +53,7 @@ public class MessageController {
     }
 
     @ApiOperation(value = "수신자에 의한 메세지 삭제", notes = "메세지를 수신한 유저가 메세지를 삭제합니다.")
-    @DeleteMapping("/receive/{messageId}")
+    @DeleteMapping("/{messageId}/received")
     @ResponseStatus(HttpStatus.OK)
     public Response deleteMessageByReceiver(@ApiParam(value = "삭제할 Message Id", required = true) @PathVariable Long messageId) {
         messageService.deleteMessageByReceiver(messageId);
