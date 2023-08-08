@@ -80,6 +80,12 @@ public class ExceptionAdvisor {
         return getFailureResponse("CONFLICT.CODE", "OAUTH2_ALREADY_SIGNUP.MSG");
     }
 
+    @ExceptionHandler(AlreadySendAuthKeyException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Response alreadySendAuthKeyException(AlreadySendAuthKeyException e) {
+        return getFailureResponse("CONFLICT.CODE", "OAUTH2_ALREADY_SEND_KEY.MSG");
+    }
+
     @ExceptionHandler(AuthenticationEntryPointException.class)
     @ResponseStatus(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED)
     public Response authenticationEntryPointException(AuthenticationEntryPointException e) {

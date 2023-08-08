@@ -9,7 +9,7 @@ public interface EmailAuthRepository extends JpaRepository<EmailAuth, String> {
 
     Optional<EmailAuth> findByEmailAndPurpose(String email, String purpose);
 
-    boolean existsByEmail(String email);
+    boolean existsByEmailAndPurpose(String email, String purpose);
 
     boolean existsByKey(String Key);
 

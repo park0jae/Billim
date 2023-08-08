@@ -29,7 +29,7 @@ public class SignController {
     @ApiOperation(value = "일반 회원가입", notes = "일반 회원가입을 한다.") // 2
     @PostMapping("/auth/sign-up")
     @ResponseStatus(HttpStatus.CREATED)
-    public Response signUp(@Valid @ModelAttribute MemberCreateRequestDto memberCreateRequestDto){
+    public Response signUp(@Valid @RequestBody MemberCreateRequestDto memberCreateRequestDto){
         signService.signUp(memberCreateRequestDto);
         return Response.success();
     }
@@ -37,14 +37,14 @@ public class SignController {
     @ApiOperation(value = "일반 로그인", notes = "일반 로그인을 한다.") // 2
     @PostMapping("/auth/login")
     @ResponseStatus(HttpStatus.OK)
-    public Response login(@Valid @ModelAttribute LoginRequestDto loginRequestDto){
+    public Response login(@Valid @RequestBody LoginRequestDto loginRequestDto){
         return Response.success(signService.login(loginRequestDto));
     }
 
     @ApiOperation(value = "비밀번호 재설정", notes = "비밀번호를 재설정합니다.") // 2
     @PostMapping("/password-reset")
     @ResponseStatus(HttpStatus.OK)
-    public Response resetPassword(@Valid @ModelAttribute PasswordResetRequestDto passwordResetRequestDto){
+    public Response resetPassword(@Valid @RequestBody PasswordResetRequestDto passwordResetRequestDto){
         signService.resetPassword(passwordResetRequestDto);
         return Response.success();
     }
