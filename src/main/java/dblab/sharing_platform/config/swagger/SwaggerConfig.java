@@ -27,7 +27,7 @@ public class SwaggerConfig {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER_TOKEN = "Bearer Token";
     private static final String HEADER = "header";
-    private static final String BASE_PACKAGE = "dblab.sharing_flatform.controller";
+    private static final String BASE_PACKAGE = "dblab.sharing_platform.controller";
     private static final String SCOPE = "global";
     private static final String SCOPE_DESCRIPTION = "global access";
 

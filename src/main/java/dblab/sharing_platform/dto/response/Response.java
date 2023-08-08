@@ -13,13 +13,13 @@ public class Response {
     private int code;
     private Result result;
 
-    public static Response success() {
-        return new Response(true, 0, null);
+    public static Response success(int code) {
+        return new Response(true, code, null);
     }
 
     // DTO 객체에 대한 success 처리를 위해 <T> 제네릭 타입 선언
-    public static <T> Response success(T data) {
-        return new Response(true, 0, new Success<>(data));
+    public static <T> Response success(int code, T data) {
+        return new Response(true, code, new Success<>(data));
     }
 
     public static Response failure(int code, String msg) {

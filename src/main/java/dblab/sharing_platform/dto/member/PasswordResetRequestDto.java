@@ -6,7 +6,7 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-@ApiModel(value = "회원가입 요청")
+@ApiModel(value = "비밀번호 재설정 요청")
 @EqualsAndHashCode(callSuper=false)
 @Data
 @AllArgsConstructor
