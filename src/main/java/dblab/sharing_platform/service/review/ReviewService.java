@@ -8,6 +8,7 @@ import dblab.sharing_platform.dto.review.PagedReviewListDto;
 import dblab.sharing_platform.dto.review.ReviewPagingCondition;
 import dblab.sharing_platform.dto.review.ReviewRequestDto;
 import dblab.sharing_platform.dto.review.ReviewResponseDto;
+import dblab.sharing_platform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_platform.exception.member.MemberNotFoundException;
 import dblab.sharing_platform.exception.review.ExistReviewException;
 import dblab.sharing_platform.exception.review.ImpossibleWriteReviewException;
@@ -38,7 +39,7 @@ public class ReviewService {
     @Transactional
     public ReviewResponseDto writeReviewByTradeId(ReviewRequestDto reviewRequestDto, Long tradeId, String username) {
         Trade trade = tradeRepository.findById(tradeId).orElseThrow(TradeNotFoundException::new);
-        Member writer = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new); // 리뷰 작성자
+        Member writer = memberRepository.findByUsername(username).orElseThrow(AuthenticationEntryPointException::new); // 리뷰 작성자
         Member member = memberRepository.findById(trade.getRenderMember().getId()).orElseThrow(MemberNotFoundException::new); // 리뷰 받는 사람
 
         validate(username, trade);
@@ -49,6 +50,7 @@ public class ReviewService {
 
         reviewRepository.save(review);
         trade.addReview(review);
+
         notificationHelper.notificationIfSubscribe(writer, member, NotificationType.REVIEW, REVIEW_COMPLETE_MESSAGE);
         return ReviewResponseDto.toDto(review);
     }
@@ -70,7 +72,7 @@ public class ReviewService {
         return PagedReviewListDto.toDto(reviewRepository.findAllWithMemberByCurrentUsername(cond));
     }
 
-    public PagedReviewListDto findAllReviewsByUsername(ReviewPagingCondition cond) {
+    public PagedReviewListDto findAllReviewsByNickname(ReviewPagingCondition cond) {
         return PagedReviewListDto.toDto(reviewRepository.findAllByUsername(cond));
     }
 

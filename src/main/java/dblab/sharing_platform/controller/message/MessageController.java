@@ -42,7 +42,7 @@ public class MessageController {
     @ResponseStatus(OK)
     public Response findReceiveMessageByCurrentUser(@Valid MessagePagingCondition cond){
         cond.setReceiverUsername(getCurrentUsernameCheck());
-        return Response.success(OK.value(),messageService.findReceiveMessageByCurrentUser(cond));
+        return Response.success(OK.value(), messageService.findReceiveMessageByCurrentUser(cond));
     }
 
     @ApiOperation(value = "송신자에 의한 메세지 삭제", notes = "메세지를 보낸 유저가 메세지를 삭제합니다.")

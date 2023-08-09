@@ -3,7 +3,6 @@ package dblab.sharing_platform.advisor;
 import dblab.sharing_platform.dto.response.Response;
 import dblab.sharing_platform.exception.auth.*;
 import dblab.sharing_platform.exception.category.CategoryNotFoundException;
-import dblab.sharing_platform.exception.chat.ChatRoomNotFoundException;
 import dblab.sharing_platform.exception.comment.CommentNotFoundException;
 import dblab.sharing_platform.exception.comment.RootCommentNotFoundException;
 import dblab.sharing_platform.exception.file.FileUploadFailureException;
@@ -280,9 +279,9 @@ public class ExceptionAdvisor {
     }
 
     @ExceptionHandler(ImpossibleWriteReviewException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response impossibleWriteReviewException(ImpossibleWriteReviewException e) {
-        return getFailureResponse("UNAUTHORIZED.CODE", "WRITE_REVIEW.MSG");
+        return getFailureResponse("BAD_REQUEST.CODE", "WRITE_REVIEW.MSG");
     }
 
     @ExceptionHandler(ReviewNotFoundException.class)
@@ -337,16 +336,6 @@ public class ExceptionAdvisor {
     public Response tokenNotFoundException(TokenNotFoundException e) {
         return getFailureResponse("NOT_FOUND.CODE", "TOKEN_NOT_FOUND.MSG");
     }
-
-    /**
-     * ChatRoom Exception
-     */
-    @ExceptionHandler(ChatRoomNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Response chatRoomNotFoundException(ChatRoomNotFoundException e){
-        return getFailureResponse("NOT_FOUND.CODE", "CHATROOM_NOT_FOUND_MSG");
-    }
-
     private Response getFailureResponse(String code, String msg) {
         return Response.failure(getCode(code), getMessage(msg));
     }
