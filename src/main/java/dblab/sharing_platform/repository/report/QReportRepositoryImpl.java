@@ -30,16 +30,50 @@ public class QReportRepositoryImpl extends QuerydslRepositorySupport implements 
     @Override
     public Page<ReportDto> findAllByCond(ReportPagingCondition cond) {
         Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize());
-        Predicate predicate = createPredicate(cond);
+        Predicate predicate = createPredicateForAdmin(cond);
         return new PageImpl<>(fetchAll(predicate, pageable), pageable, fetchCount(predicate));
     }
 
-    private Predicate createPredicate(ReportPagingCondition cond) {
+    @Override
+    public Page<ReportDto> findAllMyReportByCond(ReportPagingCondition cond) {
+        Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize());
+        Predicate predicate = createPredicateForMyReport(cond);
+        return new PageImpl<>(fetchAll(predicate, pageable), pageable, fetchCount(predicate));
+    }
+
+    private Predicate createPredicateForAdmin(ReportPagingCondition cond) {
         BooleanBuilder builder = new BooleanBuilder();
 
-        if (StringUtils.hasText(cond.getReported())) {
-            builder.and(report.reported.nickname.eq(cond.getReported()));
+        if (StringUtils.hasText(cond.getWriterNickname())) {
+            builder.and(report.reporter.nickname.eq(cond.getWriterNickname()));
         }
+
+        if (StringUtils.hasText(cond.getReportedNickname())) {
+            builder.and(report.reported.nickname.eq(cond.getReportedNickname()));
+        }
+
+        if (cond.getReportType() != null) {
+            builder.and(report.reportType.eq(cond.getReportType()));
+        }
+
+        return builder;
+    }
+
+    private Predicate createPredicateForMyReport(ReportPagingCondition cond) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (StringUtils.hasText(cond.getWriterUsername())) {
+            builder.and(report.reporter.username.eq(cond.getWriterUsername()));
+        }
+
+        if (StringUtils.hasText(cond.getReportedNickname())) {
+            builder.and(report.reported.nickname.eq(cond.getReportedNickname()));
+        }
+
+        if (cond.getReportType() != null) {
+            builder.and(report.reportType.eq(cond.getReportType()));
+        }
+
         return builder;
     }
 

@@ -1,5 +1,6 @@
 package dblab.sharing_platform.dto.report;
 
+import dblab.sharing_platform.domain.embedded.report_type.ReportType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -19,9 +20,11 @@ public class ReportPagingCondition {
     private Integer size;
 
     // 검색 조건
-    private String reported;
-    private String writer;
-    private Long postId;
+    private String reportedNickname;
+    private String writerNickname;
+
+    private String writerUsername;
+    private ReportType reportType;
 
     public ReportPagingCondition() {
         this.page = getDefaultPageNum();

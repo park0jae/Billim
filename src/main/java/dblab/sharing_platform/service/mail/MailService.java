@@ -2,6 +2,7 @@ package dblab.sharing_platform.service.mail;
 
 
 import dblab.sharing_platform.domain.emailAuth.EmailAuth;
+import dblab.sharing_platform.exception.auth.AlreadySendAuthKeyException;
 import dblab.sharing_platform.exception.member.MemberNotFoundException;
 import dblab.sharing_platform.repository.emailAuth.EmailAuthRepository;
 import dblab.sharing_platform.repository.member.MemberRepository;
@@ -36,12 +37,18 @@ public class MailService {
 
     @Transactional
     public void sendSignUpMail(String email) {
+        if (emailAuthRepository.existsByEmailAndPurpose(email, SIGN_UP)) {
+            throw new AlreadySendAuthKeyException();
+        }
         ePw = createAuthKey();
         sendMail(email, SIGN_UP);
     }
 
     @Transactional
     public void sendResetPasswordMail(String email) {
+        if (emailAuthRepository.existsByEmailAndPurpose(email, RESET_PASSWORD)) {
+            throw new AlreadySendAuthKeyException();
+        }
         ePw = createAuthKey();
         memberRepository.findByUsername(email).orElseThrow(MemberNotFoundException::new);
         sendMail(email, RESET_PASSWORD);

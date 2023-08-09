@@ -26,9 +26,11 @@ public class SecurityUtil {
 
         Object principal = authentication.getPrincipal();
         if(principal instanceof MemberDetails){
+            System.out.println("principal = " + principal);
             MemberDetails memberDetails = (MemberDetails) authentication.getPrincipal();
             return Optional.ofNullable(memberDetails.getUsername());
         } else if (authentication.getPrincipal() instanceof String) {
+            System.out.println("principal = " + principal);
             throw new AuthenticationEntryPointException();
         }
 

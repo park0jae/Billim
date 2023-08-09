@@ -39,7 +39,12 @@ public class ReportService {
         Report report = reportRepository.findById(reportId).orElseThrow(ReportNotFoundException::new);
         reportRepository.delete(report);
     }
+
     public PagedReportListDto readAllReportByCond(ReportPagingCondition cond) {
         return PagedReportListDto.toDto(reportRepository.findAllByCond(cond));
+    }
+
+    public PagedReportListDto readAllMyReport(ReportPagingCondition cond) {
+        return PagedReportListDto.toDto(reportRepository.findAllMyReportByCond(cond));
     }
 }
