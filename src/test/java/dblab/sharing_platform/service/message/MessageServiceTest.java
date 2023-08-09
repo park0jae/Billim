@@ -4,6 +4,8 @@ import dblab.sharing_platform.domain.member.Member;
 import dblab.sharing_platform.domain.message.Message;
 import dblab.sharing_platform.dto.message.MessageCreateRequestDto;
 import dblab.sharing_platform.dto.message.MessageDto;
+import dblab.sharing_platform.dto.message.MessagePagingCondition;
+import dblab.sharing_platform.dto.message.PagedMessageListDto;
 import dblab.sharing_platform.exception.message.MessageNotFoundException;
 import dblab.sharing_platform.helper.NotificationHelper;
 import dblab.sharing_platform.repository.member.MemberRepository;
@@ -15,7 +17,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static dblab.sharing_platform.factory.member.MemberFactory.createReceiveMember;
@@ -67,59 +73,39 @@ public class MessageServiceTest {
         assertThat(result.getContent()).isEqualTo("HelloWorld");
     }
 
-//    @Test
-//    @DisplayName("송신 메세지 조회 테스트")
-//    public void findSendMessageTest() {
-//        // Given
-//        List<Message> messages = new ArrayList<>();
-//        messages.add(message);
-//        given(messageRepository.findAllBySendMember(sendMember.getUsername())).willReturn(messages);
-//
-//        // When
-//        List<MessageDto> result = messageService.findSendMessageByCurrentUser(message.getSendMember().getUsername());
-//
-//        // Then
-//        assertThat(result.get(0).getContent()).isEqualTo("content");
-//    }
-//
-//    @Test
-//    @DisplayName("수신 메세지 조회 테스트")
-//    public void findReceiveMessageTest(){
-//        // Given
-//        List<Message> messages = new ArrayList<>();
-//        messages.add(message);
-//        given(messageRepository.findAllByReceiverMember(receiveMember.getUsername())).willReturn(messages);
-//        // When
-//        PagedMessageListDto result = messageService.findReceiveMessageByCurrentUser(new MessagePagingCondition(0,0,));
-//        // Then
-//        assertThat(result.getMessageList().get(0).getContent()).isEqualTo("content");
-//    }
-//
-//    @Test
-//    @DisplayName("멤버1 -> 멤버2 전송 메세지 조회 테스트")
-//    public void findMessageMemberToMemberTest(){
-//        // Given
-//        List<Message> messages = new ArrayList<>();
-//        messages.add(createMessageWithMeber(receiveMember, sendMember));
-//        messages.add(createMessageWithMeber(receiveMember, sendMember));
-//
-//        given(memberRepository.findByUsername(sendMember.getUsername())).willReturn(Optional.of(sendMember));
-//        given(memberRepository.findByNickname(receiveMember.getNickname())).willReturn(Optional.of(receiveMember));
-//
-//        given(messageRepository.findAllBySendAndReceiverMembers(sendMember.getNickname(), receiveMember.getNickname())).willReturn(messages);
-//
-//        // When
-//        List<MessageDto> result = messageService.findSendMessageByCurrentUser(sendMember.getUsername(), receiveMember.getNickname());
-//
-//        // Then
-//        assertThat(result).hasSize(2);
-//
-//        MessageDto messageDto1 = result.get(0);
-//        assertThat(messageDto1.getContent()).isEqualTo("content");
-//
-//        MessageDto messageDto2 = result.get(1);
-//        assertThat(messageDto2.getContent()).isEqualTo("content");
-//    }
+    @Test
+    @DisplayName("송신 메세지 조회 테스트")
+    public void findSendMessageTest() {
+        // Given
+        List<Message> messages = new ArrayList<>();
+        messages.add(message);
+        MessagePagingCondition cond = new MessagePagingCondition(0, 10, sendMember.getUsername(), null, null, null);
+        given(messageRepository.findAllBySendMember(cond)).willReturn(
+                new PageImpl<>(List.of(MessageDto.toDto(messages.get(0))), PageRequest.of(cond.getPage(), cond.getSize()), 1));
+
+        // When
+        PagedMessageListDto result = messageService.findSendMessageByCurrentUser(cond);
+
+        // Then
+        assertThat(result.getMessageList().get(0).getContent()).isEqualTo("content");
+    }
+
+    @Test
+    @DisplayName("수신 메세지 조회 테스트")
+    public void findReceiveMessageTest(){
+        // Given
+        List<Message> messages = new ArrayList<>();
+        messages.add(message);
+        MessagePagingCondition cond = new MessagePagingCondition(0, 10, null, receiveMember.getUsername(), null, null);
+        given(messageRepository.findAllByReceiverMember(cond)).willReturn(
+                new PageImpl<>(List.of(MessageDto.toDto(messages.get(0))), PageRequest.of(cond.getPage(), cond.getSize()), 1));
+
+        // When
+        PagedMessageListDto result = messageService.findReceiveMessageByCurrentUser(cond);
+
+        // Then
+        assertThat(result.getMessageList().get(0).getContent()).isEqualTo("content");
+    }
 
     @Test
     @DisplayName("송신자에 의한 메세지 삭제 테스트")
@@ -157,5 +143,4 @@ public class MessageServiceTest {
         // When & Then
         assertThatThrownBy(() -> messageService.deleteMessageBySender(messageId)).isInstanceOf(MessageNotFoundException.class);
     }
-
 }
