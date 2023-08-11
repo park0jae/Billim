@@ -68,15 +68,15 @@ public class Member {
         this.roles = roleList;
     }
 
-    public String updateMember(MemberUpdateRequestDto memberUpdateRequestDto, String encodedPassword){
-        this.password = encodedPassword;
+    public void updateMember(MemberUpdateRequestDto memberUpdateRequestDto){
         this.nickname = memberUpdateRequestDto.getNickname();
         this.phoneNumber = memberUpdateRequestDto.getPhoneNumber();
         this.address = memberUpdateRequestDto.getAddress();
         this.introduce = memberUpdateRequestDto.getIntroduce();
-        String existedImageName = updateProfileImage(memberUpdateRequestDto.getImage());
+    }
 
-        return existedImageName;
+    public String updateMemberProfileImage(MemberUpdateRequestDto requestDto) {
+        return updateProfileImage(requestDto.getImage());
     }
 
     public void updatePassword(String password) {
