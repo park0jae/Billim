@@ -28,7 +28,7 @@ public class SignController {
     private final OAuthService oAuthService;
     private final MailService mailService;
 
-    @ApiOperation(value = "일반 회원가입", notes = "일반 회원가입을 한다.") // 2
+    @ApiOperation(value = "일반 회원가입", notes = "일반 회원가입을 한다.")
     @PostMapping("/auth/sign-up")
     @ResponseStatus(CREATED)
     public Response signUp(@Valid @RequestBody MemberCreateRequestDto memberCreateRequestDto){
@@ -36,14 +36,14 @@ public class SignController {
         return Response.success(CREATED.value());
     }
 
-    @ApiOperation(value = "일반 로그인", notes = "일반 로그인을 한다.") // 2
+    @ApiOperation(value = "일반 로그인", notes = "일반 로그인을 한다.")
     @PostMapping("/auth/login")
     @ResponseStatus(OK)
     public Response login(@Valid @RequestBody LoginRequestDto loginRequestDto){
         return Response.success(OK.value(), signService.login(loginRequestDto));
     }
 
-    @ApiOperation(value = "비밀번호 재설정", notes = "비밀번호를 재설정합니다.") // 2
+    @ApiOperation(value = "비밀번호 재설정", notes = "비밀번호를 재설정합니다.")
     @PostMapping("/password-reset")
     @ResponseStatus(OK)
     public Response resetPassword(@Valid @RequestBody PasswordResetRequestDto passwordResetRequestDto){
@@ -60,8 +60,8 @@ public class SignController {
     }
 
     @ApiOperation(value = "비밀번호 재설정을 위한 이메일 인증" , notes = "비밀번호 재설정 페이지에서 이메일 인증을 위한 엔드포인트")
-    @ResponseBody
     @PostMapping("/email/password-reset")
+    @ResponseStatus(OK)
     public Response resetPasswordMailConfirm(@RequestParam(name = "email") String email)  {
         mailService.sendResetPasswordMail(email);
         return Response.success(OK.value());

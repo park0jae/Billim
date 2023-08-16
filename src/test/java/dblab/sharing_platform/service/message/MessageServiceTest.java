@@ -143,5 +143,4 @@ public class MessageServiceTest {
         // When & Then
         assertThatThrownBy(() -> messageService.deleteMessageBySender(messageId)).isInstanceOf(MessageNotFoundException.class);
     }
-
 }
