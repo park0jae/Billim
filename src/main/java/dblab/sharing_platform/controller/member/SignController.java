@@ -61,7 +61,7 @@ public class SignController {
 
     @ApiOperation(value = "비밀번호 재설정을 위한 이메일 인증" , notes = "비밀번호 재설정 페이지에서 이메일 인증을 위한 엔드포인트")
     @PostMapping("/email/password-reset")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(OK)
     public Response resetPasswordMailConfirm(@RequestParam(name = "email") String email)  {
         mailService.sendResetPasswordMail(email);
         return Response.success(OK.value());

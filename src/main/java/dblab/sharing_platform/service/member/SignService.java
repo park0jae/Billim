@@ -23,7 +23,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,9 +130,8 @@ public class SignService {
             tokens.add(accessToken);
             tokens.add(refreshToken);
 
-            if (!StringUtils.hasText(accessToken)) {
-                throw new LoginFailureException();
-            }
+
+
             return tokens;
         } catch (BadCredentialsException e) {
             throw new LoginFailureException();
