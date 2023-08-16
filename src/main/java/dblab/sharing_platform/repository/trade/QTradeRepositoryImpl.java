@@ -50,7 +50,12 @@ public class QTradeRepositoryImpl extends QuerydslRepositorySupport implements Q
 
     private Predicate createPredicateByCurrentNicknameRend(TradePagingCondition cond) {
         BooleanBuilder builder = new BooleanBuilder();
+
         builder.and(trade.renderMember.username.eq(cond.getRenderMember()));
+
+        if (cond.getTradeComplete() != null) {
+            builder.and(trade.tradeComplete.eq(cond.getTradeComplete()));
+        }
 
         return builder;
     }
@@ -58,6 +63,11 @@ public class QTradeRepositoryImpl extends QuerydslRepositorySupport implements Q
     private Predicate createPredicateByCurrentNicknameBorrow(TradePagingCondition cond) {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(trade.borrowerMember.username.eq(cond.getBorrowerMember()));
+
+        if (cond.getTradeComplete() != null) {
+            builder.and(trade.tradeComplete.eq(cond.getTradeComplete()));
+        }
+
         return builder;
     }
 

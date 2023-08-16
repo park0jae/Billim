@@ -5,9 +5,9 @@ import dblab.sharing_platform.domain.member.Member;
 import dblab.sharing_platform.domain.post.Post;
 import dblab.sharing_platform.dto.comment.CommentCreateRequestDto;
 import dblab.sharing_platform.dto.comment.CommentDto;
+import dblab.sharing_platform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_platform.exception.comment.CommentNotFoundException;
 import dblab.sharing_platform.exception.comment.RootCommentNotFoundException;
-import dblab.sharing_platform.exception.member.MemberNotFoundException;
 import dblab.sharing_platform.exception.post.PostNotFoundException;
 import dblab.sharing_platform.repository.comment.CommentRepository;
 import dblab.sharing_platform.repository.member.MemberRepository;
@@ -30,7 +30,7 @@ public class CommentService {
     @Transactional
     public Long createCommentWithPostId(Long postId, CommentCreateRequestDto requestDto, String username) {
         Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
-        Member member = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
+        Member member = memberRepository.findByUsername(username).orElseThrow(AuthenticationEntryPointException::new);
         Comment parent = requestDto.getParentCommentId() == null ? null : commentRepository.findById(requestDto.getParentCommentId()).orElseThrow(RootCommentNotFoundException::new);
 
         Comment createComment = commentRepository.save(
@@ -50,6 +50,11 @@ public class CommentService {
 
     // read
     public List<CommentDto> readAllCommentByPostId(Long postId) {
+        validatePostExists(postId);
         return CommentDto.toDtoList(commentRepository.findAllOrderByParentIdAscNullsFirstByPostId(postId));
+    }
+
+    private void validatePostExists(Long postId) {
+        postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
     }
 }

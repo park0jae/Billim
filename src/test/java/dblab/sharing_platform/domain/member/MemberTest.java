@@ -32,10 +32,9 @@ class MemberTest {
         Address address = new Address("TestCity", "TestDistrict", "TestStreet", "TestZipcode");
 
         //when
-        member.updateMember(new MemberUpdateRequestDto(password, nickname, phoneNumber, address, introduce, null), password);
+        member.updateMember(new MemberUpdateRequestDto(nickname, phoneNumber, address, introduce, null));
 
         //then
-        assertThat(member.getPassword()).isEqualTo(password);
         assertThat(member.getPhoneNumber()).isEqualTo(phoneNumber);
         assertThat(member.getAddress()).isEqualTo(address);
         assertThat(member.getIntroduce()).isEqualTo(introduce);

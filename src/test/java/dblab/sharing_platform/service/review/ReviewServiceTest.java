@@ -175,7 +175,7 @@ public class ReviewServiceTest {
         given(reviewRepository.findAllByUsername(cond)).willReturn(resultPage);
 
         // When
-        PagedReviewListDto result = reviewService.findAllReviewsByUsername(cond);
+        PagedReviewListDto result = reviewService.findAllReviewsByNickname(cond);
 
         // Then
         assertThat(result.getReviewList()).hasSize(2);

@@ -66,8 +66,13 @@ public class MemberService {
 
     private void memberUpdate(MemberUpdateRequestDto requestDto, Member member) {
         validateDuplicateNickname(requestDto.getNickname());
-        String profileImage = member.updateMember(requestDto, encodeRawPassword(requestDto.getPassword()));
-        profileImageServerUpdate(requestDto.getImage(), member, profileImage);
+        if (requestDto.getImage() != null) {
+            member.updateMember(requestDto);
+            String profileImage = member.updateMemberProfileImage(requestDto);
+            profileImageServerUpdate(requestDto.getImage(), member, profileImage);
+        } else {
+            member.updateMember(requestDto);
+        }
     }
 
     private void oAuthMemberUpdate(OAuthMemberUpdateRequestDto requestDto, Member member) {

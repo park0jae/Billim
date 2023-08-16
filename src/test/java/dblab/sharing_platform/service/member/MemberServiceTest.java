@@ -124,7 +124,7 @@ public class MemberServiceTest {
     @DisplayName("회원 수정 테스트")
     public void updateMemberTest() throws Exception{
         // Given
-        MemberUpdateRequestDto memberUpdateRequestDto = new MemberUpdateRequestDto("updatePass1!", "updateNickName", "updatedPN", member.getAddress(), "hi~", null);
+        MemberUpdateRequestDto memberUpdateRequestDto = new MemberUpdateRequestDto("updateNickName", "updatedPN", member.getAddress(), "hi~", null);
         given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
 
         // When

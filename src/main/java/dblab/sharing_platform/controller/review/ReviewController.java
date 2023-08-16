@@ -42,8 +42,8 @@ public class ReviewController {
     @ApiOperation(value = "특정 회원에 대한 리뷰를 페이징", notes = "특정 회원에 대한 리뷰를 페이징합니다.")
     @GetMapping
     @ResponseStatus(OK)
-    public Response findAllReviewByUsername(@Valid ReviewPagingCondition cond){
-        return Response.success(OK.value(), reviewService.findAllReviewsByUsername(cond));
+    public Response findAllReviewByNickname(@Valid ReviewPagingCondition cond){
+        return Response.success(OK.value(), reviewService.findAllReviewsByNickname(cond));
     }
 
     @ApiOperation(value = "거래에 대한 리뷰 생성", notes = "거래에 대한 리뷰를 생성합니다.")
