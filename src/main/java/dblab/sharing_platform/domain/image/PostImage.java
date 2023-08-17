@@ -6,6 +6,8 @@ import dblab.sharing_platform.exception.image.UnSupportExtException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Arrays;
@@ -31,6 +33,7 @@ public class PostImage {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Post post;
 
     public PostImage(String originName) {

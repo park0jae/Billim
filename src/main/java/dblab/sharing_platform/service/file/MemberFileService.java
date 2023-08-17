@@ -1,40 +1,38 @@
 package dblab.sharing_platform.service.file;
 
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import dblab.sharing_platform.exception.file.FileUploadFailureException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.PostConstruct;
-import java.io.File;
 import java.io.IOException;
 
 @Service
+@RequiredArgsConstructor
 public class MemberFileService {
 
-    private static final String UPLOAD_MEMBER_IMAGE_LOCATION = "${upload.member.image.location}";
-
-    @Value(UPLOAD_MEMBER_IMAGE_LOCATION)
-    private String location;
-
-    @PostConstruct
-    void postConstruct() {
-        File dir = new File(location);
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
-    }
+    @Value("${cloud.aws.s3.bucket}")
+    private String BUCKET;
+    private final AmazonS3Client amazonS3Client;
 
     public void upload(MultipartFile file, String filename) {
         try {
-            file.transferTo(new File(location + filename));
+            ObjectMetadata metadata= new ObjectMetadata();
+            metadata.setContentType(file.getContentType());
+            metadata.setContentLength(file.getSize());
+            amazonS3Client.putObject(BUCKET + "/memberProfile", filename, file.getInputStream(), metadata);
         } catch(IOException e) {
             throw new FileUploadFailureException();
         }
     }
 
-    public void delete(String filename) {
-        new File(location + filename).delete();
+    public void delete(String fileName){
+        DeleteObjectRequest request = new DeleteObjectRequest(BUCKET + "/memberProfile", fileName);
+        amazonS3Client.deleteObject(request);
     }
 }
