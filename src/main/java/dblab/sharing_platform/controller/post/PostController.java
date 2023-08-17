@@ -1,5 +1,6 @@
 package dblab.sharing_platform.controller.post;
 
+import com.amazonaws.services.s3.AmazonS3Client;
 import dblab.sharing_platform.dto.post.PostCreateRequestDto;
 import dblab.sharing_platform.dto.post.PostPagingCondition;
 import dblab.sharing_platform.dto.post.PostUpdateRequestDto;
@@ -25,6 +26,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class PostController {
 
     private final PostService postService;
+    private final AmazonS3Client amazonS3Client;
 
     @ApiOperation(value = "게시글 검색", notes = "검색조건에 따라 페이징하여 조회합니다.")
     @GetMapping
