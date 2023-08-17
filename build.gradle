@@ -93,6 +93,9 @@ dependencies {
 	implementation 'com.google.code.findbugs:jsr305:3.0.2'
 	// EqualsAndHash build Error solver 추가 시작 끝
 
+	// S3 추가 시작
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	// S3 추가 끝
 }
 
 tasks.named('test') {
