@@ -18,7 +18,7 @@ import dblab.sharing_platform.repository.category.CategoryRepository;
 import dblab.sharing_platform.repository.likepost.LikePostRepository;
 import dblab.sharing_platform.repository.member.MemberRepository;
 import dblab.sharing_platform.repository.post.PostRepository;
-import dblab.sharing_platform.service.file.PostFileService;
+import dblab.sharing_platform.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static dblab.sharing_platform.config.file.FileInfo.FOLDER_NAME_POST;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -36,11 +38,11 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
-    private final PostFileService postFileService;
+    private final FileService fileService;
     private final LikePostRepository likePostRepository;
     private final NotificationHelper notificationHelper;
 
-    private static final String LIKE_POST_MESSAGE = "님이 이 글을 좋아합니다.";
+    private final String LIKE_POST_MESSAGE = "님이 이 글을 좋아합니다.";
 
     public PagedPostListDto readAllPostByCond(PostPagingCondition cond) {
         return PagedPostListDto.toDto(postRepository.findAllByCategoryAndTitle(cond));
@@ -106,7 +108,7 @@ public class PostService {
     public void uploadImagesToServer(List<PostImage> postImages, List<MultipartFile> fileImages) {
         if (!postImages.isEmpty()) {
             for (int i = 0; i < postImages.size(); i++) {
-                postFileService.upload(fileImages.get(i), postImages.get(i).getUniqueName());
+                fileService.upload(fileImages.get(i), postImages.get(i).getUniqueName(), FOLDER_NAME_POST);
             }
         }
     }
@@ -114,7 +116,7 @@ public class PostService {
     // delete
     public void deleteImagesFromServer(Post post) {
         List<PostImage> postImages = post.getPostImages();
-        postImages.stream().forEach(i -> postFileService.delete(i.getUniqueName()));
+        postImages.stream().forEach(i -> fileService.delete(i.getUniqueName(), FOLDER_NAME_POST));
     }
 
     // update
@@ -127,14 +129,14 @@ public class PostService {
     private void uploadImagesToServer(PostUpdateRequestDto requestDto, PostUpdateResponseDto responseDto) {
         List<PostImageDto> addedImages = responseDto.getAddedImages();
         for (int i = 0; i < addedImages.size(); i++) {
-            postFileService.upload(requestDto.getAddImages().get(i), addedImages.get(i).getUniqueName());
+            fileService.upload(requestDto.getAddImages().get(i), addedImages.get(i).getUniqueName(), FOLDER_NAME_POST);
         }
     }
 
     // update - delete
     private void deleteImagesFromServer(PostUpdateResponseDto responseDto) {
         List<PostImageDto> deletePostImageDtoList = responseDto.getDeletedImages();
-        deletePostImageDtoList.stream().forEach(i -> postFileService.delete(i.getUniqueName()));
+        deletePostImageDtoList.stream().forEach(i -> fileService.delete(i.getUniqueName(), FOLDER_NAME_POST));
     }
 
     private List<PostImage> getImages(PostCreateRequestDto requestDto) {
@@ -170,12 +172,9 @@ public class PostService {
             notificationHelper.notificationIfSubscribe(member, writeMember, NotificationType.LIKE, LIKE_POST_MESSAGE);
         }
     }
-
     private Optional<LikePost> validateAlreadyLikeUp(Member member, List<LikePost> likePosts) {
         return likePosts.stream()
                 .filter(lp -> lp.getMember().equals(member))
                 .findFirst();
     }
-
-
 }
