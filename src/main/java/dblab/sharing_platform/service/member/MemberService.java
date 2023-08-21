@@ -1,6 +1,7 @@
 package dblab.sharing_platform.service.member;
 
 
+import dblab.sharing_platform.domain.image.PostImage;
 import dblab.sharing_platform.domain.member.Member;
 import dblab.sharing_platform.domain.post.Post;
 import dblab.sharing_platform.dto.member.*;
@@ -9,7 +10,7 @@ import dblab.sharing_platform.exception.auth.DuplicateNicknameException;
 import dblab.sharing_platform.exception.member.MemberNotFoundException;
 import dblab.sharing_platform.repository.member.MemberRepository;
 import dblab.sharing_platform.repository.post.PostRepository;
-import dblab.sharing_platform.service.file.MemberFileService;
+import dblab.sharing_platform.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+import static dblab.sharing_platform.config.file.FileInfo.FOLDER_NAME_MEMBER_PROFILE;
+import static dblab.sharing_platform.config.file.FileInfo.FOLDER_NAME_POST;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +30,8 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
-    private final MemberFileService postFileService;
+    private final FileService fileService;
+
 
     public MemberPrivateDto readCurrentUserInfoByUsername(String username){
         return MemberPrivateDto.toDto(memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new));
@@ -43,7 +48,10 @@ public class MemberService {
 
     @Transactional
     public void deleteMemberByUsername(String username){
-        memberRepository.delete(memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new));
+        Member member = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
+        List<Post> posts = postRepository.findAllWithMemberByNickname(member.getNickname());
+        deleteImagesFromServer(posts);
+        memberRepository.delete(member);
     }
 
     @Transactional
@@ -83,10 +91,10 @@ public class MemberService {
 
     private void profileImageServerUpdate(MultipartFile file, Member member, String profileImage) {
         if (file != null) {
-            postFileService.upload(file, member.getProfileImage().getUniqueName());
+            fileService.upload(file, member.getProfileImage().getUniqueName(), FOLDER_NAME_MEMBER_PROFILE);
         }
         if (profileImage != null) {
-            postFileService.delete(profileImage);
+            fileService.delete(profileImage, FOLDER_NAME_MEMBER_PROFILE);
         }
     }
 
@@ -94,6 +102,13 @@ public class MemberService {
         if (memberRepository.existsByNickname(nickname)) {
             throw new DuplicateNicknameException();
         }
+    }
+
+    public void deleteImagesFromServer(List<Post> posts) {
+        posts.stream().forEach(p -> {
+            List<PostImage> postImages = p.getPostImages();
+            postImages.stream().forEach(i -> fileService.delete(i.getUniqueName(), FOLDER_NAME_POST));
+        });
     }
 
 }
