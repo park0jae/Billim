@@ -83,7 +83,7 @@ public class MessageRepositoryTest {
         Page<MessageDto> result = messageRepository.findAllByReceiverMember(cond);
 
         // then
-        assertThat(receiverName).isEqualTo(result.getContent().get(0).getRecevierNickname());
+        assertThat(receiverName).isEqualTo(result.getContent().get(0).getReceiverNickname());
     }
 
 
