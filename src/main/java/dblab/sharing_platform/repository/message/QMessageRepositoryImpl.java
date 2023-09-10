@@ -51,6 +51,8 @@ public class QMessageRepositoryImpl extends QuerydslRepositorySupport implements
             builder.and(message.receiveMember.nickname.eq(cond.getReceiverName()));
         }
 
+        builder.and(message.deleteBySender.eq(false));
+
         return builder;
     }
 
@@ -64,6 +66,7 @@ public class QMessageRepositoryImpl extends QuerydslRepositorySupport implements
         if (StringUtils.hasText(cond.getSenderName())) {
             builder.and(message.sendMember.nickname.eq(cond.getSenderName()));
         }
+        builder.and(message.deleteByReceiver.eq(false));
 
         return builder;
     }

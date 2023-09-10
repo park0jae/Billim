@@ -46,6 +46,7 @@ public class Message {
     public void deleteBySender() {
         this.deleteBySender = true;
     }
+
     public void deleteByReceiver() {
         this.deleteByReceiver = true;
     }
@@ -53,5 +54,6 @@ public class Message {
     public boolean isDeletable() {
         return isDeleteBySender() && isDeleteByReceiver();
     }
+
 
 }
