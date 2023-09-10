@@ -13,7 +13,7 @@ public class MessageDto {
     private Long id;
     private String content;
     private String senderNickname;
-    private String recevierNickname;
+    private String receiverNickname;
 
     public static MessageDto toDto(Message message) {
         return new MessageDto(

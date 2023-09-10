@@ -25,6 +25,11 @@ public class MessageService {
     private final NotificationHelper notificationHelper;
     private static final String ARRIVE_MESSAGE = "님으로부터 메시지가 도착했습니다.";
 
+    public MessageDto findMessageById(Long id) {
+        Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
+        return MessageDto.toDto(message);
+    }
+
     @Transactional
     public MessageDto sendMessageToReceiverByCurrentUser(MessageCreateRequestDto requestDto, String username) {
         Member sender = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);

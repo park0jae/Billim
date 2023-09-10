@@ -29,6 +29,13 @@ public class MessageController {
         return Response.success(CREATED.value(), messageService.sendMessageToReceiverByCurrentUser(messageCreateRequestDto, getCurrentUsernameCheck()));
     }
 
+    @ApiOperation(value = "메세지 단건 조회", notes = "메시지를 ID를 통해 단건 조회합니다.(해당 메시지의 소유자, 즉 수신자 및 발신자만 접근 가능)")
+    @GetMapping("/{messageId}/message")
+    @ResponseStatus(OK)
+    public Response findOneMessagesById(@PathVariable Long messageId){
+        return Response.success(OK.value(), messageService.findMessageById(messageId));
+    }
+
     @ApiOperation(value = "송신 메시지 조회", notes = "현재 로그인한 유저가 송신한 메시지를 모두 조회합니다.")
     @GetMapping("/sent")
     @ResponseStatus(OK)
