@@ -22,6 +22,7 @@ import dblab.sharing_platform.repository.post.PostRepository;
 import dblab.sharing_platform.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,6 +49,7 @@ public class PostService {
     private final S3UploadService s3UploadService;
 
     private final String LIKE_POST_MESSAGE = "님이 이 글을 좋아합니다.";
+
     private static String postDir = "post/";
 
     public PagedPostListDto readAllPostByCond(PostPagingCondition cond) {
@@ -59,13 +61,13 @@ public class PostService {
     }
 
     public PagedPostListDto readAllWriteByCurrentUser(PostPagingCondition cond) {
-        return PagedPostListDto.toDto(postRepository.findAllWithMemberByCurrentUsername(cond));
+        Page<PostDto> page = postRepository.findAllWithMemberByCurrentUsername(cond);
+        return PagedPostListDto.toDto(page);
     }
 
     public PostReadResponseDto readSinglePostByPostId(Long id) {
         Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
-        List<String> links = post.getPostImages().stream().map(i -> s3UploadService.getThumbnailPath("post/" + i.getUniqueName())).collect(Collectors.toList());
-        return PostReadResponseDto.toDto(post, links);
+        return PostReadResponseDto.toDto(post);
     }
 
     // create

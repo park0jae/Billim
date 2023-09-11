@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 import static com.querydsl.core.types.Projections.constructor;
+import static dblab.sharing_platform.domain.image.QPostImage.postImage;
 import static dblab.sharing_platform.domain.post.QPost.post;
 
 
@@ -66,16 +67,20 @@ public class QPostRepositoryImpl extends QuerydslRepositorySupport implements QP
     }
 
     private List<PostDto> fetchAll(Predicate predicate, Pageable pageable) {
+
         return getQuerydsl().applyPagination(
                 pageable,
                 query
-                        .select(constructor(PostDto.class,
+                        .select(
+                                constructor(PostDto.class,
                                 post.id,
                                 post.title,
                                 post.member.nickname,
-                                post.createdTime))
+                                postImage.uniqueName.coalesce("testImage.jpg"),
+                                post.createdTime)
+                        )
                         .from(post)
-                        .join(post.member)
+                        .leftJoin(post.postImages, postImage)
                         .where(predicate)
                         .orderBy(post.id.asc())
         ).fetch();

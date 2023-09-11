@@ -3,6 +3,7 @@ package dblab.sharing_platform.helper;
 import dblab.sharing_platform.domain.image.PostImage;
 import dblab.sharing_platform.domain.post.Post;
 import dblab.sharing_platform.dto.post.PostUpdateRequestDto;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Component
 public class PostImageHelper {
 
     public static List<PostImage> addToDBAndServer(List<MultipartFile> addImages, List<PostImage> postImages, Post post) {
@@ -19,6 +21,7 @@ public class PostImageHelper {
 
         return addPostImageList;
     }
+
     public static List<PostImage> deleteFromDBAndServer(List<String> deleteImageNames, List<PostImage> postImages, Post post) {
         List<PostImage> deletePostImageList = StringToImage(deleteImageNames, postImages);
         deleteImages(deletePostImageList, postImages, post);
@@ -73,6 +76,7 @@ public class PostImageHelper {
                 .map(i -> i.get())
                 .collect(Collectors.toList());
     }
+
     private static List<PostImage> MultipartToImage(List<MultipartFile> addImages) {
         return addImages.stream().map(
                 file -> new PostImage(file.getOriginalFilename())).collect(Collectors.toList());

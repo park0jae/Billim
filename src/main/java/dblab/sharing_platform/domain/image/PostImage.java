@@ -17,7 +17,6 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostImage {
-
     private static final String extension[] = {"jpg", "jpeg", "gif", "bmp", "png"};
 
     @Id
@@ -77,4 +76,6 @@ public class PostImage {
     private boolean supportFormat(String ext) {
         return Arrays.stream(extension).anyMatch(e -> e.equalsIgnoreCase(ext));
     }
+
+
 }

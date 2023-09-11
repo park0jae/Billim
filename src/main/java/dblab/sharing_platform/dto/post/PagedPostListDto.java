@@ -23,7 +23,6 @@ public class PagedPostListDto {
                 page.getTotalElements(),
                 page.getTotalPages(),
                 page.hasNext(),
-                page.getContent()
-        );
+                page.getContent());
     }
 }

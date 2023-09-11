@@ -8,8 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,9 +20,9 @@ public class PostReadResponseDto {
     private Integer likes;
     private MemberDto writer;
     private ItemDto item;
-    private List<String> links;
+    private String imageName;
 
-    public static PostReadResponseDto toDto(Post post, List<String> links) {
+    public static PostReadResponseDto toDto(Post post) {
         return new PostReadResponseDto(
                 post.getId(),
                 post.getCategory().getName(),
@@ -33,6 +31,6 @@ public class PostReadResponseDto {
                 post.getLikes(),
                 MemberDto.toDto(post.getMember()),
                 ItemDto.toDto(post.getItem()),
-                links);
+                post.getPostImages().isEmpty() ? "testImage.jpg" : post.getPostImages().get(0).getUniqueName());
     }
 }
