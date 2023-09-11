@@ -3,14 +3,12 @@ package dblab.sharing_platform.dto.post;
 import dblab.sharing_platform.domain.post.Post;
 import dblab.sharing_platform.dto.item.ItemDto;
 import dblab.sharing_platform.dto.member.MemberDto;
-import dblab.sharing_platform.dto.image.PostImageDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -24,9 +22,9 @@ public class PostReadResponseDto {
     private Integer likes;
     private MemberDto writer;
     private ItemDto item;
-    private List<PostImageDto> imageList;
+    private List<String> links;
 
-    public static PostReadResponseDto toDto(Post post) {
+    public static PostReadResponseDto toDto(Post post, List<String> links) {
         return new PostReadResponseDto(
                 post.getId(),
                 post.getCategory().getName(),
@@ -35,6 +33,6 @@ public class PostReadResponseDto {
                 post.getLikes(),
                 MemberDto.toDto(post.getMember()),
                 ItemDto.toDto(post.getItem()),
-                post.getPostImages().stream().map(i -> PostImageDto.toDto(i)).collect(Collectors.toList()));
+                links);
     }
 }

@@ -1,5 +1,6 @@
 package dblab.sharing_platform.service.post;
 
+import dblab.sharing_platform.config.s3.S3UploadService;
 import dblab.sharing_platform.domain.category.Category;
 import dblab.sharing_platform.domain.image.PostImage;
 import dblab.sharing_platform.domain.likepost.LikePost;
@@ -20,6 +21,7 @@ import dblab.sharing_platform.repository.member.MemberRepository;
 import dblab.sharing_platform.repository.post.PostRepository;
 import dblab.sharing_platform.service.file.FileService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 
 import static dblab.sharing_platform.config.file.FileInfo.FOLDER_NAME_POST;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -42,7 +45,10 @@ public class PostService {
     private final LikePostRepository likePostRepository;
     private final NotificationHelper notificationHelper;
 
+    private final S3UploadService s3UploadService;
+
     private final String LIKE_POST_MESSAGE = "님이 이 글을 좋아합니다.";
+    private static String postDir = "post/";
 
     public PagedPostListDto readAllPostByCond(PostPagingCondition cond) {
         return PagedPostListDto.toDto(postRepository.findAllByCategoryAndTitle(cond));
@@ -57,7 +63,9 @@ public class PostService {
     }
 
     public PostReadResponseDto readSinglePostByPostId(Long id) {
-        return PostReadResponseDto.toDto(postRepository.findById(id).orElseThrow(PostNotFoundException::new));
+        Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        List<String> links = post.getPostImages().stream().map(i -> s3UploadService.getThumbnailPath("post/" + i.getUniqueName())).collect(Collectors.toList());
+        return PostReadResponseDto.toDto(post, links);
     }
 
     // create

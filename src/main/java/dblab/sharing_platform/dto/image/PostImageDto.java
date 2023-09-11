@@ -20,7 +20,9 @@ public class PostImageDto {
     private String originName;
 
     public static PostImageDto toDto(PostImage postImage) {
-        return new PostImageDto(postImage.getId(), postImage.getUniqueName(), postImage.getOriginName());
+        return new PostImageDto(postImage.getId(),
+                postImage.getUniqueName(),
+                postImage.getOriginName());
     }
 
     public static List<PostImageDto> toDtoList(List<PostImage> postImages) {
