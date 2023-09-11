@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static dblab.sharing_platform.config.file.FileInfo.FOLDER_NAME_MEMBER_PROFILE;
 import static dblab.sharing_platform.config.file.FileInfo.FOLDER_NAME_POST;
@@ -39,8 +38,7 @@ public class MemberService {
 
     public MemberProfileDto readMemberProfileByNickname(String nickname) {
         List<Post> posts = postRepository.findAllWithMemberByNickname(nickname);
-        List<String> imageNames = posts.stream().map(p -> p.getPostImages().get(0).getUniqueName()).collect(Collectors.toList());
-        return MemberProfileDto.toDto(memberRepository.findByNickname(nickname).orElseThrow(MemberNotFoundException::new), PostDto.toDtoList(posts, imageNames));
+        return MemberProfileDto.toDto(memberRepository.findByNickname(nickname).orElseThrow(MemberNotFoundException::new), PostDto.toDtoList(posts));
     }
 
     public PagedMemberListDto readAllMemberByCond(MemberPagingCondition cond) {

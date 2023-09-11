@@ -36,7 +36,7 @@ public class PostPagingCondition {
 
     private int getDefaultPageSize() {
         // 디폴트 페이지당 글 개수 로직
-        return 10; // 예시로 10으로 설정
+        return 50; // 예시로 50으로 설정
     }
 
 }
