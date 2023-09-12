@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 import static com.querydsl.core.types.Projections.constructor;
+import static dblab.sharing_platform.domain.image.QPostImage.postImage;
 import static dblab.sharing_platform.domain.likepost.QLikePost.likePost;
 
 public class QLikePostRepositoryImpl extends QuerydslRepositorySupport implements QLikePostRepository {
@@ -49,10 +50,11 @@ public class QLikePostRepositoryImpl extends QuerydslRepositorySupport implement
                         .select(constructor(PostDto.class,
                                 likePost.post.id,
                                 likePost.post.title,
-                                likePost.post.member.username,
+                                likePost.post.member.nickname,
+                                postImage.uniqueName.coalesce("testImage.jpg"),
                                 likePost.post.createdTime))
                         .from(likePost)
-                        .join(likePost.member)
+                        .leftJoin(likePost.post.postImages, postImage)
                         .where(predicate)
                         .orderBy(likePost.id.asc())
         ).fetch();
