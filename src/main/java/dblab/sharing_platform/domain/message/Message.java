@@ -1,6 +1,7 @@
 package dblab.sharing_platform.domain.message;
 
 import dblab.sharing_platform.domain.member.Member;
+import dblab.sharing_platform.domain.post.Post;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,22 +9,25 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Message {
+public class Message  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "message_id")
     private Long id;
-
     @Column(nullable = false)
     private String content;
-
     private boolean deleteBySender;
     private boolean deleteByReceiver;
+    private boolean checked;
+
+    @Column(updatable = false)
+    private LocalDateTime createdTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id")
@@ -35,12 +39,20 @@ public class Message {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member sendMember;
 
-    public Message(String content, Member receiveMember, Member sendMember) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Post post;
+
+    public Message(String content, Member receiveMember, Member sendMember, Post post) {
         this.content = content;
         this.receiveMember = receiveMember;
         this.sendMember = sendMember;
         this.deleteBySender = false;
         this.deleteByReceiver = false;
+        this.post = post;
+        this.checked = false;
+        this.createdTime = LocalDateTime.now();
     }
 
     public void deleteBySender() {
@@ -50,6 +62,8 @@ public class Message {
     public void deleteByReceiver() {
         this.deleteByReceiver = true;
     }
+
+    public void readByReceiver() { this.checked = true; }
 
     public boolean isDeletable() {
         return isDeleteBySender() && isDeleteByReceiver();

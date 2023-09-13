@@ -22,4 +22,7 @@ public class MessageCreateRequestDto {
     @NotBlank(message = "수신자 닉네임을 입력해주세요.")
     private String receiveMember;
 
+    @ApiModelProperty(value = "게시글 아이디", notes = "게시글 아이디를 입력해주세요", required = true)
+    @NotBlank(message = "게시글 아이디를 입력해주세요")
+    private String postId;
 }

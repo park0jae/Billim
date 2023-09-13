@@ -60,7 +60,6 @@ public class PostServiceTest {
     private NotificationHelper helper;
 
 
-
     Post post;
     Member member;
     Category category;

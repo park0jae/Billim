@@ -80,7 +80,9 @@ public class QMessageRepositoryImpl extends QuerydslRepositorySupport implements
                                 message.id,
                                 message.content,
                                 message.sendMember.nickname,
-                                message.receiveMember.nickname))
+                                message.receiveMember.nickname,
+                                message.createdTime,
+                                message.checked))
                         .from(message)
                         .where(predicate)
                         .orderBy(message.id.asc())

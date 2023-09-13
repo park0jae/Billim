@@ -26,6 +26,7 @@ public class Comment extends BaseTime {
     private boolean deleted;
     private boolean root;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     @OnDelete(action = OnDeleteAction.CASCADE)

@@ -12,6 +12,7 @@ import dblab.sharing_platform.exception.image.NoExtException;
 import dblab.sharing_platform.exception.image.UnSupportExtException;
 import dblab.sharing_platform.exception.member.MemberNotFoundException;
 import dblab.sharing_platform.exception.message.MessageNotFoundException;
+import dblab.sharing_platform.exception.message.SendMessageException;
 import dblab.sharing_platform.exception.oauth.OAuthCommunicationException;
 import dblab.sharing_platform.exception.oauth.OAuthUserNotFoundException;
 import dblab.sharing_platform.exception.oauth.SocialAgreementException;
@@ -229,6 +230,11 @@ public class ExceptionAdvisor {
         return getFailureResponse("NOT_FOUND.CODE", "MESSAGE_NOT_FOUND.MSG");
     }
 
+    @ExceptionHandler(SendMessageException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response sendMessageException(SendMessageException e) {
+        return getFailureResponse("BAD_REQUEST.CODE", "SEND_MESSAGE_BAD_REQUEST.MSG");
+    }
 
     /**
      * OAUTH_EXCEPTION
