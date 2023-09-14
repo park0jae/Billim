@@ -75,6 +75,7 @@ public class QPostRepositoryImpl extends QuerydslRepositorySupport implements QP
                                 constructor(PostDto.class,
                                 post.id,
                                 post.title,
+                                post.item.price,
                                 post.member.nickname,
                                 postImage.uniqueName.coalesce("testImage.jpg"),
                                 post.createdTime)

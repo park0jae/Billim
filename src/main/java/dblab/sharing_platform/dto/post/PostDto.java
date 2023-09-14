@@ -18,6 +18,7 @@ public class PostDto {
 
     private Long id;
     private String title;
+    private Long itemPrice;
     private String nickname;
     private String link;
 
@@ -25,9 +26,11 @@ public class PostDto {
     private LocalDateTime createdTime;
 
 
+
     public static PostDto toDto(Post post) {
         return new PostDto(post.getId(),
                 post.getTitle(),
+                post.getItem() != null ? post.getItem().getPrice() : null,
                 post.getMember().getNickname(),
                 post.getPostImages().isEmpty() ? "testImage.jpg" : post.getPostImages().get(0).getUniqueName(),
                 post.getCreatedTime());
