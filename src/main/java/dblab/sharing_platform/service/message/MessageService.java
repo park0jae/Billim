@@ -42,6 +42,7 @@ public class MessageService {
     public MessageDto sendMessageToReceiverByCurrentUser(MessageCreateRequestDto requestDto, String username) {
         Member sender = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
         Member receiver = memberRepository.findByNickname(requestDto.getReceiveMember()).orElseThrow(MemberNotFoundException::new);
+
         Post post = postValidation(Long.valueOf(requestDto.getPostId()), receiver, sender);
 
         Message message = new Message(requestDto.getContent(), receiver, sender, post);

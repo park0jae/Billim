@@ -23,6 +23,8 @@ public class MessageDto {
     private LocalDateTime createdDate;
 
     private boolean checked;
+    private Long postId;
+    private String postTitle;
 
     public static MessageDto toDto(Message message) {
         return new MessageDto(
@@ -31,6 +33,8 @@ public class MessageDto {
                 message.getSendMember().getNickname(),
                 message.getReceiveMember().getNickname(),
                 message.getCreatedTime(),
-                message.isChecked());
+                message.isChecked(),
+                message.getPost().getId(),
+                message.getPost().getTitle());
     }
 }
