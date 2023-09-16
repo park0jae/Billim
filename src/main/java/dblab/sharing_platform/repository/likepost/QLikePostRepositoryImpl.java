@@ -50,6 +50,7 @@ public class QLikePostRepositoryImpl extends QuerydslRepositorySupport implement
                         .select(constructor(PostDto.class,
                                 likePost.post.id,
                                 likePost.post.title,
+                                likePost.post.item.price,
                                 likePost.post.member.nickname,
                                 postImage.uniqueName.coalesce("testImage.jpg"),
                                 likePost.post.createdTime))
