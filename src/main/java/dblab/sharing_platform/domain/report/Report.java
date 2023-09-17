@@ -38,6 +38,7 @@ public class Report {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Post post;
 
     public Report(ReportType reportType, String content, Member reporter, Post post, Member reported) {
