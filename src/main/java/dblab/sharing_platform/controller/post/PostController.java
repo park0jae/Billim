@@ -34,12 +34,14 @@ public class PostController {
     public Response readAllPostByCond(@Valid PostPagingCondition cond) {
         return Response.success(OK.value(),postService.readAllPostByCond(cond));
     }
+
     @ApiOperation(value = "게시글 단건 조회", notes = "게시글 ID로 게시글을 조회합니다.")
     @GetMapping("/{postId}")
     @ResponseStatus(OK)
     public Response readSinglePostByPostId(@ApiParam(value = "조회할 게시글 id", required = true) @PathVariable Long postId) {
         return Response.success(OK.value(),postService.readSinglePostByPostId(postId));
     }
+
     @ApiOperation(value = "본인 작성 게시글 조회", notes = "현재 로그인한 유저가 작성한 게시글을 조회합니다.")
     @GetMapping("/my")
     @ResponseStatus(OK)
@@ -47,6 +49,7 @@ public class PostController {
         cond.setUsername(getCurrentUsernameCheck());
         return Response.success(OK.value(),postService.readAllWriteByCurrentUser(cond));
     }
+
     @ApiOperation(value ="본인의 좋아요 누른 게시글 전체 조회", notes = "현재 사용자가 좋아요 누른 게시글을 전체 조회합니다.")
     @GetMapping("/likes")
     @ResponseStatus(OK)
@@ -54,6 +57,7 @@ public class PostController {
         cond.setUsername(getCurrentUsernameCheck());
         return Response.success(OK.value(),postService.readAllLikePostByCurrentUser(cond));
     }
+
     @ApiOperation(value = "게시글 생성", notes = "게시글을 생성합니다.")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
