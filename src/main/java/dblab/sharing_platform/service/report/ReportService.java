@@ -26,7 +26,7 @@ public class ReportService {
 
     @Transactional
     public void createReportToPostOrUser(ReportCreateRequestDto requestDto, String username) {
-        Post post = requestDto.getPostId() == null ? null : postRepository.findById(requestDto.getPostId()).orElseThrow(PostNotFoundException::new);
+        Post post = requestDto.getPostId() == null ? null : postRepository.findById(Long.valueOf(requestDto.getPostId())).orElseThrow(PostNotFoundException::new);
         Member member = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
         reportRepository.save(new Report(requestDto.getReportType(),
                 requestDto.getContent(),

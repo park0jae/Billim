@@ -22,7 +22,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +38,9 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class ReportServiceTest {
+
+    @PersistenceContext
+    EntityManager em;
 
     @InjectMocks
     private ReportService reportService;
@@ -59,12 +65,13 @@ class ReportServiceTest {
         reporter = MemberFactory.createMember("reporter");
     }
 
-
     @Test
     @DisplayName("게시글 신고 생성")
     public void createPostReportTest() throws Exception {
         //given
-        ReportCreateRequestDto requestDto = new ReportCreateRequestDto(ReportType.POST_REPORT, post.getId(), "content");
+        ReflectionTestUtils.setField(post, "id", 1L);
+        ReportCreateRequestDto requestDto = new ReportCreateRequestDto(ReportType.POST_REPORT, String.valueOf(post.getId()), "content");
+        given(postRepository.findById(post.getId())).willReturn(Optional.ofNullable(post));
         given(memberRepository.findByUsername(reporter.getUsername())).willReturn(Optional.ofNullable(reporter));
 
         //when

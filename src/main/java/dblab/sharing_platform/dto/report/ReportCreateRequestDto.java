@@ -17,7 +17,7 @@ public class ReportCreateRequestDto {
     @NotNull
     private ReportType reportType;
     
-    private Long postId;
+    private String postId;
 
     @NotEmpty(message = "신고 내용을 입력해주세요.")
     private String content;
