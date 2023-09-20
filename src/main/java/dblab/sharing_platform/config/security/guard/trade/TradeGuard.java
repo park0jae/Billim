@@ -20,6 +20,9 @@ public class TradeGuard extends Guard {
         Member render = tradeRepository.findById(id).orElseThrow(GuardException::new).getRenderMember();
         Member borrower = tradeRepository.findById(id).orElseThrow(GuardException::new).getBorrowerMember();
 
+
+        System.out.println("currentId = " + currentId);
+
         return currentId.equals(render.getId()) || currentId.equals(borrower.getId());
     }
 }
