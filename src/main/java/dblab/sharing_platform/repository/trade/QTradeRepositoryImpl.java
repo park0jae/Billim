@@ -100,6 +100,7 @@ public class QTradeRepositoryImpl extends QuerydslRepositorySupport implements Q
                                 constructor(TradeDto.class,
                                         trade.id,
                                         trade.post.id,
+                                        trade.post.title,
                                         trade.renderMember.nickname,
                                         trade.borrowerMember.nickname
                                 ))
