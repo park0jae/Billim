@@ -12,7 +12,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")      //패턴
-                .allowedOrigins("*")    //URL
+                .allowedOriginPatterns("*")    //URL
                 .allowedHeaders("*")  //header
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")        //method
                 .allowCredentials(true) // 쿠키 인증 요청 허용
