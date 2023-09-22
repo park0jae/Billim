@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentDto {
 
+    private Long commentId;
     private String nickname;
     private String content;
 
@@ -38,7 +39,9 @@ public class CommentDto {
     }
 
     public static CommentDto toDto(Comment comment) {
-        return new CommentDto(comment.getMember() == null ? "(알수없음)" : comment.getMember().getNickname(),
+        return new CommentDto(
+                        comment.getId(),
+                        comment.getMember() == null ? "(알수없음)" : comment.getMember().getNickname(),
                         comment.getContent(),
                         comment.getCreatedTime(),
                         new ArrayList<>());
