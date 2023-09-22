@@ -90,7 +90,7 @@ public class SecurityConfig {
 
                 // 거래 생성, 취소 - 소유주 , ADMIN
                 .antMatchers(HttpMethod.POST, "/trades/{postId}").access("@postGuard.check(#postId)")
-                .antMatchers(HttpMethod.PATCH, "/trades/{tradeId}").access("@tradeGuard.check(#tradeId)")
+                .antMatchers(HttpMethod.PATCH, "/trades/trade/{tradeId}").access("@tradeGuard.check(#tradeId)")
                 .antMatchers(HttpMethod.DELETE, "/trades/{tradeId}").access("@tradeGuard.check(#tradeId)")
 
                 // 리뷰 조회, 작성, 삭제 - 소유주 , ADMIN

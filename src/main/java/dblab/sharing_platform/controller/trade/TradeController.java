@@ -33,7 +33,7 @@ public class TradeController {
     }
 
     @ApiOperation(value = "Trade ID로 Trade의 거래완료", notes = "Trade ID로 해당 Trade의 거래를 완료합니다.")
-    @PatchMapping("/{tradeId}")
+    @PatchMapping("/trade/{tradeId}")
     @ResponseStatus(OK)
     public Response completeTradeByTradeId(@ApiParam(value = "완료할 Trade ID", required = true) @PathVariable Long tradeId){
         return Response.success(OK.value(), tradeService.completeTradeByTradeId(tradeId));

@@ -89,6 +89,7 @@ public class ExceptionAdvisor {
     @ExceptionHandler(AuthenticationEntryPointException.class)
     @ResponseStatus(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED)
     public Response authenticationEntryPointException(AuthenticationEntryPointException e) {
+        e.printStackTrace();
         return getFailureResponse("NETWORK_AUTHENTICATION_REQUIRED.CODE", "REQUIRED_AUTHENTICATE.MSG");
     }
 
