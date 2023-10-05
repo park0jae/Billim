@@ -11,7 +11,6 @@ public class S3UploadService {
 
     private final AmazonS3Client amazonS3Client;
 
-
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 

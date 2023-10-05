@@ -33,7 +33,6 @@ public class TokenProvider {
     private final long refreshTokenValidityMilliSeconds;
     private final String originSecretKey;
     private final RefreshTokenRepository refreshTokenRepository;
-
     private Key secretKey;
 
     public TokenProvider(@Value("${jwt.token-validity-in-seconds}") long tokenValiditySeconds,
@@ -51,16 +50,6 @@ public class TokenProvider {
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    /** 로그인 요청 성공 시 토큰 발급
-     *  using in SignService
-     *  ( 1. after DB 검증 성공
-     *  -> 2. loadByUsernamePassword()로 Authentication 내부에 UserDetails 담아 리턴
-     *  -> 3. createAccessToken(authentication)
-     *  )
-     - authentication -(encode)-> token
-     - access Token 생성 (로그인 성공 시 Authentication 발급 -> Authentication 내부 MemberDetails 정보를 바탕으로 Token 생성)
-     - MemberDetails implements UserDetails
-     **/
     public String createToken(Authentication authentication, String type) {
 
         MemberDetails principal = (MemberDetails) authentication.getPrincipal();
@@ -94,11 +83,6 @@ public class TokenProvider {
         token.changeToken(newRefreshToken);
     }
 
-
-    /** 권한이 필요한 Request에서 사용
-     *  Token -(decode)-> claims 추출
-     *  claims로 UsernamePasswordAuthenticationToken 발급
-     */
     public Authentication getAuthenticationFromToken(String token) {
 
         Claims claims = Jwts.parserBuilder()
@@ -116,9 +100,6 @@ public class TokenProvider {
         return new UsernamePasswordAuthenticationToken(principal, token, simpleGrantedAuthorities);
     }
 
-
-    /** 토큰 검증
-     */
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
@@ -142,15 +123,11 @@ public class TokenProvider {
     }
 
     public Boolean refreshTokenValidation(String token) {
-        // 1차 토큰 검증
         if(!validateToken(token)) return false;
 
-        // DB에 저장한 토큰 비교
         Authentication authentication = getAuthenticationFromToken(token);
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(authentication.getName());
 
         return refreshToken.isPresent() && token.equals(refreshToken.get().getToken());
     }
-
-
 }

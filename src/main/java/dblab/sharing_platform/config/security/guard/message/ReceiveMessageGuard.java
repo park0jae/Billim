@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class ReceiveMessageGuard extends Guard {
+
     private final MessageRepository messageRepository;
 
     @Override

@@ -5,8 +5,6 @@ import dblab.sharing_platform.dto.report.ReportPagingCondition;
 import org.springframework.data.domain.Page;
 
 public interface QReportRepository {
-
     Page<ReportDto> findAllByCond(ReportPagingCondition cond);
-
     Page<ReportDto> findAllMyReportByCond(ReportPagingCondition cond);
 }

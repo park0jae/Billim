@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ReviewRepository extends JpaRepository<Review, Long>, QReviewRepository {
-
     @Query("select count(r) from Review r where r.writer.id =:memberId")
     Long countByMemberId(@Param("memberId") Long memberId);
 }

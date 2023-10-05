@@ -22,7 +22,6 @@ import static org.springframework.http.HttpStatus.OK;
 public class CommentController {
     private final CommentService commentService;
 
-    // 특정 게시물의 댓글 전체 조회
     @ApiOperation(value = "게시글 번호로 댓글 전체 조회", notes = "게시글 ID로 게시글의 댓글을 전체 조회합니다.")
     @GetMapping("/posts/{postId}/comments")
     @ResponseStatus(OK)

@@ -40,7 +40,6 @@ public class PostImage {
         this.uniqueName = extractExtAndGenerateUniqueName(originName);
     }
 
-    // Image -> Post 양방향 매핑정보
     public void initPost(Post post) {
         if (this.post == null) {
             this.post = post;
@@ -76,6 +75,4 @@ public class PostImage {
     private boolean supportFormat(String ext) {
         return Arrays.stream(extension).anyMatch(e -> e.equalsIgnoreCase(ext));
     }
-
-
 }

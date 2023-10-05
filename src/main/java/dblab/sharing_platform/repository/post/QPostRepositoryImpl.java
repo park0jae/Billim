@@ -25,6 +25,7 @@ import static dblab.sharing_platform.domain.post.QPost.post;
 public class QPostRepositoryImpl extends QuerydslRepositorySupport implements QPostRepository {
 
     private final JPAQueryFactory query;
+    private static final String DEFAULT_IMAGE = "testImage.jpg";
 
     public QPostRepositoryImpl(JPAQueryFactory query) {
         super(Post.class);
@@ -77,9 +78,8 @@ public class QPostRepositoryImpl extends QuerydslRepositorySupport implements QP
                                 post.title,
                                 post.item.price,
                                 post.member.nickname,
-                                postImage.uniqueName.coalesce("testImage.jpg"),
-                                post.createdTime)
-                        )
+                                postImage.uniqueName.coalesce(DEFAULT_IMAGE),
+                                post.createdTime))
                         .from(post)
                         .leftJoin(post.postImages, postImage)
                         .where(predicate)
@@ -87,8 +87,7 @@ public class QPostRepositoryImpl extends QuerydslRepositorySupport implements QP
         ).fetch();
     }
 
-
-    private Long fetchCount(Predicate predicate) { // 7
+    private Long fetchCount(Predicate predicate) {
         return query.select(post.count()).from(post).where(predicate).fetchOne();
     }
 }

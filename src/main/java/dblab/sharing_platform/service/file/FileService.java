@@ -14,7 +14,6 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class FileService {
-
     @Value("${cloud.aws.s3.bucket}")
     private String BUCKET;
     private final AmazonS3Client amazonS3Client;

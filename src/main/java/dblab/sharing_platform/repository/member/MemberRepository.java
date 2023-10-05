@@ -22,5 +22,4 @@ public interface MemberRepository extends JpaRepository<Member, Long>, QMemberRe
     boolean existsByNickname(String nickname);
 
     Optional<Member> findByProviderAndUsername(String provider, String username);
-
 }

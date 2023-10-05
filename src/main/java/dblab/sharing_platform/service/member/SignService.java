@@ -46,7 +46,6 @@ public class SignService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RefreshTokenRepository tokenRepository;
 
-
     @Transactional
     public void signUp(MemberCreateRequestDto requestDto){
         validateDuplicateUsernameAndNickname(requestDto);
@@ -129,8 +128,6 @@ public class SignService {
             List<String> tokens = new ArrayList<>();
             tokens.add(accessToken);
             tokens.add(refreshToken);
-
-
 
             return tokens;
         } catch (BadCredentialsException e) {

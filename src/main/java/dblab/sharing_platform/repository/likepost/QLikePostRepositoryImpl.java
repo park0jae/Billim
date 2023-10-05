@@ -22,6 +22,7 @@ import static dblab.sharing_platform.domain.likepost.QLikePost.likePost;
 public class QLikePostRepositoryImpl extends QuerydslRepositorySupport implements QLikePostRepository {
 
     private final JPAQueryFactory query;
+    private static final String DEFAULT_IMAGE_NAME = "testImage.jpg";
 
     public QLikePostRepositoryImpl(JPAQueryFactory query) {
         super(LikePost.class);
@@ -52,7 +53,7 @@ public class QLikePostRepositoryImpl extends QuerydslRepositorySupport implement
                                 likePost.post.title,
                                 likePost.post.item.price,
                                 likePost.post.member.nickname,
-                                postImage.uniqueName.coalesce("testImage.jpg"),
+                                postImage.uniqueName.coalesce(DEFAULT_IMAGE_NAME),
                                 likePost.post.createdTime))
                         .from(likePost)
                         .leftJoin(likePost.post.postImages, postImage)
@@ -61,8 +62,7 @@ public class QLikePostRepositoryImpl extends QuerydslRepositorySupport implement
         ).fetch();
     }
 
-    private Long fetchCount(Predicate predicate) { // 7
+    private Long fetchCount(Predicate predicate) {
         return query.select(likePost.count()).from(likePost).where(predicate).fetchOne();
     }
-
 }

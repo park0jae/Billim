@@ -6,6 +6,5 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReviewRequestDto {
-
     private String content;
 }

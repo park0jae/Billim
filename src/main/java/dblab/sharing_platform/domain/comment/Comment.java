@@ -37,7 +37,6 @@ public class Comment extends BaseTime {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
-    // 부모 댓글
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     @OnDelete(action = OnDeleteAction.CASCADE)

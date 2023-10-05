@@ -31,24 +31,23 @@ public class QReviewRepositoryImpl extends QuerydslRepositorySupport implements 
     @Override
     public Page<ReviewDto> findAllByUsername(ReviewPagingCondition cond) {
         Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize());
-        Predicate predicate = createPredicateByNickname(cond); // 검색 조건
+        Predicate predicate = createPredicateByNickname(cond);
         return new PageImpl<>(fetchAll(predicate, pageable), pageable, fetchCount(predicate));
     }
 
     @Override
     public Page<ReviewDto> findAllWithMemberByCurrentUsername(ReviewPagingCondition cond) {
         Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize());
-        Predicate predicate = createPredicateByCurrentUsername(cond); // 검색 조건
+        Predicate predicate = createPredicateByCurrentUsername(cond);
         return new PageImpl<>(fetchAll(predicate, pageable), pageable, fetchCount(predicate));
     }
 
     @Override
     public Page<ReviewDto> findAllReviews(ReviewPagingCondition cond) {
         Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize());
-        Predicate predicate = createPredicateAll(); // 검색 조건
+        Predicate predicate = createPredicateAll();
         return new PageImpl<>(fetchAll(predicate, pageable), pageable, fetchCount(predicate));
     }
-
 
     private Predicate createPredicateByNickname(ReviewPagingCondition cond) {
         BooleanBuilder builder = new BooleanBuilder();

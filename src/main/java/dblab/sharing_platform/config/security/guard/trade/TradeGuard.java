@@ -13,15 +13,13 @@ import org.springframework.stereotype.Component;
 public class TradeGuard extends Guard {
 
     private final TradeRepository tradeRepository;
+
     @Override
     protected boolean isResourceOwner(Long id) {
-        Long currentId = Long.valueOf(SecurityUtil.getCurrentUserId().orElseThrow(GuardException::new)); // 현재 아이디
+        Long currentId = Long.valueOf(SecurityUtil.getCurrentUserId().orElseThrow(GuardException::new));
 
         Member render = tradeRepository.findById(id).orElseThrow(GuardException::new).getRenderMember();
         Member borrower = tradeRepository.findById(id).orElseThrow(GuardException::new).getBorrowerMember();
-
-
-        System.out.println("currentId = " + currentId);
 
         return currentId.equals(render.getId()) || currentId.equals(borrower.getId());
     }

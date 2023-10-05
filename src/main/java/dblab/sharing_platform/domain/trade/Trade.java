@@ -57,7 +57,6 @@ public class Trade {
         this.post = post;
     }
 
-
     public void addReview(Review review) {
         if (this.review == null) {
             this.writtenReview = true;

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class CommentGuard extends Guard {
-
     private final CommentRepository commentRepository;
 
     @Override

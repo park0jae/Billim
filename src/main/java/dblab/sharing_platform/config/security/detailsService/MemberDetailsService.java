@@ -22,10 +22,6 @@ import java.util.stream.Collectors;
 public class MemberDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
-    // authenticate() 메소드 실행 시 넘어온 UsernamePasswordAuthentication 내부에
-    // username, password 추출
-    // username ->  role까지 graph로 조회
-    // password ->  DaoAuthenticationProvider가 Encoding된 Password와 DB의 password 자동 비교
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Member> member = Optional.ofNullable(memberRepository.findOneWithRolesByUsername(username).

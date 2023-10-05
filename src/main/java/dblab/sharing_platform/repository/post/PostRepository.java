@@ -11,5 +11,4 @@ public interface PostRepository extends JpaRepository<Post, Long>, QPostReposito
 
     @Query("select p from Post p join fetch p.member m where m.nickname = :nickname")
     List<Post> findAllWithMemberByNickname(@Param("nickname") String nickname);
-
 }

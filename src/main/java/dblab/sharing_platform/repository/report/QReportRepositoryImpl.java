@@ -43,37 +43,29 @@ public class QReportRepositoryImpl extends QuerydslRepositorySupport implements 
 
     private Predicate createPredicateForAdmin(ReportPagingCondition cond) {
         BooleanBuilder builder = new BooleanBuilder();
-
         if (StringUtils.hasText(cond.getWriterNickname())) {
             builder.and(report.reporter.nickname.eq(cond.getWriterNickname()));
         }
-
         if (StringUtils.hasText(cond.getReportedNickname())) {
             builder.and(report.reported.nickname.eq(cond.getReportedNickname()));
         }
-
         if (cond.getReportType() != null) {
             builder.and(report.reportType.eq(cond.getReportType()));
         }
-
         return builder;
     }
 
     private Predicate createPredicateForMyReport(ReportPagingCondition cond) {
         BooleanBuilder builder = new BooleanBuilder();
-
         if (StringUtils.hasText(cond.getWriterUsername())) {
             builder.and(report.reporter.username.eq(cond.getWriterUsername()));
         }
-
         if (StringUtils.hasText(cond.getReportedNickname())) {
             builder.and(report.reported.nickname.eq(cond.getReportedNickname()));
         }
-
         if (cond.getReportType() != null) {
             builder.and(report.reportType.eq(cond.getReportType()));
         }
-
         return builder;
     }
 
@@ -95,7 +87,7 @@ public class QReportRepositoryImpl extends QuerydslRepositorySupport implements 
                         .orderBy(report.id.asc())
         ).fetch();
     }
-    private Long fetchCount(Predicate predicate) { // 7
+    private Long fetchCount(Predicate predicate) {
         return query.select(report.count()).from(report).where(predicate).fetchOne();
     }
 }

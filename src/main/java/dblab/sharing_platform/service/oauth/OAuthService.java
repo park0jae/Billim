@@ -57,23 +57,19 @@ public class OAuthService {
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-            //POST 요청을 위해 기본값이 false인 setDoOutput을 true로
             conn.setRequestMethod(POST);
             conn.setDoOutput(true);
 
-            //POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append(GRANT_TYPE);
-            sb.append(CLIENT_ID+ accessTokenRequestDto.getClientId()); // TODO REST_API_KEY 입력
+            sb.append(CLIENT_ID+ accessTokenRequestDto.getClientId());
             sb.append(CLIENT_SECRET+ accessTokenRequestDto.getClientSecret());
-            sb.append(REDIRECT_URI + accessTokenRequestDto.getRedirectUri()); // TODO 인가코드 받은 redirect_uri 입력
+            sb.append(REDIRECT_URI + accessTokenRequestDto.getRedirectUri());
             sb.append(CODE + code);
             bw.write(sb.toString());
             bw.flush();
 
-            //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line = "";
             String result = "";
@@ -82,7 +78,6 @@ public class OAuthService {
                 result += line;
             }
 
-            // Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
             JsonElement element = JsonParser.parseString(result);
             access_Token = element.getAsJsonObject().get(ACCESS_TOKEN).getAsString();
 
@@ -112,19 +107,14 @@ public class OAuthService {
                 break;
         }
 
-        //access_token을 이용하여 사용자 정보 조회
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestMethod(GET);
             conn.setDoOutput(true);
-            conn.setRequestProperty(AUTHORIZATION, BEARER + accessToken); //전송할 header 작성, access_token전송
+            conn.setRequestProperty(AUTHORIZATION, BEARER + accessToken);
 
-            //결과 코드가 200이라면 성공
-            conn.getResponseCode();
-
-            //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line = "";
             String result = "";
@@ -149,10 +139,8 @@ public class OAuthService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return null;
     }
-
 
     public void unlinkOAuthService(String accessToken, String provider){
         String url = "";
@@ -181,7 +169,6 @@ public class OAuthService {
         throw new OAuthCommunicationException();
     }
 
-
     private OAuth2MemberCreateRequestDto getProvideInfo(String provider, String accessToken){
         String email = "";
         switch (provider){
@@ -208,8 +195,6 @@ public class OAuthService {
         } else if (memberRepository.existsByUsernameAndProvider(email, NONE)) {
             throw new AlreadyExistsMemberException();
         }
-
         return new OAuth2MemberCreateRequestDto(email, provider, accessToken);
     }
-
 }

@@ -1,6 +1,5 @@
 package dblab.sharing_platform.service.post;
 
-import dblab.sharing_platform.config.s3.S3UploadService;
 import dblab.sharing_platform.domain.category.Category;
 import dblab.sharing_platform.domain.image.PostImage;
 import dblab.sharing_platform.domain.likepost.LikePost;
@@ -45,12 +44,7 @@ public class PostService {
     private final FileService fileService;
     private final LikePostRepository likePostRepository;
     private final NotificationHelper notificationHelper;
-
-    private final S3UploadService s3UploadService;
-
-    private final String LIKE_POST_MESSAGE = "님이 이 글을 좋아합니다.";
-
-    private static String postDir = "post/";
+    private static final String LIKE_POST_MESSAGE = "님이 이 글을 좋아합니다.";
 
     public PagedPostListDto readAllPostByCond(PostPagingCondition cond) {
         return PagedPostListDto.toDto(postRepository.findAllByCategoryAndTitle(cond));
@@ -70,7 +64,6 @@ public class PostService {
         return PostReadResponseDto.toDto(post);
     }
 
-    // create
     @Transactional
     public PostCreateResponseDto createPost(PostCreateRequestDto requestDto, String username) {
         List<PostImage> postImages = getImages(requestDto);
@@ -114,7 +107,6 @@ public class PostService {
         likeUpOrDown(member, post);
     }
 
-    // create
     public void uploadImagesToServer(List<PostImage> postImages, List<MultipartFile> fileImages) {
         if (!postImages.isEmpty()) {
             for (int i = 0; i < postImages.size(); i++) {
@@ -123,19 +115,16 @@ public class PostService {
         }
     }
 
-    // delete
     public void deleteImagesFromServer(Post post) {
         List<PostImage> postImages = post.getPostImages();
         postImages.stream().forEach(i -> fileService.delete(i.getUniqueName(), FOLDER_NAME_POST));
     }
 
-    // update
     public void updateImagesToServer(PostUpdateRequestDto requestDto, PostUpdateResponseDto responseDto) {
         uploadImagesToServer(requestDto, responseDto);
         deleteImagesFromServer(responseDto);
     }
 
-    // update - create
     private void uploadImagesToServer(PostUpdateRequestDto requestDto, PostUpdateResponseDto responseDto) {
         List<PostImageDto> addedImages = responseDto.getAddedImages();
         for (int i = 0; i < addedImages.size(); i++) {
@@ -143,7 +132,6 @@ public class PostService {
         }
     }
 
-    // update - delete
     private void deleteImagesFromServer(PostUpdateResponseDto responseDto) {
         List<PostImageDto> deletePostImageDtoList = responseDto.getDeletedImages();
         deletePostImageDtoList.stream().forEach(i -> fileService.delete(i.getUniqueName(), FOLDER_NAME_POST));

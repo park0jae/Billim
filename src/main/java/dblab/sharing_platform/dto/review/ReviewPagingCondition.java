@@ -18,7 +18,6 @@ public class ReviewPagingCondition {
     @NotNull(message = "페이지 크기를 입력해주세요.")
     @Positive(message = "1 이상의 올바른 페이지당 글 개수를 입력해주세요.")
     private Integer size;
-
     private String username;
     private String nickname;
 
@@ -28,13 +27,10 @@ public class ReviewPagingCondition {
     }
 
     private int getDefaultPageNum() {
-        // 디폴트 페이지 번호 로직
-        return 0; // 예시로 1로 설정
+        return 0;
     }
 
     private int getDefaultPageSize() {
-        // 디폴트 페이지당 글 개수 로직
-        return 10; // 예시로 10으로 설정
+        return 10;
     }
-
 }

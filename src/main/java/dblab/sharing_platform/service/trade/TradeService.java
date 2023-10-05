@@ -83,5 +83,4 @@ public class TradeService {
             throw new ImpossibleCreateTradeException();
         }
     }
-
 }

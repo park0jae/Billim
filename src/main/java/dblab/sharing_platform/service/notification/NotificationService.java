@@ -99,6 +99,4 @@ public class NotificationService {
     private static String makeTimeIncludeId(Long memberId) {
         return memberId + "_" + System.currentTimeMillis();
     }
-
-
 }

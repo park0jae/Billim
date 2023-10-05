@@ -22,5 +22,4 @@ public class KakaoProfile{
     public static class Properties {
         private String nickname;
     }
-
 }

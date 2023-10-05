@@ -36,5 +36,4 @@ public class Review {
         this.member = member;
         this.writer = writer;
     }
-
 }

@@ -24,17 +24,16 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MessageService {
+    private static final String ARRIVE_MESSAGE = "님으로부터 메시지가 도착했습니다.";
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final NotificationHelper notificationHelper;
-    private static final String ARRIVE_MESSAGE = "님으로부터 메시지가 도착했습니다.";
 
     @Transactional
     public MessageDto findMessageById(Long id) {
         Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
         message.readByReceiver();
-
         return MessageDto.toDto(message);
     }
 
@@ -52,7 +51,6 @@ public class MessageService {
 
         return MessageDto.toDto(message);
     }
-
 
     public PagedMessageListDto findSendMessageByCurrentUser(MessagePagingCondition cond){
         return PagedMessageListDto.toDto(messageRepository.findAllBySendMember(cond));
@@ -96,5 +94,4 @@ public class MessageService {
             throw new SendMessageException();
         }
     }
-
 }

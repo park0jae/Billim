@@ -14,18 +14,18 @@ import java.util.stream.Collectors;
 
 @Component
 public class PostImageHelper {
+    private static final String DELETE_LIST = "deleteList";
+    private static final String ADD_LIST = "addList";
 
     public static List<PostImage> addToDBAndServer(List<MultipartFile> addImages, List<PostImage> postImages, Post post) {
         List<PostImage> addPostImageList = MultipartToImage(addImages);
         addImages(addPostImageList, postImages, post);
-
         return addPostImageList;
     }
 
     public static List<PostImage> deleteFromDBAndServer(List<String> deleteImageNames, List<PostImage> postImages, Post post) {
         List<PostImage> deletePostImageList = StringToImage(deleteImageNames, postImages);
         deleteImages(deletePostImageList, postImages, post);
-
         return deletePostImageList;
     }
 
@@ -47,22 +47,19 @@ public class PostImageHelper {
     }
 
     public static Map<String, List<PostImage>> updateImage(PostUpdateRequestDto requestDto, List<PostImage> postImages, Post post) {
-
         Map<String, List<PostImage>> m = new HashMap<>();
 
-        // 수정/DB - 추가된 이미지 데이터베이스에 올리고, 삭제된 이미지 데이터베이스에서 삭제
         if (requestDto.getAddImages() != null) {
-            List<MultipartFile> addImages = requestDto.getAddImages();  // 업로드할 이미지 파일
+            List<MultipartFile> addImages = requestDto.getAddImages();
             List<PostImage> addList = addToDBAndServer(addImages, postImages, post);
-            m.put("addList", addList);
+            m.put(ADD_LIST, addList);
         }
 
         if (requestDto.getDeleteImageNames() != null) {
-            List<String> deleteImageNames = requestDto.getDeleteImageNames(); // 삭제할 이미지 파일 이름
+            List<String> deleteImageNames = requestDto.getDeleteImageNames();
             List<PostImage> deleteList = deleteFromDBAndServer(deleteImageNames, postImages, post);
-            m.put("deleteList", deleteList);
+            m.put(DELETE_LIST, deleteList);
         }
-
         return m;
     }
 
@@ -81,6 +78,4 @@ public class PostImageHelper {
         return addImages.stream().map(
                 file -> new PostImage(file.getOriginalFilename())).collect(Collectors.toList());
     }
-
-
 }

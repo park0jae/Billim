@@ -56,5 +56,4 @@ public class ReportController {
         reportService.deleteReportByReportId(reportId);
         return Response.success(OK.value());
     }
-
 }

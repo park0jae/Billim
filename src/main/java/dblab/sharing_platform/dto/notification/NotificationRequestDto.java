@@ -24,5 +24,4 @@ public class NotificationRequestDto {
     private String notificationType;
 
     private String receiver;
-
 }

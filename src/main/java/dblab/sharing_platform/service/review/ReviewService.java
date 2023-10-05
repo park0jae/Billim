@@ -33,7 +33,6 @@ public class ReviewService {
     private final MemberRepository memberRepository;
     private final TradeRepository tradeRepository;
     private final NotificationHelper notificationHelper;
-
     public static final String REVIEW_COMPLETE_MESSAGE = "님이 거래에 대한 리뷰를 작성했습니다.";
 
     @Transactional

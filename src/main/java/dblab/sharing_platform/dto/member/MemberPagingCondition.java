@@ -19,7 +19,6 @@ public class MemberPagingCondition {
     @Positive(message = "1 이상의 올바른 페이지당 글 개수를 입력해주세요.")
     private Integer size;
 
-    // 검색 조건
     private String nickname;
 
     public MemberPagingCondition() {
@@ -28,14 +27,11 @@ public class MemberPagingCondition {
     }
 
     private int getDefaultPageNum() {
-        // 디폴트 페이지 번호 로직
-        return 0; // 예시로 1로 설정
+        return 0;
     }
 
     private int getDefaultPageSize() {
-        // 디폴트 페이지당 글 개수 로직
-        return 10; // 예시로 10으로 설정
+        return 10;
     }
-
 }
 

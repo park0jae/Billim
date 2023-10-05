@@ -22,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CommentService {
+
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
@@ -47,7 +48,6 @@ public class CommentService {
         comment.delete();
     }
 
-    // read
     public List<CommentDto> readAllCommentByPostId(Long postId) {
         validatePostExists(postId);
         return CommentDto.toDtoList(commentRepository.findAllOrderByParentIdAscNullsFirstByPostId(postId));

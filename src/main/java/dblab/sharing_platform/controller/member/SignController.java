@@ -80,7 +80,6 @@ public class SignController {
         return Response.success(OK.value(),signUpAndLogin(req));
     }
 
-
     @ApiOperation(value = "구글 로그인", notes = "OAuth2.0 구글로 소셜 로그인을 진행합니다.")
     @GetMapping("/oauth2/callback/google")
     @ResponseStatus(OK)

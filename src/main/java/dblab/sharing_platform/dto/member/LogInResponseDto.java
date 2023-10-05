@@ -15,6 +15,7 @@ public class LogInResponseDto {
 
     private String accessToken;
     private String refreshToken;
+
     public static LogInResponseDto toDto(String accessToken, String refreshToken) {
         return new LogInResponseDto(accessToken, refreshToken);
     }

@@ -27,5 +27,4 @@ public class MemberRole {
     public MemberRole(Role role) {
         this.role = role;
     }
-
 }

@@ -12,15 +12,10 @@ import lombok.NoArgsConstructor;
 public class MemberPrivateDto {
 
     private Long id;
-
     private String username;
-
     private String nickname;
-
     private String phoneNumber;
-
     private Address address;
-
 
     public static MemberPrivateDto toDto(Member member) {
         return new MemberPrivateDto(

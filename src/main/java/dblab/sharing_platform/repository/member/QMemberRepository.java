@@ -6,7 +6,5 @@ import org.springframework.data.domain.Page;
 
 public interface QMemberRepository {
 
-    // 회원 검색 및 페이징 ( Querydsl 사용 )
-    // 검색조건 : username -> paging
     Page<MemberDto> findAllBySearch(MemberPagingCondition cond);
 }

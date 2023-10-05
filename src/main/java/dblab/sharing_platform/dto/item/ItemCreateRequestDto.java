@@ -29,6 +29,4 @@ public class ItemCreateRequestDto {
                 itemCreateRequestDto.getPrice(),
                 itemCreateRequestDto.getQuantity());
     }
-
-
 }

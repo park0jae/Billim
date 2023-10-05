@@ -33,9 +33,4 @@ public class MemberUpdateRequestDto {
 
     @ApiModelProperty(value = "image", notes = "프로필 사진을 업로드하세요. (선택)")
     private MultipartFile image;
-
-//    public static MemberUpdateRequestDto toDto(Member member) {
-//        return new MemberUpdateRequestDto(member.getPassword(),
-//                                member.getNickname(), member.getPhoneNumber(), member.getAddress(), member.getIntroduce(), )
-//    }
 }

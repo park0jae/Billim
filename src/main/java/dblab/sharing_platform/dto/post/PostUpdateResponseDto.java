@@ -17,16 +17,11 @@ import java.util.Map;
 public class PostUpdateResponseDto {
 
     private Long id;
-
     private String title;
-
     private String content;
-
     private MemberDto memberDto;
-
     private List<PostImageDto> addedImages;
     private List<PostImageDto> deletedImages;
-
 
     public static PostUpdateResponseDto toDto(PostUpdateRequestDto postUpdateRequestDto, Post post, Map<String, List<PostImage>> map) {
         return new PostUpdateResponseDto(post.getId(),
@@ -36,5 +31,4 @@ public class PostUpdateResponseDto {
                 PostImageDto.toDtoList(map.getOrDefault("addList", List.of())),
                 PostImageDto.toDtoList(map.getOrDefault("deleteList",List.of())));
     }
-
 }

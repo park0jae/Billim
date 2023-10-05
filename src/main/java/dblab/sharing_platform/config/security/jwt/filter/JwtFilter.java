@@ -27,9 +27,6 @@ public class JwtFilter extends OncePerRequestFilter {
     public static final String LOGIN_PATH = "/login";
     public static final String EXCEPTION_PATH = "/exception";
 
-
-    // 인증/인가가 필요한 요청시 실행하는 필터
-    // 토큰 검증 이후 -> 인증정보 Authentication 객체를 SecurityContext에 저장
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String accessToken = extractTokenFromRequest(request, AUTH_HEADER);

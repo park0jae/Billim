@@ -43,7 +43,6 @@ public class ExceptionAdvisor {
 
     private final MessageSource ms;
 
-    // UNCAUGHT EXCEPTION
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Response exception(Exception e) {
@@ -65,9 +64,6 @@ public class ExceptionAdvisor {
         return getFailureResponse("BAD_REQUEST.CODE", "FIELD_ERROR.MSG");
     }
 
-    /**
-     * AUTH-EXCEPTION
-     */
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Response accessDeniedException(AccessDeniedException e) {
@@ -141,20 +137,12 @@ public class ExceptionAdvisor {
         return getFailureResponse("BAD_REQUEST.CODE", "INVALID_TOKEN.MSG");
     }
 
-
-    /**
-     * CATEGORY_EXCEPTION
-     */
     @ExceptionHandler(CategoryNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response categoryNotFoundException(CategoryNotFoundException e) {
         return getFailureResponse("NOT_FOUND.CODE", "CATEGORY_NOT_FOUND.MSG");
     }
 
-
-    /**
-     * COMMENT_EXCEPTION
-     */
     @ExceptionHandler(CommentNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response commentNotFoundException(CommentNotFoundException e) {
@@ -167,40 +155,24 @@ public class ExceptionAdvisor {
         return getFailureResponse("NOT_FOUND.CODE", "ROOT_COMMENT_NOT_FOUND.MSG");
     }
 
-
-    /**
-     * FILE_UPLOAD_EXCEPTION
-     */
     @ExceptionHandler(FileUploadFailureException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response fileUploadFailureException(FileUploadFailureException e) {
         return getFailureResponse("BAD_REQUEST.CODE", "FILE_UPLOAD.MSG");
     }
 
-
-    /**
-     * GUARD_EXCEPTION
-     */
     @ExceptionHandler(GuardException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Response guardException(GuardException e) {
         return getFailureResponse("UNAUTHORIZED.CODE", "GUARD.MSG");
     }
 
-
-    /**
-     * HELPER_EXCEPTION
-     */
     @ExceptionHandler(ConvertException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response convertException(ConvertException e) {
         return getFailureResponse("BAD_REQUEST.CODE", "CONVERTER.MSG");
     }
 
-
-    /**
-     * IMAGE_EXCEPTION
-     */
     @ExceptionHandler(NoExtException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response noExtException(NoExtException e) {
@@ -213,18 +185,12 @@ public class ExceptionAdvisor {
         return getFailureResponse("UNSUPPORTED_MEDIA_TYPE.CODE", "UNSUPPORTED_TYPE.MSG");
     }
 
-    /**
-     * MEMBER_EXCEPTION
-     */
     @ExceptionHandler(MemberNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response memberNotFoundException(MemberNotFoundException e) {
         return getFailureResponse("NOT_FOUND.CODE", "MEMBER_NOT_FOUND.MSG");
     }
 
-    /**
-     * MESSAGE_EXCEPTION
-     */
     @ExceptionHandler(MessageNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response messageNotFoundException(MessageNotFoundException e) {
@@ -237,9 +203,6 @@ public class ExceptionAdvisor {
         return getFailureResponse("BAD_REQUEST.CODE", "SEND_MESSAGE_BAD_REQUEST.MSG");
     }
 
-    /**
-     * OAUTH_EXCEPTION
-     */
     @ExceptionHandler(OAuthCommunicationException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Response oAuthCommunicationException(OAuthCommunicationException e) {
@@ -258,27 +221,18 @@ public class ExceptionAdvisor {
         return getFailureResponse("PRECONDITION_REQUIRED.CODE", "SOCIAL_AGREEMENT.MSG");
     }
 
-    /**
-     * POST_EXCEPTION
-     */
     @ExceptionHandler(PostNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response postNotFoundException(PostNotFoundException e) {
         return getFailureResponse("NOT_FOUND.CODE", "POST_NOT_FOUND.MSG");
     }
 
-    /**
-     * REPORT_EXCEPTION
-     */
     @ExceptionHandler(ReportNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response reportNotFoundException(ReportNotFoundException e) {
         return getFailureResponse("NOT_FOUND.CODE", "REPORT_NOT_FOUND.MSG");
     }
 
-    /**
-     * REVIEW_EXCEPTION
-     */
     @ExceptionHandler(ExistReviewException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public Response ExistReviewException(ExistReviewException e) {
@@ -297,20 +251,12 @@ public class ExceptionAdvisor {
         return getFailureResponse("NOT_FOUND.CODE", "REVIEW_NOT_FOUND.MSG");
     }
 
-
-    /**
-     * ROLE_EXCEPTION
-     */
     @ExceptionHandler(RoleNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response roleNotFoundException(RoleNotFoundException e) {
         return getFailureResponse("BAD_REQUEST.CODE", "ROLE_NOT_FOUND.MSG");
     }
 
-
-    /**
-     * TRADE_EXCEPTION
-     */
     @ExceptionHandler(ExistTradeException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public Response ExistTradeException(ExistTradeException e) {
@@ -335,9 +281,6 @@ public class ExceptionAdvisor {
         return getFailureResponse("NOT_FOUND.CODE", "TRADE_NOT_FOUND.MSG");
     }
 
-    /**
-     * Token Exception
-     */
     @ExceptionHandler(TokenNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response tokenNotFoundException(TokenNotFoundException e) {

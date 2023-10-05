@@ -5,10 +5,7 @@ import dblab.sharing_platform.dto.trade.TradePagingCondition;
 import org.springframework.data.domain.Page;
 
 public interface QTradeRepository {
-
     Page<TradeDto> findAllByCond(TradePagingCondition cond);
-
     Page<TradeDto> findAllByMyRend(TradePagingCondition cond);
-
     Page<TradeDto> findAllByMyBorrow(TradePagingCondition cond);
 }

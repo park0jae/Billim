@@ -25,7 +25,6 @@ public class TradeResponseDto {
     private boolean tradeComplete;
     private boolean writtenReview;
 
-
     public static TradeResponseDto toDto(Trade trade) {
         if (trade != null) {
             return new TradeResponseDto(
@@ -38,7 +37,6 @@ public class TradeResponseDto {
                     trade.isTradeComplete(),
                     trade.isWrittenReview()
                     );
-
         } else {
             return null;
         }

@@ -22,5 +22,4 @@ public class PasswordResetRequestDto extends EmailAuthRequest {
     @ApiModelProperty(value = "verifyPassword", notes = "password를 확인합니다.", required = true, example = "kimdongwoong@naver.com")
     @NotBlank(message = "재설정할 비밀번호를 다시 한 번 입력해주세요.")
     private String verifyPassword;
-
 }

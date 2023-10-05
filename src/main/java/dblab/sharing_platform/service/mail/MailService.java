@@ -31,8 +31,6 @@ public class MailService {
     private static final String CHARSET = "utf-8";
     private static final String SUBTYPE = "html";
     private static final String PERSONAL = "SharingPlatform_Admin";
-
-
     private String ePw;
 
     @Transactional

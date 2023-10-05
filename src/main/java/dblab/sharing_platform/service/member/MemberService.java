@@ -26,7 +26,6 @@ import static dblab.sharing_platform.config.file.FileInfo.FOLDER_NAME_POST;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberService {
-
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
@@ -109,5 +108,4 @@ public class MemberService {
             postImages.stream().forEach(i -> fileService.delete(i.getUniqueName(), FOLDER_NAME_POST));
         });
     }
-
 }

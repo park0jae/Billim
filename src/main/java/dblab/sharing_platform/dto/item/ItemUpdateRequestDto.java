@@ -29,5 +29,4 @@ public class ItemUpdateRequestDto {
                 itemUpdateRequestDto.getPrice(),
                 itemUpdateRequestDto.getQuantity());
     }
-
 }

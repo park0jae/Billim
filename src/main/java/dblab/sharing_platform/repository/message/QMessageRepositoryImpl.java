@@ -19,6 +19,7 @@ import static com.querydsl.core.types.Projections.constructor;
 import static dblab.sharing_platform.domain.message.QMessage.message;
 
 public class QMessageRepositoryImpl extends QuerydslRepositorySupport implements QMessageRepository {
+
     private final JPAQueryFactory query;
 
     public QMessageRepositoryImpl(JPAQueryFactory query) {
@@ -90,7 +91,6 @@ public class QMessageRepositoryImpl extends QuerydslRepositorySupport implements
                         .orderBy(message.id.asc())
         ).fetch();
     }
-
 
     private Long fetchCount(Predicate predicate) {
         return query.select(message.count()).from(message).where(predicate).fetchOne();
