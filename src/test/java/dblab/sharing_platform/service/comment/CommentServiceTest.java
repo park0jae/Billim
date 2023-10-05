@@ -82,7 +82,8 @@ class CommentServiceTest {
                 );
 
         given(postRepository.findById(post.getId())).willReturn(Optional.ofNullable(post));
-
+        System.out.println(post.getId());
+        
         // when
         List<CommentDto> result = commentService.readAllCommentByPostId(post.getId());
 

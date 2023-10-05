@@ -54,8 +54,6 @@ public class CommentService {
     }
 
     private void validatePostExists(Long postId) {
-        postRepository.findById(postId).ifPresent(e -> {
-            throw new PostNotFoundException();
-        });
+        postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
     }
 }
