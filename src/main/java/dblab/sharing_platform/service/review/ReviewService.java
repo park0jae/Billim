@@ -42,7 +42,7 @@ public class ReviewService {
         Member writer = memberRepository.findByUsername(username).orElseThrow(AuthenticationEntryPointException::new); // 리뷰 작성자
         Member member = memberRepository.findById(trade.getRenderMember().getId()).orElseThrow(MemberNotFoundException::new); // 리뷰 받는 사람
 
-        validate(username, trade);
+        validateWriteReview(username, trade);
 
         Review review = new Review(reviewRequestDto.getContent(),
                 member,
@@ -76,18 +76,15 @@ public class ReviewService {
         return PagedReviewListDto.toDto(reviewRepository.findAllByUsername(cond));
     }
 
-    private void validate(String username, Trade trade) {
+    private void validateWriteReview(String username, Trade trade) {
         if (username.equals(trade.getRenderMember().getUsername())) {
             throw new ImpossibleWriteReviewException();
         }
-
         if (trade.isTradeComplete() == false) {
             throw new TradeNotCompleteException();
         }
-
         if (trade.isWrittenReview()) {
             throw new ExistReviewException();
         }
     }
-
 }

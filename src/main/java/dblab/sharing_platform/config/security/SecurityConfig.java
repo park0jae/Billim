@@ -75,7 +75,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/category/**").hasAuthority("ADMIN")
 
                 // 메시지 조회 - 소유주(수신자, 발신자)
-                .antMatchers(HttpMethod.GET, "/messages/{messageId}/message").access("@sendMessageGuard.check(#messageId) or @receiveMessageGuard.check(#messageId)")
+                .antMatchers(HttpMethod.GET, "/messages/{messageId}").access("@sendMessageGuard.check(#messageId) or @receiveMessageGuard.check(#messageId)")
 
                 // 메세지 삭제 - 소유주, ADMIN
                 .antMatchers(HttpMethod.DELETE, "/messages/{messageId}/sent").access("@sendMessageGuard.check(#messageId)")

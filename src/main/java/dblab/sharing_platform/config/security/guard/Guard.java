@@ -11,7 +11,7 @@ public abstract class Guard {
 
     private boolean hasAuthority(Long id){
         return SecurityUtil.extractMemberRolesFromContext().contains(RoleType.ADMIN) || isResourceOwner(id);
-    }
+    } 
 
     abstract protected boolean isResourceOwner(Long id);
 }

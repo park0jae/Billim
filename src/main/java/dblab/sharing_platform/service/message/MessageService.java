@@ -67,9 +67,13 @@ public class MessageService {
         Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
         message.deleteBySender();
 
-        if (message.isDeleteBySender() && message.isDeleteByReceiver()) {
+        if (deletedByBothSides(message)) {
             messageRepository.delete(message);
         }
+    }
+
+    private boolean deletedByBothSides(Message message) {
+        return message.isDeleteBySender() && message.isDeleteByReceiver();
     }
 
     @Transactional
@@ -77,7 +81,7 @@ public class MessageService {
         Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
         message.deleteByReceiver();
 
-        if (message.isDeleteBySender() && message.isDeleteByReceiver()) {
+        if (deletedByBothSides(message)) {
             messageRepository.delete(message);
         }
     }

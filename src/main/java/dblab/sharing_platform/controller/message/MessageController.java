@@ -30,7 +30,7 @@ public class MessageController {
     }
 
     @ApiOperation(value = "메세지 단건 조회", notes = "메시지를 ID를 통해 단건 조회합니다.(해당 메시지의 소유자, 즉 수신자 및 발신자만 접근 가능)")
-    @GetMapping("/{messageId}/message")
+    @GetMapping("/{messageId}")
     @ResponseStatus(OK)
     public Response findOneMessagesById(@PathVariable Long messageId){
         return Response.success(OK.value(), messageService.findMessageById(messageId));

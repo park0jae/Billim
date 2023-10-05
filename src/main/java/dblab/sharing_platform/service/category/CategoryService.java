@@ -27,9 +27,8 @@ public class CategoryService {
             Category parentCategory = categoryRepository.findByName(requestDto.getParentCategoryName()).orElseThrow(CategoryNotFoundException::new);
             Category category = categoryRepository.save(CategoryCreateRequestDto.toEntity(requestDto, parentCategory));
             return category.getId();
-        } else {
-            return categoryRepository.save(CategoryCreateRequestDto.toEntity(requestDto, null)).getId();
         }
+        return categoryRepository.save(CategoryCreateRequestDto.toEntity(requestDto, null)).getId();
     }
 
     @Transactional

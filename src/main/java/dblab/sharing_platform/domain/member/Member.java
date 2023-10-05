@@ -76,7 +76,8 @@ public class Member {
     }
 
     public String updateMemberProfileImage(MemberUpdateRequestDto requestDto) {
-        return updateProfileImage(requestDto.getImage());
+        updateProfileImageIfExist(requestDto.getImage());
+        return this.profileImage.getUniqueName();
     }
 
     public void updatePassword(String password) {
@@ -89,24 +90,16 @@ public class Member {
         this.address = requestDto.getAddress();
         this.introduce = requestDto.getIntroduce();
 
-        String existedImageName = updateProfileImage(requestDto.getImage());
+        updateProfileImageIfExist(requestDto.getImage());
 
-        return existedImageName;
+        return this.profileImage.getUniqueName();
     }
 
-    private String updateProfileImage(MultipartFile image) {
-        String existedImageName = null;
-
-        if (this.profileImage != null) {
-            existedImageName = this.profileImage.getUniqueName();
-        }
-
+    private void updateProfileImageIfExist(MultipartFile image) {
         if (image != null) {
             this.profileImage = new ProfileImage(image.getOriginalFilename());
         } else {
             this.profileImage = null;
         }
-        return existedImageName;
     }
-
 }
