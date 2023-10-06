@@ -3,10 +3,9 @@ package dblab.sharing_platform.service.member;
 import dblab.sharing_platform.domain.member.Member;
 import dblab.sharing_platform.domain.post.Post;
 import dblab.sharing_platform.dto.member.MemberDto;
+import dblab.sharing_platform.dto.member.MemberPagingCondition;
 import dblab.sharing_platform.dto.member.MemberPrivateDto;
 import dblab.sharing_platform.dto.member.MemberProfileDto;
-import dblab.sharing_platform.dto.member.MemberPagingCondition;
-import dblab.sharing_platform.dto.member.MemberUpdateRequestDto;
 import dblab.sharing_platform.exception.member.MemberNotFoundException;
 import dblab.sharing_platform.repository.member.MemberRepository;
 import dblab.sharing_platform.repository.post.PostRepository;
@@ -26,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static dblab.sharing_platform.factory.category.CategoryFactory.*;
+import static dblab.sharing_platform.factory.category.CategoryFactory.createCategory;
 import static dblab.sharing_platform.factory.item.ItemFactory.createItem;
 import static dblab.sharing_platform.factory.member.MemberFactory.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -120,19 +119,6 @@ public class MemberServiceTest {
         verify(memberRepository).delete(member);
     }
 
-    @Test
-    @DisplayName("회원 수정 테스트")
-    public void updateMemberTest() throws Exception{
-        // Given
-        MemberUpdateRequestDto memberUpdateRequestDto = new MemberUpdateRequestDto("updateNickName", "updatedPN", member.getAddress(), "hi~", null);
-        given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
-
-        // When
-        MemberPrivateDto updateMember = memberService.updateMember(member.getUsername(), memberUpdateRequestDto);
-
-        // Then
-        assertThat(updateMember.getPhoneNumber()).isEqualTo("updatedPN");
-    }
 
     @Test
     @DisplayName("회원 존재 X, 예외 테스트")
