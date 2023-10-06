@@ -2,7 +2,6 @@ package dblab.sharing_platform.dto.member;
 
 import dblab.sharing_platform.domain.member.Member;
 import dblab.sharing_platform.domain.role.RoleType;
-import dblab.sharing_platform.dto.image.ProfileImageDto;
 import dblab.sharing_platform.dto.post.PostDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberProfileDto {
 
-    private ProfileImageDto profileImage;
+    private String profileImageName;
     private String nickname;
     private String introduce;
     private RoleType memberRole;
@@ -24,7 +23,7 @@ public class MemberProfileDto {
 
     public static MemberProfileDto toDto(Member member, List<PostDto> postDtoList) {
         return new MemberProfileDto(
-                ProfileImageDto.toDto(member.getProfileImage()),
+                member.getProfileImage() == null ? "defaultProfile.jpg" : member.getProfileImage().getUniqueName(),
                 member.getNickname(),
                 member.getIntroduce(),
                 member.getRoles().get(0).getRole().getRoleType(),

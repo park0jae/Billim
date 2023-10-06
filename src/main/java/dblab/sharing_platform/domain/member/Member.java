@@ -76,8 +76,18 @@ public class Member {
     }
 
     public String updateMemberProfileImage(MemberUpdateRequestDto requestDto) {
-        updateProfileImageIfExist(requestDto.getImage());
-        return this.profileImage.getUniqueName();
+        return updateProfileImageEntity(requestDto.getImage());
+    }
+
+    private String updateProfileImageEntity(MultipartFile image) {
+        if (image != null) {
+            this.profileImage = new ProfileImage(image.getOriginalFilename());
+            return this.profileImage.getUniqueName();
+        } else {
+            String uniqueNameForDelete = this.profileImage.getUniqueName();
+            this.profileImage = null;
+            return uniqueNameForDelete;
+        }
     }
 
     public void updatePassword(String password) {
@@ -90,16 +100,8 @@ public class Member {
         this.address = requestDto.getAddress();
         this.introduce = requestDto.getIntroduce();
 
-        updateProfileImageIfExist(requestDto.getImage());
-
         return this.profileImage.getUniqueName();
     }
 
-    private void updateProfileImageIfExist(MultipartFile image) {
-        if (image != null) {
-            this.profileImage = new ProfileImage(image.getOriginalFilename());
-        } else {
-            this.profileImage = null;
-        }
-    }
+
 }

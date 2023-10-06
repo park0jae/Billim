@@ -72,13 +72,9 @@ public class MemberService {
 
     private void memberUpdate(MemberUpdateRequestDto requestDto, Member member) {
         validateDuplicateNickname(requestDto.getNickname());
-        if (requestDto.getImage() != null) {
-            member.updateMember(requestDto);
-            String profileImage = member.updateMemberProfileImage(requestDto);
-            profileImageServerUpdate(requestDto.getImage(), member, profileImage);
-        } else {
-            member.updateMember(requestDto);
-        }
+        member.updateMember(requestDto);
+        String profileImage = member.updateMemberProfileImage(requestDto);
+        profileImageServerUpdate(requestDto.getImage(), member, profileImage);
     }
 
     private void oAuthMemberUpdate(OAuthMemberUpdateRequestDto requestDto, Member member) {
@@ -90,8 +86,7 @@ public class MemberService {
     private void profileImageServerUpdate(MultipartFile file, Member member, String profileImage) {
         if (file != null) {
             fileService.upload(file, member.getProfileImage().getUniqueName(), FOLDER_NAME_MEMBER_PROFILE);
-        }
-        if (profileImage != null) {
+        } else {
             fileService.delete(profileImage, FOLDER_NAME_MEMBER_PROFILE);
         }
     }
