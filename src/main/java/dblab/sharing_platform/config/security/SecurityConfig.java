@@ -71,8 +71,9 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.DELETE, "/category/**").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/category/**").hasAuthority("ADMIN")
 
+                .antMatchers(HttpMethod.GET, "/messages/received").permitAll()
+                .antMatchers(HttpMethod.GET, "/messages/sent").permitAll()
                 .antMatchers(HttpMethod.GET, "/messages/{messageId}").access("@sendMessageGuard.check(#messageId) or @receiveMessageGuard.check(#messageId)")
-
                 .antMatchers(HttpMethod.DELETE, "/messages/{messageId}/sent").access("@sendMessageGuard.check(#messageId)")
                 .antMatchers(HttpMethod.DELETE, "/messages/{messageId}/received").access("@receiveMessageGuard.check(#messageId)")
 

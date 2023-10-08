@@ -96,10 +96,10 @@ public class MailService {
 
         switch (purpose) {
             case "RESET-PASSWORD":
-                message.setSubject("[뭐든빌리개]" + "Sharing-Platform 비밀번호 재설정 페이지에 대한 인증코드 입니다.");
+                message.setSubject("[Billim]" + "Billim 비밀번호 재설정 페이지에 대한 인증코드 입니다.");
                 // msgg += "<img src=../resources/static/image/emailheader.jpg />";
                 msgg += "<h1>안녕하세요</h1>";
-                msgg += "<h1>대여 서비스 플랫폼 뭐든빌리개 입니다</h1>";
+                msgg += "<h1>대여 서비스 플랫폼 Billim 입니다</h1>";
                 msgg += "<br>";
                 msgg += "<p>아래 인증코드를 비밀번호 재설정 페이지에 입력해주세요</p>";
                 msgg += "<br>";
@@ -113,10 +113,10 @@ public class MailService {
                 break;
 
             case "SIGN-UP":
-                message.setSubject("[뭐든빌리개]" + "Sharing-Platform 회원가입 인증코드 입니다.");
+                message.setSubject("[Billim]" + "Billim 회원가입 인증코드 입니다.");
                 // msgg += "<img src=../resources/static/image/emailheader.jpg />";
                 msgg += "<h1>안녕하세요</h1>";
-                msgg += "<h1>대여 서비스 플랫폼 뭐든빌리개 입니다</h1>";
+                msgg += "<h1>대여 서비스 플랫폼 Billim 입니다</h1>";
                 msgg += "<br>";
                 msgg += "<p>아래 인증코드를 회원가입 페이지에 입력해주세요</p>";
                 msgg += "<br>";
