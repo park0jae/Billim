@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Member {
+public class  Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
