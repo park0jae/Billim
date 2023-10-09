@@ -1,5 +1,6 @@
 package dblab.sharing_platform.domain.embedded.item;
 
+import dblab.sharing_platform.dto.item.ItemCreateRequestDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +24,12 @@ public class Item {
         this.name = name;
         this.quantity = quantity;
         this.price = price;
+    }
+
+    public static Item toEntity(ItemCreateRequestDto itemCreateRequestDto) {
+        return new Item(itemCreateRequestDto.getName(),
+                itemCreateRequestDto.getPrice(),
+                itemCreateRequestDto.getQuantity());
     }
 
 }
