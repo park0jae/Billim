@@ -1,7 +1,7 @@
 package dblab.sharing_platform.controller.report;
 
 import dblab.sharing_platform.config.security.util.SecurityUtil;
-import dblab.sharing_platform.dto.report.ReportCreateRequestDto;
+import dblab.sharing_platform.dto.report.ReportCreateRequest;
 import dblab.sharing_platform.dto.report.ReportPagingCondition;
 import dblab.sharing_platform.service.report.ReportService;
 import io.swagger.annotations.Api;
@@ -46,8 +46,8 @@ public class ReportController {
 
     @ApiOperation(value = "게시글 또는 회원에 대한 Report를 생성", notes = "현재 로그인한 유저 정보로 게시글/회원에 대한 Report를 생성합니다.")
     @PostMapping
-    public ResponseEntity createReportToPostOrUser(@Valid @RequestBody ReportCreateRequestDto requestDto) {
-        reportService.createReportToPostOrUser(requestDto, getCurrentUsernameCheck());
+    public ResponseEntity createReportToPostOrUser(@Valid @RequestBody ReportCreateRequest request) {
+        reportService.createReportToPostOrUser(request, getCurrentUsernameCheck());
         return new ResponseEntity(CREATED);
     }
 

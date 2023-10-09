@@ -1,7 +1,7 @@
 package dblab.sharing_platform.domain.member;
 
 import dblab.sharing_platform.domain.embedded.address.Address;
-import dblab.sharing_platform.dto.member.MemberUpdateRequestDto;
+import dblab.sharing_platform.dto.member.MemberUpdateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +32,7 @@ class MemberTest {
         Address address = new Address("TestCity", "TestDistrict", "TestStreet", "TestZipcode");
 
         //when
-        member.updateMember(new MemberUpdateRequestDto(nickname, phoneNumber, address, introduce, null));
+        member.updateMember(new MemberUpdateRequest(nickname, phoneNumber, address, introduce, null));
 
         //then
         assertThat(member.getPhoneNumber()).isEqualTo(phoneNumber);

@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryCreateRequestDto {
+public class CategoryCreateRequest {
 
     @ApiModelProperty(value = "카테고리 명", notes = "카테고리명을 입력해주세요.", required = true, example = "Essay")
     @NotBlank(message = "카테고리명은 반드시 입력하셔야 합니다.")
@@ -22,7 +22,7 @@ public class CategoryCreateRequestDto {
     @ApiModelProperty(value = "상위 카테고리 명", notes = "상위 카테고리명을 입력해주세요.", required = true, example = "Book")
     private String parentCategoryName;
 
-    public static Category toEntity(CategoryCreateRequestDto categoryCreateRequestDto, Category parent) {
-        return new Category(categoryCreateRequestDto.getName(), parent);
+    public static Category toEntity(CategoryCreateRequest categoryCreateRequest, Category parent) {
+        return new Category(categoryCreateRequest.getName(), parent);
     }
 }

@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class NotificationRequestDto {
+public class NotificationRequest {
 
     @ApiModelProperty(value = "알림 내용", notes = "알림 내용을 입력해주세요.", required = true)
     @NotBlank(message = "내용을 입력해주세요.")

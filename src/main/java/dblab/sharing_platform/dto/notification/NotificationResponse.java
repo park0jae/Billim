@@ -12,15 +12,15 @@ import java.time.format.DateTimeFormatter;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class NotificationResponseDto {
+public class NotificationResponse {
 
     private String content;
     private String notificationType;
     private String receiver;
     private String createdDate;
 
-    public static NotificationResponseDto toDto(Notification notification){
-        return new NotificationResponseDto(
+    public static NotificationResponse toDto(Notification notification){
+        return new NotificationResponse(
                 notification.getContent(),
                 notification.getNotificationType().toString(),
                 notification.getReceiver().getNickname(),

@@ -4,7 +4,7 @@ import dblab.sharing_platform.domain.member.Member;
 import dblab.sharing_platform.domain.message.Message;
 import dblab.sharing_platform.domain.notification.NotificationType;
 import dblab.sharing_platform.domain.post.Post;
-import dblab.sharing_platform.dto.message.MessageCreateRequestDto;
+import dblab.sharing_platform.dto.message.MessageCreateRequest;
 import dblab.sharing_platform.dto.message.MessageDto;
 import dblab.sharing_platform.dto.message.MessagePagingCondition;
 import dblab.sharing_platform.dto.message.PagedMessageListDto;
@@ -39,15 +39,15 @@ public class MessageService {
     }
 
     @Transactional
-    public MessageDto sendMessageToReceiverByCurrentUser(MessageCreateRequestDto requestDto, String username) {
+    public MessageDto sendMessageToReceiverByCurrentUser(MessageCreateRequest request, String username) {
         Member sender = memberRepository.findByUsername(username)
                 .orElseThrow(MemberNotFoundException::new);
-        Member receiver = memberRepository.findByNickname(requestDto.getReceiveMember())
+        Member receiver = memberRepository.findByNickname(request.getReceiveMember())
                 .orElseThrow(MemberNotFoundException::new);
 
-        Post post = postValidation(Long.valueOf(requestDto.getPostId()), receiver, sender);
+        Post post = postValidation(Long.valueOf(request.getPostId()), receiver, sender);
 
-        Message message = new Message(requestDto.getContent(), receiver, sender, post);
+        Message message = new Message(request.getContent(), receiver, sender, post);
 
         messageRepository.save(message);
         notificationHelper.notificationIfSubscribe(sender, receiver, NotificationType.MESSAGE, ARRIVE_MESSAGE);

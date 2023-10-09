@@ -14,7 +14,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostUpdateResponseDto {
+public class PostUpdateResponse {
 
     private Long id;
     private String title;
@@ -23,10 +23,10 @@ public class PostUpdateResponseDto {
     private List<PostImageDto> addedImages;
     private List<PostImageDto> deletedImages;
 
-    public static PostUpdateResponseDto toDto(PostUpdateRequestDto postUpdateRequestDto, Post post, Map<String, List<PostImage>> map) {
-        return new PostUpdateResponseDto(post.getId(),
-                postUpdateRequestDto.getTitle(),
-                postUpdateRequestDto.getContent(),
+    public static PostUpdateResponse toDto(PostUpdateRequest postUpdateRequest, Post post, Map<String, List<PostImage>> map) {
+        return new PostUpdateResponse(post.getId(),
+                postUpdateRequest.getTitle(),
+                postUpdateRequest.getContent(),
                 MemberDto.toDto(post.getMember()),
                 PostImageDto.toDtoList(map.getOrDefault("addList", List.of())),
                 PostImageDto.toDtoList(map.getOrDefault("deleteList",List.of())));

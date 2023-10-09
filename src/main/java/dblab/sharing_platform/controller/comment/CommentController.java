@@ -1,6 +1,6 @@
 package dblab.sharing_platform.controller.comment;
 
-import dblab.sharing_platform.dto.comment.CommentCreateRequestDto;
+import dblab.sharing_platform.dto.comment.CommentCreateRequest;
 import dblab.sharing_platform.service.comment.CommentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,9 +38,9 @@ public class CommentController {
     @ApiOperation(value = "댓글 생성", notes = "댓글을 생성합니다.")
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity createCommentWithPostId(@ApiParam(value = "Post ID", required = true) @PathVariable Long postId,
-            @Valid @RequestBody CommentCreateRequestDto requestDto) {
+            @Valid @RequestBody CommentCreateRequest request) {
 
-        return new ResponseEntity(commentService.createCommentWithPostId(postId, requestDto, getCurrentUsernameCheck()), CREATED);
+        return new ResponseEntity(commentService.createCommentWithPostId(postId, request, getCurrentUsernameCheck()), CREATED);
     }
 
     @ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제합니다.")

@@ -3,8 +3,8 @@ package dblab.sharing_platform.service.notification;
 import dblab.sharing_platform.domain.member.Member;
 import dblab.sharing_platform.domain.notification.Notification;
 import dblab.sharing_platform.domain.notification.NotificationType;
-import dblab.sharing_platform.dto.notification.NotificationRequestDto;
-import dblab.sharing_platform.dto.notification.NotificationResponseDto;
+import dblab.sharing_platform.dto.notification.NotificationRequest;
+import dblab.sharing_platform.dto.notification.NotificationResponse;
 import dblab.sharing_platform.exception.member.MemberNotFoundException;
 import dblab.sharing_platform.repository.emitter.EmitterRepositoryImpl;
 import dblab.sharing_platform.repository.member.MemberRepository;
@@ -55,14 +55,14 @@ public class NotificationService {
         }
     }
 
-    public void send(NotificationRequestDto requestDto){
-        Member receiver = memberRepository.findByNickname(requestDto.getReceiver())
+    public void send(NotificationRequest request){
+        Member receiver = memberRepository.findByNickname(request.getReceiver())
                 .orElseThrow(MemberNotFoundException::new);
 
         Notification notification = notificationRepository.save(
                 new Notification(
-                        requestDto.getContent(),
-                        NotificationType.valueOf(requestDto.getNotificationType()),
+                        request.getContent(),
+                        NotificationType.valueOf(request.getNotificationType()),
                         receiver));
 
         String receiverId = String.valueOf(receiver.getId());
@@ -71,7 +71,7 @@ public class NotificationService {
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartsWithByMemberId(receiverId);
         emitters.forEach((key,emitter) -> {
             emitterRepository.saveEventCache(key, notification);
-            sendNotification(emitter, eventId, key, NotificationResponseDto.toDto(notification));
+            sendNotification(emitter, eventId, key, NotificationResponse.toDto(notification));
         });
     }
 

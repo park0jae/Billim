@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostCreateResponseDto {
+public class PostCreateResponse {
 
     private Long id;
-    public static PostCreateResponseDto toDto(Post post) {
-        return new PostCreateResponseDto(post.getId());
+    public static PostCreateResponse toDto(Post post) {
+        return new PostCreateResponse(post.getId());
     }
 }

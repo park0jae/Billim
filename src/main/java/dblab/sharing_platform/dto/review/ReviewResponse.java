@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReviewResponseDto {
+public class ReviewResponse {
 
     private Long id;
     private String content;
     private String writer;
 
-    public static ReviewResponseDto toDto(Review review) {
+    public static ReviewResponse toDto(Review review) {
         if (review != null) {
-            return new ReviewResponseDto(
+            return new ReviewResponse(
                     review.getId(),
                     review.getContent(),
                     review.getWriter().getNickname());

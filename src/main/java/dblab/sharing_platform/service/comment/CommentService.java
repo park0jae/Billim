@@ -3,7 +3,7 @@ package dblab.sharing_platform.service.comment;
 import dblab.sharing_platform.domain.comment.Comment;
 import dblab.sharing_platform.domain.member.Member;
 import dblab.sharing_platform.domain.post.Post;
-import dblab.sharing_platform.dto.comment.CommentCreateRequestDto;
+import dblab.sharing_platform.dto.comment.CommentCreateRequest;
 import dblab.sharing_platform.dto.comment.CommentDto;
 import dblab.sharing_platform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_platform.exception.comment.CommentNotFoundException;
@@ -28,17 +28,17 @@ public class CommentService {
     private final PostRepository postRepository;
 
     @Transactional
-    public Long createCommentWithPostId(Long postId, CommentCreateRequestDto requestDto, String username) {
+    public Long createCommentWithPostId(Long postId, CommentCreateRequest request, String username) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(AuthenticationEntryPointException::new);
-        Comment parent = requestDto.getParentCommentId() == null ? null : commentRepository.findById(requestDto.getParentCommentId())
+        Comment parent = request.getParentCommentId() == null ? null : commentRepository.findById(request.getParentCommentId())
                 .orElseThrow(RootCommentNotFoundException::new);
 
         Comment createComment = commentRepository.save(
-                new Comment(requestDto.getContent(),
-                requestDto.getParentCommentId() == null ? true : false,
+                new Comment(request.getContent(),
+                request.getParentCommentId() == null ? true : false,
                 post,
                 member,
                 parent));

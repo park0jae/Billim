@@ -72,14 +72,14 @@ public class ReviewServiceTest {
     public void writeReviewTest(){
         // Given
         trade.isTradeComplete(true);
-        ReviewRequestDto reviewRequestDto = new ReviewRequestDto(review.getContent());
+        ReviewRequest reviewRequest = new ReviewRequest(review.getContent());
 
         given(tradeRepository.findById(trade.getId())).willReturn(Optional.of(trade));
         given(memberRepository.findByUsername(reviewerMember.getUsername())).willReturn(Optional.of(reviewerMember));
         given(memberRepository.findById(member.getId())).willReturn(Optional.of(member));
 
         // When
-        ReviewResponseDto result = reviewService.writeReviewByTradeId(reviewRequestDto, trade.getId(), reviewerMember.getUsername());
+        ReviewResponse result = reviewService.writeReviewByTradeId(reviewRequest, trade.getId(), reviewerMember.getUsername());
 
         // Then
         assertThat(result.getContent()).isEqualTo("테스트 리뷰입니다.");
@@ -209,14 +209,14 @@ public class ReviewServiceTest {
         trade = new Trade(review.getMember(), review.getWriter(), LocalDate.now(), LocalDate.now(), post);
 
         trade.isTradeComplete(true);
-        ReviewRequestDto reviewRequestDto = new ReviewRequestDto(review.getContent());
+        ReviewRequest reviewRequest = new ReviewRequest(review.getContent());
 
         given(tradeRepository.findById(trade.getId())).willReturn(Optional.of(trade));
         given(memberRepository.findByUsername(review.getWriter().getUsername())).willReturn(Optional.of(review.getWriter()));
         given(memberRepository.findById(review.getMember().getId())).willReturn(Optional.of(review.getMember()));
 
         // When & Then
-        assertThatThrownBy(() -> reviewService.writeReviewByTradeId(reviewRequestDto, trade.getId(), review.getWriter().getUsername())).isInstanceOf(ImpossibleWriteReviewException.class);
+        assertThatThrownBy(() -> reviewService.writeReviewByTradeId(reviewRequest, trade.getId(), review.getWriter().getUsername())).isInstanceOf(ImpossibleWriteReviewException.class);
     }
 
     @Test
@@ -225,26 +225,26 @@ public class ReviewServiceTest {
         // Given
         trade.isTradeComplete(true);
         trade.addReview(review);
-        ReviewRequestDto reviewRequestDto = new ReviewRequestDto(review.getContent());
+        ReviewRequest reviewRequest = new ReviewRequest(review.getContent());
 
         given(tradeRepository.findById(trade.getId())).willReturn(Optional.of(trade));
         given(memberRepository.findByUsername(review.getWriter().getUsername())).willReturn(Optional.of(reviewerMember));
         given(memberRepository.findById(review.getMember().getId())).willReturn(Optional.of(member));
 
         // When & Then
-        assertThatThrownBy(() -> reviewService.writeReviewByTradeId(reviewRequestDto, trade.getId(), review.getWriter().getUsername())).isInstanceOf(ExistReviewException.class);
+        assertThatThrownBy(() -> reviewService.writeReviewByTradeId(reviewRequest, trade.getId(), review.getWriter().getUsername())).isInstanceOf(ExistReviewException.class);
     }
     @Test
     @DisplayName("거래 미완료 리뷰 작성 불가 예외 테스트")
     public void writeReviewTradeNotCompleteException(){
         // Given
-        ReviewRequestDto reviewRequestDto = new ReviewRequestDto(review.getContent());
+        ReviewRequest reviewRequest = new ReviewRequest(review.getContent());
 
         given(tradeRepository.findById(trade.getId())).willReturn(Optional.of(trade));
         given(memberRepository.findByUsername(review.getWriter().getUsername())).willReturn(Optional.of(reviewerMember));
         given(memberRepository.findById(review.getMember().getId())).willReturn(Optional.of(member));
 
         // When & Then
-        assertThatThrownBy(() -> reviewService.writeReviewByTradeId(reviewRequestDto, trade.getId(), review.getWriter().getUsername())).isInstanceOf(TradeNotCompleteException.class);
+        assertThatThrownBy(() -> reviewService.writeReviewByTradeId(reviewRequest, trade.getId(), review.getWriter().getUsername())).isInstanceOf(TradeNotCompleteException.class);
     }
 }

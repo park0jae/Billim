@@ -4,7 +4,7 @@ import dblab.sharing_platform.domain.member.Member;
 import dblab.sharing_platform.domain.post.Post;
 import dblab.sharing_platform.domain.report.Report;
 import dblab.sharing_platform.dto.report.PagedReportListDto;
-import dblab.sharing_platform.dto.report.ReportCreateRequestDto;
+import dblab.sharing_platform.dto.report.ReportCreateRequest;
 import dblab.sharing_platform.dto.report.ReportPagingCondition;
 import dblab.sharing_platform.exception.member.MemberNotFoundException;
 import dblab.sharing_platform.exception.post.PostNotFoundException;
@@ -25,13 +25,13 @@ public class ReportService {
     private final PostRepository postRepository;
 
     @Transactional
-    public void createReportToPostOrUser(ReportCreateRequestDto requestDto, String username) {
-        Post post = requestDto.getPostId() == null ? null : postRepository.findById(Long.valueOf(requestDto.getPostId()))
+    public void createReportToPostOrUser(ReportCreateRequest request, String username) {
+        Post post = request.getPostId() == null ? null : postRepository.findById(Long.valueOf(request.getPostId()))
                 .orElseThrow(PostNotFoundException::new);
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(MemberNotFoundException::new);
-        reportRepository.save(new Report(requestDto.getReportType(),
-                requestDto.getContent(),
+        reportRepository.save(new Report(request.getReportType(),
+                request.getContent(),
                 member,
                 post,
                 post == null ? null : post.getMember()));

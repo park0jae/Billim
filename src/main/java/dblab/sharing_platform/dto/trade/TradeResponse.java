@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TradeResponseDto {
+public class TradeResponse {
 
     private Long tradeId;
     private Long postId;
@@ -25,9 +25,9 @@ public class TradeResponseDto {
     private boolean tradeComplete;
     private boolean writtenReview;
 
-    public static TradeResponseDto toDto(Trade trade) {
+    public static TradeResponse toDto(Trade trade) {
         if (trade != null) {
-            return new TradeResponseDto(
+            return new TradeResponse(
                     trade.getId(),
                     trade.getPost().getId(),
                     trade.getRenderMember().getNickname(),

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostReadResponseDto {
+public class PostReadResponse {
 
     private Long id;
     private String categoryName;
@@ -22,8 +22,8 @@ public class PostReadResponseDto {
     private ItemDto item;
     private String imageName;
 
-    public static PostReadResponseDto toDto(Post post) {
-        return new PostReadResponseDto(
+    public static PostReadResponse toDto(Post post) {
+        return new PostReadResponse(
                 post.getId(),
                 post.getCategory().getName(),
                 post.getTitle(),

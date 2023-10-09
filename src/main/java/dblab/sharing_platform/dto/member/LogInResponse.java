@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class LogInResponseDto {
+public class LogInResponse {
 
     private String accessToken;
     private String refreshToken;
 
-    public static LogInResponseDto toDto(String accessToken, String refreshToken) {
-        return new LogInResponseDto(accessToken, refreshToken);
+    public static LogInResponse toDto(String accessToken, String refreshToken) {
+        return new LogInResponse(accessToken, refreshToken);
     }
 }

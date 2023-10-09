@@ -1,6 +1,6 @@
 package dblab.sharing_platform.controller.message;
 
-import dblab.sharing_platform.dto.message.MessageCreateRequestDto;
+import dblab.sharing_platform.dto.message.MessageCreateRequest;
 import dblab.sharing_platform.dto.message.MessagePagingCondition;
 import dblab.sharing_platform.service.message.MessageService;
 import io.swagger.annotations.ApiOperation;
@@ -29,8 +29,8 @@ public class MessageController {
 
     @ApiOperation(value = "메세지 생성 및 전송", notes = "메세지를 생성하고 수신자에게 전송합니다.")
     @PostMapping
-    public ResponseEntity sendMessageToReceiverByCurrentUser(@Valid @RequestBody MessageCreateRequestDto messageCreateRequestDto) {
-        return new ResponseEntity(messageService.sendMessageToReceiverByCurrentUser(messageCreateRequestDto, getCurrentUsernameCheck()), CREATED);
+    public ResponseEntity sendMessageToReceiverByCurrentUser(@Valid @RequestBody MessageCreateRequest messageCreateRequest) {
+        return new ResponseEntity(messageService.sendMessageToReceiverByCurrentUser(messageCreateRequest, getCurrentUsernameCheck()), CREATED);
     }
 
     @ApiOperation(value = "메세지 단건 조회", notes = "메시지를 ID를 통해 단건 조회합니다.(해당 메시지의 소유자, 즉 수신자 및 발신자만 접근 가능)")

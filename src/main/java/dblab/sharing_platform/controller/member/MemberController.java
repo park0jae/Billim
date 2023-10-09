@@ -1,8 +1,8 @@
 package dblab.sharing_platform.controller.member;
 
 import dblab.sharing_platform.dto.member.MemberPagingCondition;
-import dblab.sharing_platform.dto.member.MemberUpdateRequestDto;
-import dblab.sharing_platform.dto.member.OAuthMemberUpdateRequestDto;
+import dblab.sharing_platform.dto.member.MemberUpdateRequest;
+import dblab.sharing_platform.dto.member.OAuthMemberUpdateRequest;
 import dblab.sharing_platform.service.member.MemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -57,13 +57,13 @@ public class MemberController {
 
     @ApiOperation(value = "자신의 회원 정보 수정", notes = "본인인 경우 정보를 수정한다.")
     @PatchMapping
-    public ResponseEntity updateMemberInfo(@Valid @ModelAttribute MemberUpdateRequestDto memberUpdateRequestDto) {
-        return new ResponseEntity(memberService.updateMember(getCurrentUsernameCheck(), memberUpdateRequestDto), OK);
+    public ResponseEntity updateMemberInfo(@Valid @ModelAttribute MemberUpdateRequest memberUpdateRequest) {
+        return new ResponseEntity(memberService.updateMember(getCurrentUsernameCheck(), memberUpdateRequest), OK);
     }
 
     @ApiOperation(value = "OAuth 회원 추가 정보 등록(필수) / 수정 ", notes = "OAuth2 유저 최초 로그인 시 OAuth 회원 본인의 정보를 등록합니다. / OAuth2 회원의 정보를 수정합니다.")
     @PatchMapping("/oauth")
-    public ResponseEntity updateOAuthMemberInfo(@Valid @ModelAttribute OAuthMemberUpdateRequestDto requestDto) {
-        return new ResponseEntity(memberService.oauthMemberUpdate(getCurrentUsernameCheck(), requestDto), OK);
+    public ResponseEntity updateOAuthMemberInfo(@Valid @ModelAttribute OAuthMemberUpdateRequest request) {
+        return new ResponseEntity(memberService.oauthMemberUpdate(getCurrentUsernameCheck(), request), OK);
     }
 }

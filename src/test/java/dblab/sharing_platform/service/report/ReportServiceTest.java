@@ -5,7 +5,7 @@ import dblab.sharing_platform.domain.member.Member;
 import dblab.sharing_platform.domain.post.Post;
 import dblab.sharing_platform.domain.report.Report;
 import dblab.sharing_platform.dto.report.PagedReportListDto;
-import dblab.sharing_platform.dto.report.ReportCreateRequestDto;
+import dblab.sharing_platform.dto.report.ReportCreateRequest;
 import dblab.sharing_platform.dto.report.ReportDto;
 import dblab.sharing_platform.dto.report.ReportPagingCondition;
 import dblab.sharing_platform.factory.member.MemberFactory;
@@ -64,7 +64,7 @@ class ReportServiceTest {
     public void createPostReportTest() throws Exception {
         //given
         ReflectionTestUtils.setField(post, "id", 1L);
-        ReportCreateRequestDto requestDto = new ReportCreateRequestDto(ReportType.POST_REPORT, String.valueOf(post.getId()), "content");
+        ReportCreateRequest requestDto = new ReportCreateRequest(ReportType.POST_REPORT, String.valueOf(post.getId()), "content");
         given(postRepository.findById(post.getId())).willReturn(Optional.ofNullable(post));
         given(memberRepository.findByUsername(reporter.getUsername())).willReturn(Optional.ofNullable(reporter));
 
@@ -79,7 +79,7 @@ class ReportServiceTest {
     @DisplayName("버그 신고 생성")
     public void createMemberReportTest() throws Exception {
         //given
-        ReportCreateRequestDto requestDto = new ReportCreateRequestDto( ReportType.BUG, null, "content");
+        ReportCreateRequest requestDto = new ReportCreateRequest( ReportType.BUG, null, "content");
         given(memberRepository.findByUsername(reporter.getUsername())).willReturn(Optional.ofNullable(reporter));
 
         //when

@@ -3,8 +3,8 @@ package dblab.sharing_platform.service.oauth;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import dblab.sharing_platform.dto.member.OAuth2MemberCreateRequestDto;
-import dblab.sharing_platform.dto.oauth.AccessTokenRequestDto;
+import dblab.sharing_platform.dto.member.OAuth2MemberCreateRequest;
+import dblab.sharing_platform.dto.oauth.AccessTokenRequest;
 import dblab.sharing_platform.dto.oauth.GoogleProfile;
 import dblab.sharing_platform.dto.oauth.KakaoProfile;
 import dblab.sharing_platform.dto.oauth.NaverProfile;
@@ -46,7 +46,7 @@ public class OAuthService {
     private static final String POST = "POST";
     private static final String GET = "GET";
 
-    public OAuth2MemberCreateRequestDto getAccessToken(String code, String provider, AccessTokenRequestDto accessTokenRequestDto){
+    public OAuth2MemberCreateRequest getAccessToken(String code, String provider, AccessTokenRequest accessTokenRequest){
         String access_Token = "";
         String refresh_Token = "";
         String reqURL = "";
@@ -72,9 +72,9 @@ public class OAuthService {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append(GRANT_TYPE);
-            sb.append(CLIENT_ID+ accessTokenRequestDto.getClientId());
-            sb.append(CLIENT_SECRET+ accessTokenRequestDto.getClientSecret());
-            sb.append(REDIRECT_URI + accessTokenRequestDto.getRedirectUri());
+            sb.append(CLIENT_ID+ accessTokenRequest.getClientId());
+            sb.append(CLIENT_SECRET+ accessTokenRequest.getClientSecret());
+            sb.append(REDIRECT_URI + accessTokenRequest.getRedirectUri());
             sb.append(CODE + code);
             bw.write(sb.toString());
             bw.flush();
@@ -178,7 +178,7 @@ public class OAuthService {
         throw new OAuthCommunicationException();
     }
 
-    private OAuth2MemberCreateRequestDto getProvideInfo(String provider, String accessToken){
+    private OAuth2MemberCreateRequest getProvideInfo(String provider, String accessToken){
         String email = "";
         switch (provider){
             case KAKAO:
@@ -204,6 +204,6 @@ public class OAuthService {
         } else if (memberRepository.existsByUsernameAndProvider(email, NONE)) {
             throw new AlreadyExistsMemberException();
         }
-        return new OAuth2MemberCreateRequestDto(email, provider, accessToken);
+        return new OAuth2MemberCreateRequest(email, provider, accessToken);
     }
 }

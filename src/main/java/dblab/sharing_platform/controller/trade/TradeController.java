@@ -2,7 +2,7 @@ package dblab.sharing_platform.controller.trade;
 
 import dblab.sharing_platform.config.security.util.SecurityUtil;
 import dblab.sharing_platform.dto.trade.TradePagingCondition;
-import dblab.sharing_platform.dto.trade.TradeRequestDto;
+import dblab.sharing_platform.dto.trade.TradeRequest;
 import dblab.sharing_platform.service.trade.TradeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,9 +34,9 @@ public class TradeController {
 
     @ApiOperation(value = "Post ID로 Trade 생성", notes = "게시글 ID로 Trade를 생성합니다.")
     @PostMapping("/{postId}")
-    public ResponseEntity createTradeByPostId(@Valid @RequestBody TradeRequestDto tradeRequestDto,
+    public ResponseEntity createTradeByPostId(@Valid @RequestBody TradeRequest tradeRequest,
                                               @ApiParam(value = "Post ID", required = true) @PathVariable Long postId) {
-        return new ResponseEntity(tradeService.createTradeByPostId(tradeRequestDto, postId, getCurrentUsernameCheck()), CREATED);
+        return new ResponseEntity(tradeService.createTradeByPostId(tradeRequest, postId, getCurrentUsernameCheck()), CREATED);
     }
 
     @ApiOperation(value = "Trade ID로 Trade의 거래완료", notes = "Trade ID로 해당 Trade의 거래를 완료합니다.")

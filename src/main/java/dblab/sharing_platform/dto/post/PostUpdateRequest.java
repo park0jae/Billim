@@ -1,6 +1,6 @@
 package dblab.sharing_platform.dto.post;
 
-import dblab.sharing_platform.dto.item.ItemUpdateRequestDto;
+import dblab.sharing_platform.dto.item.ItemUpdateRequest;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostUpdateRequestDto {
+public class PostUpdateRequest {
 
     @ApiModelProperty(value = "게시글 제목", notes = "변경할 게시글 제목을 입력해주세요", required = true, example = "my title")
     @Nullable
@@ -27,7 +27,7 @@ public class PostUpdateRequestDto {
 
     @ApiModelProperty(value = "물품", notes = "수정할 물품정보를 입력하세요.", required = false)
     @Nullable
-    private ItemUpdateRequestDto itemUpdateRequestDto;
+    private ItemUpdateRequest itemUpdateRequest;
 
     @ApiModelProperty(value = "추가 이미지", notes = "추가될 이미지 첨부")
     @Nullable

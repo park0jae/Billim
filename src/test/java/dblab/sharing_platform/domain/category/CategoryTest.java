@@ -16,7 +16,7 @@ public class CategoryTest {
         Category category = CategoryFactory.createCategory();
 
         // when & then
-        assertThat(category.getName()).isEqualTo("category1");
+        assertThat(category.getName()).isEqualTo("category");
     }
 
     @Test

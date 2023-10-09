@@ -6,8 +6,8 @@ import dblab.sharing_platform.domain.review.Review;
 import dblab.sharing_platform.domain.trade.Trade;
 import dblab.sharing_platform.dto.review.PagedReviewListDto;
 import dblab.sharing_platform.dto.review.ReviewPagingCondition;
-import dblab.sharing_platform.dto.review.ReviewRequestDto;
-import dblab.sharing_platform.dto.review.ReviewResponseDto;
+import dblab.sharing_platform.dto.review.ReviewRequest;
+import dblab.sharing_platform.dto.review.ReviewResponse;
 import dblab.sharing_platform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_platform.exception.member.MemberNotFoundException;
 import dblab.sharing_platform.exception.review.ExistReviewException;
@@ -36,7 +36,7 @@ public class ReviewService {
     public static final String REVIEW_COMPLETE_MESSAGE = "님이 거래에 대한 리뷰를 작성했습니다.";
 
     @Transactional
-    public ReviewResponseDto writeReviewByTradeId(ReviewRequestDto reviewRequestDto, Long tradeId, String username) {
+    public ReviewResponse writeReviewByTradeId(ReviewRequest reviewRequest, Long tradeId, String username) {
         Trade trade = tradeRepository.findById(tradeId)
                 .orElseThrow(TradeNotFoundException::new);
         Member writer = memberRepository.findByUsername(username)
@@ -46,7 +46,7 @@ public class ReviewService {
 
         validateWriteReview(username, trade);
 
-        Review review = new Review(reviewRequestDto.getContent(),
+        Review review = new Review(reviewRequest.getContent(),
                 member,
                 writer);
 
@@ -54,7 +54,7 @@ public class ReviewService {
         trade.addReview(review);
 
         notificationHelper.notificationIfSubscribe(writer, member, NotificationType.REVIEW, REVIEW_COMPLETE_MESSAGE);
-        return ReviewResponseDto.toDto(review);
+        return ReviewResponse.toDto(review);
     }
 
     @Transactional

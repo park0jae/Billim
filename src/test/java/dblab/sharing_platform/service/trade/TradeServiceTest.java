@@ -64,15 +64,15 @@ public class TradeServiceTest {
     @DisplayName("거래 생성 테스트")
     public void createTradeTest(){
         // Given
-        TradeRequestDto tradeRequestDto = new TradeRequestDto(borrowerMember.getNickname(), LocalDate.now(), LocalDate.now());
+        TradeRequest tradeRequest = new TradeRequest(borrowerMember.getNickname(), LocalDate.now(), LocalDate.now());
 
         given(memberRepository.findByUsername(renderMember.getUsername())).willReturn(Optional.of(renderMember));
-        given(memberRepository.findByNickname(tradeRequestDto.getBorrowerName())).willReturn(Optional.of(borrowerMember));
+        given(memberRepository.findByNickname(tradeRequest.getBorrowerName())).willReturn(Optional.of(borrowerMember));
 
         given(postRepository.findById(trade.getPost().getId())).willReturn(Optional.of(post));
 
         // When
-        TradeResponseDto result = tradeService.createTradeByPostId(tradeRequestDto, post.getId(), renderMember.getUsername());
+        TradeResponse result = tradeService.createTradeByPostId(tradeRequest, post.getId(), renderMember.getUsername());
 
         // Then
         assertThat(result.getRenderMember()).isEqualTo("render");
@@ -98,7 +98,7 @@ public class TradeServiceTest {
         given(tradeRepository.findById(trade.getId())).willReturn(Optional.of(trade));
 
         // When
-        TradeResponseDto result = tradeService.findSingleTradeById(trade.getId());
+        TradeResponse result = tradeService.findSingleTradeById(trade.getId());
 
         // Then
         assertThat(result.getPostId()).isEqualTo(trade.getId());
@@ -159,7 +159,7 @@ public class TradeServiceTest {
     @DisplayName("거래 중복 생성 예외 테스트")
     public void existTradeExceptionTest(){
         // Given
-        TradeRequestDto tradeRequestDto = new TradeRequestDto(trade.getBorrowerMember().getNickname(), LocalDate.now(), LocalDate.now());
+        TradeRequest tradeRequest = new TradeRequest(trade.getBorrowerMember().getNickname(), LocalDate.now(), LocalDate.now());
 
         given(memberRepository.findByUsername(trade.getRenderMember().getUsername())).willReturn(Optional.of(renderMember));
         given(memberRepository.findByNickname(trade.getBorrowerMember().getNickname())).willReturn(Optional.of(borrowerMember));
@@ -167,7 +167,7 @@ public class TradeServiceTest {
         given(tradeRepository.findByPostId(post.getId())).willReturn(Optional.of(trade));
 
         // When & Then
-        assertThatThrownBy(() -> tradeService.createTradeByPostId(tradeRequestDto, trade.getPost().getId(), renderMember.getUsername())).isInstanceOf(ExistTradeException.class);
+        assertThatThrownBy(() -> tradeService.createTradeByPostId(tradeRequest, trade.getPost().getId(), renderMember.getUsername())).isInstanceOf(ExistTradeException.class);
     }
 
     @Test
@@ -175,13 +175,13 @@ public class TradeServiceTest {
     public void impossibleCreateTradeExceptionTest(){
         // Given
         trade = createTradeEqualMember();
-        TradeRequestDto tradeRequestDto = new TradeRequestDto(trade.getBorrowerMember().getNickname(), LocalDate.now(), LocalDate.now());
+        TradeRequest tradeRequest = new TradeRequest(trade.getBorrowerMember().getNickname(), LocalDate.now(), LocalDate.now());
 
         given(memberRepository.findByUsername(trade.getRenderMember().getUsername())).willReturn(Optional.of(renderMember));
         given(memberRepository.findByNickname(trade.getBorrowerMember().getNickname())).willReturn(Optional.of(renderMember));
         given(postRepository.findById(trade.getPost().getId())).willReturn(Optional.of(post));
 
         // When & Then
-        assertThatThrownBy(() -> tradeService.createTradeByPostId(tradeRequestDto, trade.getPost().getId(), renderMember.getUsername())).isInstanceOf(ImpossibleCreateTradeException.class);
+        assertThatThrownBy(() -> tradeService.createTradeByPostId(tradeRequest, trade.getPost().getId(), renderMember.getUsername())).isInstanceOf(ImpossibleCreateTradeException.class);
     }
 }

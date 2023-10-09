@@ -1,7 +1,7 @@
 package dblab.sharing_platform.controller.review;
 
 import dblab.sharing_platform.dto.review.ReviewPagingCondition;
-import dblab.sharing_platform.dto.review.ReviewRequestDto;
+import dblab.sharing_platform.dto.review.ReviewRequest;
 import dblab.sharing_platform.service.review.ReviewService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -52,8 +52,8 @@ public class ReviewController {
     @ApiOperation(value = "거래에 대한 리뷰 생성", notes = "거래에 대한 리뷰를 생성합니다.")
     @PostMapping("/{tradeId}")
     public ResponseEntity writeReviewByTradeId(@ApiParam(value = "생성할 리뷰의 Trade Id", required = true) @PathVariable Long tradeId,
-                                @Valid @RequestBody ReviewRequestDto reviewRequestDto){
-        reviewService.writeReviewByTradeId(reviewRequestDto, tradeId, getCurrentUsernameCheck());
+                                @Valid @RequestBody ReviewRequest reviewRequest){
+        reviewService.writeReviewByTradeId(reviewRequest, tradeId, getCurrentUsernameCheck());
         return new ResponseEntity(CREATED);
     }
 

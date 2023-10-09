@@ -1,6 +1,6 @@
 package dblab.sharing_platform.controller.category;
 
-import dblab.sharing_platform.dto.category.CategoryCreateRequestDto;
+import dblab.sharing_platform.dto.category.CategoryCreateRequest;
 import dblab.sharing_platform.service.category.CategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,8 +36,8 @@ public class CategoryController {
 
     @ApiOperation(value = "카테고리 생성", notes = "카테고리를 생성 / ADMIN 전용")
     @PostMapping
-    public ResponseEntity createCategory(@Valid @RequestBody CategoryCreateRequestDto categoryCreateRequestDto) {
-        return new ResponseEntity(categoryService.createCategory(categoryCreateRequestDto), CREATED);
+    public ResponseEntity createCategory(@Valid @RequestBody CategoryCreateRequest categoryCreateRequest) {
+        return new ResponseEntity(categoryService.createCategory(categoryCreateRequest), CREATED);
     }
 
     @ApiOperation(value = "카테고리 삭제", notes = "카테고리를 삭제 / ADMIN 전용")

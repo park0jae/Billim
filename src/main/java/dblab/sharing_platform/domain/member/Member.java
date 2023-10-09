@@ -3,8 +3,8 @@ package dblab.sharing_platform.domain.member;
 import dblab.sharing_platform.domain.embedded.address.Address;
 import dblab.sharing_platform.domain.image.ProfileImage;
 import dblab.sharing_platform.domain.role.Role;
-import dblab.sharing_platform.dto.member.MemberUpdateRequestDto;
-import dblab.sharing_platform.dto.member.OAuthMemberUpdateRequestDto;
+import dblab.sharing_platform.dto.member.MemberUpdateRequest;
+import dblab.sharing_platform.dto.member.OAuthMemberUpdateRequest;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -78,15 +78,15 @@ public class  Member {
         this.roles = roleList;
     }
 
-    public void updateMember(MemberUpdateRequestDto memberUpdateRequestDto){
-        this.nickname = memberUpdateRequestDto.getNickname();
-        this.phoneNumber = memberUpdateRequestDto.getPhoneNumber();
-        this.address = memberUpdateRequestDto.getAddress();
-        this.introduce = memberUpdateRequestDto.getIntroduce();
+    public void updateMember(MemberUpdateRequest memberUpdateRequest){
+        this.nickname = memberUpdateRequest.getNickname();
+        this.phoneNumber = memberUpdateRequest.getPhoneNumber();
+        this.address = memberUpdateRequest.getAddress();
+        this.introduce = memberUpdateRequest.getIntroduce();
     }
 
-    public String updateMemberProfileImage(MemberUpdateRequestDto requestDto) {
-        return updateProfileImageEntity(requestDto.getImage());
+    public String updateMemberProfileImage(MemberUpdateRequest request) {
+        return updateProfileImageEntity(request.getImage());
     }
 
     private String updateProfileImageEntity(MultipartFile image) {
@@ -104,11 +104,11 @@ public class  Member {
         this.password = password;
     }
 
-    public String updateOAuthMember(OAuthMemberUpdateRequestDto requestDto){
-        this.phoneNumber = requestDto.getPhoneNumber();
-        this.nickname = requestDto.getNickname();
-        this.address = requestDto.getAddress();
-        this.introduce = requestDto.getIntroduce();
+    public String updateOAuthMember(OAuthMemberUpdateRequest request){
+        this.phoneNumber = request.getPhoneNumber();
+        this.nickname = request.getNickname();
+        this.address = request.getAddress();
+        this.introduce = request.getIntroduce();
 
         return this.profileImage.getUniqueName();
     }

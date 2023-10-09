@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LoginRequestDto {
+public class LoginRequest {
 
     @ApiModelProperty(value = "username", notes = "USERNAME를 입력해주세요", required = true)
     @NotBlank(message = "아이디를 입력해주세요.")

@@ -1,6 +1,6 @@
 package dblab.sharing_platform.dto.post;
 
-import dblab.sharing_platform.dto.item.ItemCreateRequestDto;
+import dblab.sharing_platform.dto.item.ItemCreateRequest;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
@@ -19,7 +19,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostCreateRequestDto {
+public class PostCreateRequest {
 
     @ApiModelProperty(value = "게시글 제목", notes = "게시글 제목을 입력해주세요", required = true)
     @NotBlank(message = "제목을 입력해주세요.")
@@ -39,6 +39,6 @@ public class PostCreateRequestDto {
 
     @ApiModelProperty(value = "물품", notes = "물품을 첨부하세요.")
     @Nullable
-    private ItemCreateRequestDto itemCreateRequestDto;
+    private ItemCreateRequest itemCreateRequest;
 
 }

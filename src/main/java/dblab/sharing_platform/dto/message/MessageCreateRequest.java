@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageCreateRequestDto {
+public class MessageCreateRequest {
 
     @ApiModelProperty(value = "메세지 내용", notes = "메세지 내용을 입력해주세요.", required = true)
     @NotBlank(message = "내용을 입력해주세요.")

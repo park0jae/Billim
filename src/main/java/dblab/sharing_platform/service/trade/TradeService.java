@@ -5,8 +5,8 @@ import dblab.sharing_platform.domain.post.Post;
 import dblab.sharing_platform.domain.trade.Trade;
 import dblab.sharing_platform.dto.trade.PagedTradeListDto;
 import dblab.sharing_platform.dto.trade.TradePagingCondition;
-import dblab.sharing_platform.dto.trade.TradeRequestDto;
-import dblab.sharing_platform.dto.trade.TradeResponseDto;
+import dblab.sharing_platform.dto.trade.TradeRequest;
+import dblab.sharing_platform.dto.trade.TradeResponse;
 import dblab.sharing_platform.exception.member.MemberNotFoundException;
 import dblab.sharing_platform.exception.post.PostNotFoundException;
 import dblab.sharing_platform.exception.trade.ExistTradeException;
@@ -29,10 +29,10 @@ public class TradeService {
     private final PostRepository postRepository;
 
     @Transactional
-    public TradeResponseDto createTradeByPostId(TradeRequestDto tradeRequestDto, Long id, String username){
+    public TradeResponse createTradeByPostId(TradeRequest tradeRequest, Long id, String username){
         Member render = memberRepository.findByUsername(username)
                 .orElseThrow(MemberNotFoundException::new);
-        Member borrower = memberRepository.findByNickname(tradeRequestDto.getBorrowerName())
+        Member borrower = memberRepository.findByNickname(tradeRequest.getBorrowerName())
                 .orElseThrow(MemberNotFoundException::new);
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
@@ -40,24 +40,24 @@ public class TradeService {
         validateCreateTrade(id, borrower, render);
 
         Trade trade = new Trade(render, borrower,
-                        tradeRequestDto.getStartDate(),
-                        tradeRequestDto.getEndDate(),
+                        tradeRequest.getStartDate(),
+                        tradeRequest.getEndDate(),
                         post);
 
         tradeRepository.save(trade);
-        return TradeResponseDto.toDto(trade);
+        return TradeResponse.toDto(trade);
     }
 
     @Transactional
-    public TradeResponseDto completeTradeByTradeId(Long id) {
+    public TradeResponse completeTradeByTradeId(Long id) {
         Trade trade = tradeRepository.findById(id)
                 .orElseThrow(TradeNotFoundException::new);
         trade.isTradeComplete(true);
-        return TradeResponseDto.toDto(trade);
+        return TradeResponse.toDto(trade);
     }
 
-    public TradeResponseDto findSingleTradeById(Long id) {
-        return TradeResponseDto.toDto(tradeRepository.findById(id)
+    public TradeResponse findSingleTradeById(Long id) {
+        return TradeResponse.toDto(tradeRepository.findById(id)
                 .orElseThrow(TradeNotFoundException::new));
     }
 

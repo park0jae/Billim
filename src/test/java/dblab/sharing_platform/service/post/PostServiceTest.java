@@ -5,13 +5,13 @@ import dblab.sharing_platform.domain.likepost.LikePost;
 import dblab.sharing_platform.domain.member.Member;
 import dblab.sharing_platform.domain.post.Post;
 import dblab.sharing_platform.dto.post.PostDto;
-import dblab.sharing_platform.dto.post.PostCreateRequestDto;
-import dblab.sharing_platform.dto.post.PostCreateResponseDto;
+import dblab.sharing_platform.dto.post.PostCreateRequest;
+import dblab.sharing_platform.dto.post.PostCreateResponse;
 import dblab.sharing_platform.dto.post.PostPagingCondition;
 import dblab.sharing_platform.dto.post.PagedPostListDto;
-import dblab.sharing_platform.dto.post.PostReadResponseDto;
-import dblab.sharing_platform.dto.post.PostUpdateRequestDto;
-import dblab.sharing_platform.dto.post.PostUpdateResponseDto;
+import dblab.sharing_platform.dto.post.PostReadResponse;
+import dblab.sharing_platform.dto.post.PostUpdateRequest;
+import dblab.sharing_platform.dto.post.PostUpdateResponse;
 import dblab.sharing_platform.exception.post.PostNotFoundException;
 import dblab.sharing_platform.helper.NotificationHelper;
 import dblab.sharing_platform.repository.category.CategoryRepository;
@@ -79,13 +79,13 @@ public class PostServiceTest {
     @DisplayName("글 생성 테스트")
     public void createPostTest(){
         // Given
-        PostCreateRequestDto postCreateRequestDto = new PostCreateRequestDto("테스트 타이틀", "테스트 내용",  category.getName(), List.of(), null);
+        PostCreateRequest postCreateRequest = new PostCreateRequest("테스트 타이틀", "테스트 내용",  category.getName(), List.of(), null);
 
-        given(categoryRepository.findByName(postCreateRequestDto.getCategoryName())).willReturn(Optional.of(category));
+        given(categoryRepository.findByName(postCreateRequest.getCategoryName())).willReturn(Optional.of(category));
         given(memberRepository.findByUsername(member.getUsername())).willReturn(Optional.of(member));
 
         // when
-        PostCreateResponseDto result = postService.createPost(postCreateRequestDto, member.getUsername());
+        PostCreateResponse result = postService.createPost(postCreateRequest, member.getUsername());
 
         assertThat(result.getId()).isEqualTo(post.getId());
     }
@@ -94,12 +94,12 @@ public class PostServiceTest {
     @DisplayName("글 수정 테스트")
     public void updatePostTest(){
         // Given
-        PostUpdateRequestDto postUpdateRequestDto = new PostUpdateRequestDto("업데이트 타이틀", "업데이트 내용", null, null, null);
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest("업데이트 타이틀", "업데이트 내용", null, null, null);
 
         given(postRepository.findById(post.getId())).willReturn(Optional.of(post));
 
         // When
-        PostUpdateResponseDto result = postService.updatePost(post.getId(), postUpdateRequestDto);
+        PostUpdateResponse result = postService.updatePost(post.getId(), postUpdateRequest);
 
         // Then
         assertThat(result.getTitle()).isEqualTo("업데이트 타이틀");
@@ -125,7 +125,7 @@ public class PostServiceTest {
         given(postRepository.findById(post.getId())).willReturn(Optional.of(post));
 
         // When
-        PostReadResponseDto result = postService.readSinglePostByPostId(post.getId());
+        PostReadResponse result = postService.readSinglePostByPostId(post.getId());
 
         // Then
         assertThat(result.getTitle()).isEqualTo("title");

@@ -7,15 +7,15 @@ import dblab.sharing_platform.domain.member.Member;
 import dblab.sharing_platform.domain.notification.NotificationType;
 import dblab.sharing_platform.domain.post.Post;
 import dblab.sharing_platform.dto.image.PostImageDto;
-import dblab.sharing_platform.dto.item.ItemCreateRequestDto;
+import dblab.sharing_platform.dto.item.ItemCreateRequest;
 import dblab.sharing_platform.dto.post.PagedPostListDto;
-import dblab.sharing_platform.dto.post.PostCreateRequestDto;
-import dblab.sharing_platform.dto.post.PostCreateResponseDto;
+import dblab.sharing_platform.dto.post.PostCreateRequest;
+import dblab.sharing_platform.dto.post.PostCreateResponse;
 import dblab.sharing_platform.dto.post.PostDto;
 import dblab.sharing_platform.dto.post.PostPagingCondition;
-import dblab.sharing_platform.dto.post.PostReadResponseDto;
-import dblab.sharing_platform.dto.post.PostUpdateRequestDto;
-import dblab.sharing_platform.dto.post.PostUpdateResponseDto;
+import dblab.sharing_platform.dto.post.PostReadResponse;
+import dblab.sharing_platform.dto.post.PostUpdateRequest;
+import dblab.sharing_platform.dto.post.PostUpdateResponse;
 import dblab.sharing_platform.exception.auth.AuthenticationEntryPointException;
 import dblab.sharing_platform.exception.category.CategoryNotFoundException;
 import dblab.sharing_platform.exception.member.MemberNotFoundException;
@@ -66,30 +66,30 @@ public class PostService {
         return PagedPostListDto.toDto(page);
     }
 
-    public PostReadResponseDto readSinglePostByPostId(Long id) {
+    public PostReadResponse readSinglePostByPostId(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
-        return PostReadResponseDto.toDto(post);
+        return PostReadResponse.toDto(post);
     }
 
     @Transactional
-    public PostCreateResponseDto createPost(PostCreateRequestDto requestDto, String username) {
-        List<PostImage> postImages = getImages(requestDto);
-        Category category = categoryRepository.findByName(requestDto.getCategoryName())
+    public PostCreateResponse createPost(PostCreateRequest request, String username) {
+        List<PostImage> postImages = getImages(request);
+        Category category = categoryRepository.findByName(request.getCategoryName())
                 .orElseThrow(CategoryNotFoundException::new);
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(AuthenticationEntryPointException::new);
 
-        Post post = new Post(requestDto.getTitle(),
-                requestDto.getContent(),
+        Post post = new Post(request.getTitle(),
+                request.getContent(),
                 category,
-                requestDto.getItemCreateRequestDto() != null ? ItemCreateRequestDto.toEntity(requestDto.getItemCreateRequestDto()) : null,
+                request.getItemCreateRequest() != null ? ItemCreateRequest.toEntity(request.getItemCreateRequest()) : null,
                 postImages,
                 member);
 
         postRepository.save(post);
 
-        return PostCreateResponseDto.toDto(post);
+        return PostCreateResponse.toDto(post);
     }
 
     @Transactional
@@ -101,14 +101,14 @@ public class PostService {
     }
 
     @Transactional
-    public PostUpdateResponseDto updatePost(Long id, PostUpdateRequestDto requestDto) {
+    public PostUpdateResponse updatePost(Long id, PostUpdateRequest request) {
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
-        PostUpdateResponseDto responseDto = post.updatePost(requestDto);
+        PostUpdateResponse response = post.updatePost(request);
 
-        updateImagesToServer(requestDto, responseDto);
+        updateImagesToServer(request, response);
 
-        return responseDto;
+        return response;
     }
 
     @Transactional
@@ -134,28 +134,28 @@ public class PostService {
         postImages.stream().forEach(i -> fileService.delete(i.getUniqueName(), FOLDER_NAME_POST));
     }
 
-    public void updateImagesToServer(PostUpdateRequestDto requestDto, PostUpdateResponseDto responseDto) {
-        uploadImagesToServer(requestDto, responseDto);
-        deleteImagesFromServer(responseDto);
+    public void updateImagesToServer(PostUpdateRequest request, PostUpdateResponse response) {
+        uploadImagesToServer(request, response);
+        deleteImagesFromServer(response);
     }
 
-    private void uploadImagesToServer(PostUpdateRequestDto requestDto, PostUpdateResponseDto responseDto) {
-        List<PostImageDto> addedImages = responseDto.getAddedImages();
+    private void uploadImagesToServer(PostUpdateRequest request, PostUpdateResponse response) {
+        List<PostImageDto> addedImages = response.getAddedImages();
         for (int i = 0; i < addedImages.size(); i++) {
-            fileService.upload(requestDto.getAddImages().get(i), addedImages.get(i).getUniqueName(), FOLDER_NAME_POST);
+            fileService.upload(request.getAddImages().get(i), addedImages.get(i).getUniqueName(), FOLDER_NAME_POST);
         }
     }
 
-    private void deleteImagesFromServer(PostUpdateResponseDto responseDto) {
-        List<PostImageDto> deletePostImageDtoList = responseDto.getDeletedImages();
+    private void deleteImagesFromServer(PostUpdateResponse response) {
+        List<PostImageDto> deletePostImageDtoList = response.getDeletedImages();
         deletePostImageDtoList.stream().forEach(i -> fileService.delete(i.getUniqueName(), FOLDER_NAME_POST));
     }
 
-    private List<PostImage> getImages(PostCreateRequestDto requestDto) {
+    private List<PostImage> getImages(PostCreateRequest request) {
         List<PostImage> postImages;
-        if (requestDto.getMultipartFiles() != null) {
-            postImages = MultiPartFileToImage(requestDto.getMultipartFiles());
-            uploadImagesToServer(postImages, requestDto.getMultipartFiles());
+        if (request.getMultipartFiles() != null) {
+            postImages = MultiPartFileToImage(request.getMultipartFiles());
+            uploadImagesToServer(postImages, request.getMultipartFiles());
         } else {
             postImages = List.of();
         }

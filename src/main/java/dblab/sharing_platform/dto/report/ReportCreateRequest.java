@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReportCreateRequestDto {
+public class ReportCreateRequest {
 
     @NotNull
     private ReportType reportType;
@@ -21,5 +21,4 @@ public class ReportCreateRequestDto {
 
     @NotEmpty(message = "신고 내용을 입력해주세요.")
     private String content;
-
 }

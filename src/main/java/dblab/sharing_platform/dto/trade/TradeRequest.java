@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TradeRequestDto {
+public class TradeRequest {
 
     private String borrowerName;
 

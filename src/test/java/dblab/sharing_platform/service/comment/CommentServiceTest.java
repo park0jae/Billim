@@ -3,7 +3,7 @@ package dblab.sharing_platform.service.comment;
 import dblab.sharing_platform.domain.comment.Comment;
 import dblab.sharing_platform.domain.member.Member;
 import dblab.sharing_platform.domain.post.Post;
-import dblab.sharing_platform.dto.comment.CommentCreateRequestDto;
+import dblab.sharing_platform.dto.comment.CommentCreateRequest;
 import dblab.sharing_platform.dto.comment.CommentDto;
 import dblab.sharing_platform.repository.comment.CommentRepository;
 import dblab.sharing_platform.repository.member.MemberRepository;
@@ -65,7 +65,7 @@ class CommentServiceTest {
         given(commentRepository.save(any())).willReturn(createComment(null));
 
         // when
-        commentService.createCommentWithPostId(post.getId(), new CommentCreateRequestDto("content", null), member.getUsername());
+        commentService.createCommentWithPostId(post.getId(), new CommentCreateRequest("content", null), member.getUsername());
 
         // then
         verify(commentRepository).save(any(Comment.class));

@@ -7,11 +7,11 @@ import dblab.sharing_platform.domain.refresh.RefreshToken;
 import dblab.sharing_platform.domain.role.Role;
 import dblab.sharing_platform.domain.role.RoleType;
 import dblab.sharing_platform.dto.member.EmailAuthRequest;
-import dblab.sharing_platform.dto.member.LogInResponseDto;
-import dblab.sharing_platform.dto.member.LoginRequestDto;
-import dblab.sharing_platform.dto.member.MemberCreateRequestDto;
-import dblab.sharing_platform.dto.member.OAuth2MemberCreateRequestDto;
-import dblab.sharing_platform.dto.member.PasswordResetRequestDto;
+import dblab.sharing_platform.dto.member.LogInResponse;
+import dblab.sharing_platform.dto.member.LoginRequest;
+import dblab.sharing_platform.dto.member.MemberCreateRequest;
+import dblab.sharing_platform.dto.member.OAuth2MemberCreateRequest;
+import dblab.sharing_platform.dto.member.PasswordResetRequest;
 import dblab.sharing_platform.exception.auth.DuplicateNicknameException;
 import dblab.sharing_platform.exception.auth.DuplicateUsernameException;
 import dblab.sharing_platform.exception.auth.EmailAuthNotEqualsException;
@@ -57,74 +57,74 @@ public class SignService {
     private final RefreshTokenRepository tokenRepository;
 
     @Transactional
-    public void signUp(MemberCreateRequestDto requestDto){
-        validateDuplicateUsernameAndNickname(requestDto);
-        validateEmailAuthKey(requestDto, AUTH_KEY_SIGN_UP);
+    public void signUp(MemberCreateRequest request){
+        validateDuplicateUsernameAndNickname(request);
+        validateEmailAuthKey(request, AUTH_KEY_SIGN_UP);
         List<Role> roles = List.of(roleRepository.findByRoleType(RoleType.USER)
                 .orElseThrow(RoleNotFoundException::new));
 
-        Member member = new Member(requestDto.getUsername(),
-                passwordEncoder.encode(requestDto.getPassword()),
-                requestDto.getNickname(),
-                requestDto.getPhoneNumber(),
-                requestDto.getAddress(),
+        Member member = new Member(request.getUsername(),
+                passwordEncoder.encode(request.getPassword()),
+                request.getNickname(),
+                request.getPhoneNumber(),
+                request.getAddress(),
                 NONE,
                 roles);
 
         memberRepository.save(member);
-        emailAuthRepository.deleteByEmail(requestDto.getUsername());
+        emailAuthRepository.deleteByEmail(request.getUsername());
     }
 
     @Transactional
-    public void resetPassword(PasswordResetRequestDto requestDto) {
-        Member member = memberRepository.findByUsername(requestDto.getUsername())
+    public void resetPassword(PasswordResetRequest request) {
+        Member member = memberRepository.findByUsername(request.getUsername())
                 .orElseThrow(MemberNotFoundException::new);
 
-        validateEmailAuthKey(requestDto, AUTH_KEY_RESET_PASSWORD);
-        validatePasswordEqualsVerifyPassword(requestDto);
+        validateEmailAuthKey(request, AUTH_KEY_RESET_PASSWORD);
+        validatePasswordEqualsVerifyPassword(request);
 
-        member.updatePassword(passwordEncoder.encode(requestDto.getPassword()));
+        member.updatePassword(passwordEncoder.encode(request.getPassword()));
 
-        emailAuthRepository.deleteByEmail(requestDto.getUsername());
+        emailAuthRepository.deleteByEmail(request.getUsername());
     }
 
     @Transactional
-    public void oAuth2Signup(OAuth2MemberCreateRequestDto requestDto) {
+    public void oAuth2Signup(OAuth2MemberCreateRequest request) {
         List<Role> roles = List.of(roleRepository.findByRoleType(RoleType.USER)
                 .orElseThrow(RoleNotFoundException::new));
 
-        Member member = new Member(requestDto.getEmail(),
-                passwordEncoder.encode(requestDto.getEmail()),
+        Member member = new Member(request.getEmail(),
+                passwordEncoder.encode(request.getEmail()),
                 null,
                 null,
                 null,
-                requestDto.getProvider(),
+                request.getProvider(),
                 roles);
         memberRepository.save(member);
     }
 
     @Transactional
-    public LogInResponseDto oauth2Login(OAuth2MemberCreateRequestDto requestDto) {
-        List<String> tokens = jwtLoginRequest(new LoginRequestDto(requestDto.getEmail(), requestDto.getEmail()));
+    public LogInResponse oauth2Login(OAuth2MemberCreateRequest request) {
+        List<String> tokens = jwtLoginRequest(new LoginRequest(request.getEmail(), request.getEmail()));
         String accessToken = tokens.get(0);
         String refreshToken = tokens.get(1);
-        return LogInResponseDto.toDto(accessToken, refreshToken);
+        return LogInResponse.toDto(accessToken, refreshToken);
     }
 
     @Transactional
-    public LogInResponseDto login(LoginRequestDto requestDto) {
-        memberRepository.findByUsername(requestDto.getUsername())
+    public LogInResponse login(LoginRequest request) {
+        memberRepository.findByUsername(request.getUsername())
                 .orElseThrow(MemberNotFoundException::new);
-        List<String> tokens = jwtLoginRequest(requestDto);
+        List<String> tokens = jwtLoginRequest(request);
         String accessToken = tokens.get(0);
         String refreshToken = tokens.get(1);
-        return LogInResponseDto.toDto(accessToken, refreshToken);
+        return LogInResponse.toDto(accessToken, refreshToken);
     }
 
     @Transactional
-    public List<String> jwtLoginRequest(LoginRequestDto requestDto) {
+    public List<String> jwtLoginRequest(LoginRequest request) {
         UsernamePasswordAuthenticationToken authenticationToken
-                = new UsernamePasswordAuthenticationToken(requestDto.getUsername(), requestDto.getPassword());
+                = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
         try {
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
@@ -132,11 +132,11 @@ public class SignService {
             String accessToken = tokenProvider.createToken(authentication, TokenProvider.ACCESS);
             String refreshToken = tokenProvider.createToken(authentication, TokenProvider.REFRESH);
 
-            RefreshToken findToken = tokenRepository.findByUsername(requestDto.getUsername())
+            RefreshToken findToken = tokenRepository.findByUsername(request.getUsername())
                     .orElse(null);
 
             if (findToken == null) {
-                tokenRepository.save(createToken(requestDto.getUsername(), refreshToken));
+                tokenRepository.save(createToken(request.getUsername(), refreshToken));
             } else {
                 findToken.changeToken(refreshToken);
             }
@@ -151,23 +151,23 @@ public class SignService {
         }
     }
 
-    private void validateDuplicateUsernameAndNickname(MemberCreateRequestDto requestDto) {
-        if (memberRepository.existsByUsername(requestDto.getUsername())) {
+    private void validateDuplicateUsernameAndNickname(MemberCreateRequest request) {
+        if (memberRepository.existsByUsername(request.getUsername())) {
             throw new DuplicateUsernameException();
-        } else if (memberRepository.existsByNickname(requestDto.getNickname())) {
+        } else if (memberRepository.existsByNickname(request.getNickname())) {
             throw new DuplicateNicknameException();
         }
     }
 
-    private void validateEmailAuthKey(EmailAuthRequest requestDto, String purpose) {
-        EmailAuth emailAuth = emailAuthRepository.findByEmailAndPurpose(requestDto.getUsername(), purpose)
+    private void validateEmailAuthKey(EmailAuthRequest request, String purpose) {
+        EmailAuth emailAuth = emailAuthRepository.findByEmailAndPurpose(request.getUsername(), purpose)
                 .orElseThrow(EmailAuthNotFoundException::new);
-        if (!emailAuth.getKey().equals(requestDto.getAuthKey())) {
+        if (!emailAuth.getKey().equals(request.getAuthKey())) {
             throw new EmailAuthNotEqualsException();
         }
     }
-    private void validatePasswordEqualsVerifyPassword(PasswordResetRequestDto requestDto) {
-        if (!requestDto.getPassword().equals(requestDto.getVerifyPassword())) {
+    private void validatePasswordEqualsVerifyPassword(PasswordResetRequest request) {
+        if (!request.getPassword().equals(request.getVerifyPassword())) {
             throw new NotEqualsPasswordToVerifiedException();
         }
     }

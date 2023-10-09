@@ -1,11 +1,11 @@
 package dblab.sharing_platform.controller.member;
 
-import dblab.sharing_platform.dto.member.LogInResponseDto;
-import dblab.sharing_platform.dto.member.LoginRequestDto;
-import dblab.sharing_platform.dto.member.MemberCreateRequestDto;
-import dblab.sharing_platform.dto.member.OAuth2MemberCreateRequestDto;
-import dblab.sharing_platform.dto.member.PasswordResetRequestDto;
-import dblab.sharing_platform.dto.oauth.AccessTokenRequestDto;
+import dblab.sharing_platform.dto.member.LogInResponse;
+import dblab.sharing_platform.dto.member.LoginRequest;
+import dblab.sharing_platform.dto.member.MemberCreateRequest;
+import dblab.sharing_platform.dto.member.OAuth2MemberCreateRequest;
+import dblab.sharing_platform.dto.member.PasswordResetRequest;
+import dblab.sharing_platform.dto.oauth.AccessTokenRequest;
 import dblab.sharing_platform.exception.member.MemberNotFoundException;
 import dblab.sharing_platform.service.mail.MailService;
 import dblab.sharing_platform.service.member.MemberService;
@@ -40,21 +40,21 @@ public class SignController {
 
     @ApiOperation(value = "일반 회원가입", notes = "일반 회원가입을 한다.")
     @PostMapping("/auth/sign-up")
-    public ResponseEntity signUp(@Valid @RequestBody MemberCreateRequestDto memberCreateRequestDto){
-        signService.signUp(memberCreateRequestDto);
+    public ResponseEntity signUp(@Valid @RequestBody MemberCreateRequest memberCreateRequest){
+        signService.signUp(memberCreateRequest);
         return new ResponseEntity(CREATED);
     }
 
     @ApiOperation(value = "일반 로그인", notes = "일반 로그인을 한다.")
     @PostMapping("/auth/login")
-    public ResponseEntity login(@Valid @RequestBody LoginRequestDto loginRequestDto){
-        return new ResponseEntity(signService.login(loginRequestDto), OK);
+    public ResponseEntity login(@Valid @RequestBody LoginRequest loginRequest){
+        return new ResponseEntity(signService.login(loginRequest), OK);
     }
 
     @ApiOperation(value = "비밀번호 재설정", notes = "비밀번호를 재설정합니다.")
     @PostMapping("/password-reset")
-    public ResponseEntity resetPassword(@Valid @RequestBody PasswordResetRequestDto passwordResetRequestDto){
-        signService.resetPassword(passwordResetRequestDto);
+    public ResponseEntity resetPassword(@Valid @RequestBody PasswordResetRequest passwordResetRequest){
+        signService.resetPassword(passwordResetRequest);
         return new ResponseEntity(OK);
     }
 
@@ -78,8 +78,8 @@ public class SignController {
                                 @Value("${spring.security.oauth2.client.registration.kakao.client-id}") String clientId,
                                 @Value("${spring.security.oauth2.client.registration.kakao.client-secret}") String clientSecret,
                                 @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}") String redirectUri) {
-        AccessTokenRequestDto accessTokenRequestDto = new AccessTokenRequestDto(clientId, clientSecret, redirectUri);
-        OAuth2MemberCreateRequestDto req = oAuthService.getAccessToken(code, "kakao", accessTokenRequestDto);
+        AccessTokenRequest accessTokenRequest = new AccessTokenRequest(clientId, clientSecret, redirectUri);
+        OAuth2MemberCreateRequest req = oAuthService.getAccessToken(code, "kakao", accessTokenRequest);
 
         return new ResponseEntity(signUpAndLogin(req), OK);
     }
@@ -90,8 +90,8 @@ public class SignController {
                                       @Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId,
                                       @Value("${spring.security.oauth2.client.registration.google.client-secret}") String clientSecret,
                                       @Value("${spring.security.oauth2.client.registration.google.redirect-uri}") String redirectUri) {
-        AccessTokenRequestDto accessTokenRequestDto= new AccessTokenRequestDto(clientId, clientSecret, redirectUri);
-        OAuth2MemberCreateRequestDto req = oAuthService.getAccessToken(code, "google", accessTokenRequestDto);
+        AccessTokenRequest accessTokenRequest = new AccessTokenRequest(clientId, clientSecret, redirectUri);
+        OAuth2MemberCreateRequest req = oAuthService.getAccessToken(code, "google", accessTokenRequest);
 
         return new ResponseEntity(signUpAndLogin(req), OK);
     }
@@ -102,13 +102,13 @@ public class SignController {
                                      @Value("${spring.security.oauth2.client.registration.naver.client-id}") String clientId,
                                      @Value("${spring.security.oauth2.client.registration.naver.client-secret}") String clientSecret,
                                      @Value("${spring.security.oauth2.client.registration.naver.redirect-uri}") String redirectUri) {
-        AccessTokenRequestDto accessTokenRequestDto = new AccessTokenRequestDto(clientId, clientSecret, redirectUri);
-        OAuth2MemberCreateRequestDto req = oAuthService.getAccessToken(code, "naver", accessTokenRequestDto);
+        AccessTokenRequest accessTokenRequest = new AccessTokenRequest(clientId, clientSecret, redirectUri);
+        OAuth2MemberCreateRequest req = oAuthService.getAccessToken(code, "naver", accessTokenRequest);
 
         return new ResponseEntity(signUpAndLogin(req), OK);
     }
 
-    private LogInResponseDto signUpAndLogin(OAuth2MemberCreateRequestDto req) {
+    private LogInResponse signUpAndLogin(OAuth2MemberCreateRequest req) {
         try {
             memberService.readCurrentUserInfoByUsername(req.getEmail());
         } catch (MemberNotFoundException e) {

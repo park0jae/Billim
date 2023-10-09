@@ -1,9 +1,9 @@
 package dblab.sharing_platform.controller.post;
 
 import com.amazonaws.services.s3.AmazonS3Client;
-import dblab.sharing_platform.dto.post.PostCreateRequestDto;
+import dblab.sharing_platform.dto.post.PostCreateRequest;
 import dblab.sharing_platform.dto.post.PostPagingCondition;
-import dblab.sharing_platform.dto.post.PostUpdateRequestDto;
+import dblab.sharing_platform.dto.post.PostUpdateRequest;
 import dblab.sharing_platform.service.post.PostService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -62,8 +62,8 @@ public class PostController {
 
     @ApiOperation(value = "게시글 생성", notes = "게시글을 생성합니다.")
     @PostMapping
-    public ResponseEntity createPost(@Valid @ModelAttribute PostCreateRequestDto postCreateRequestDto) {
-        return new ResponseEntity(postService.createPost(postCreateRequestDto, getCurrentUsernameCheck()), CREATED);
+    public ResponseEntity createPost(@Valid @ModelAttribute PostCreateRequest postCreateRequest) {
+        return new ResponseEntity(postService.createPost(postCreateRequest, getCurrentUsernameCheck()), CREATED);
     }
     @ApiOperation(value = "게시글 삭제", notes = "해당 번호의 게시글을 삭제한다.")
     @DeleteMapping("/{postId}")
@@ -74,8 +74,8 @@ public class PostController {
     @ApiOperation(value = "게시글 수정", notes = "해당 번호의 게시글을 수정한다.")
     @PatchMapping("/{postId}")
     public ResponseEntity updatePostByPostId(@ApiParam(value = "수정할 게시글 id", required = true) @PathVariable Long postId,
-                           @Valid @ModelAttribute PostUpdateRequestDto postUpdateRequestDto) {
-        return new ResponseEntity(postService.updatePost(postId, postUpdateRequestDto), OK);
+                           @Valid @ModelAttribute PostUpdateRequest postUpdateRequest) {
+        return new ResponseEntity(postService.updatePost(postId, postUpdateRequest), OK);
     }
     @ApiOperation(value = "게시글 좋아요/좋아요 취소", notes = "해당 번호의 게시글에 좋아요 남기기/좋아요 취소")
     @PostMapping("/{postId}/likes")

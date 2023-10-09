@@ -5,9 +5,9 @@ import dblab.sharing_platform.domain.category.Category;
 import dblab.sharing_platform.domain.embedded.item.Item;
 import dblab.sharing_platform.domain.image.PostImage;
 import dblab.sharing_platform.domain.member.Member;
-import dblab.sharing_platform.dto.item.ItemUpdateRequestDto;
-import dblab.sharing_platform.dto.post.PostUpdateRequestDto;
-import dblab.sharing_platform.dto.post.PostUpdateResponseDto;
+import dblab.sharing_platform.dto.item.ItemUpdateRequest;
+import dblab.sharing_platform.dto.post.PostUpdateRequest;
+import dblab.sharing_platform.dto.post.PostUpdateResponse;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -79,16 +79,16 @@ public class Post extends BaseTime {
         addImages(postImages, this.postImages, this);
     }
 
-    public PostUpdateResponseDto updatePost(PostUpdateRequestDto requestDto) {
-        this.title = requestDto.getTitle();
-        this.content = requestDto.getContent();
+    public PostUpdateResponse updatePost(PostUpdateRequest request) {
+        this.title = request.getTitle();
+        this.content = request.getContent();
 
-        if (requestDto.getItemUpdateRequestDto() != null) {
-            this.item = ItemUpdateRequestDto.toEntity(requestDto.getItemUpdateRequestDto());
+        if (request.getItemUpdateRequest() != null) {
+            this.item = ItemUpdateRequest.toEntity(request.getItemUpdateRequest());
         }
 
-        Map<String, List<PostImage>> m = updateImage(requestDto, this.postImages, this);
-        return PostUpdateResponseDto.toDto(requestDto, this, m);
+        Map<String, List<PostImage>> m = updateImage(request, this.postImages, this);
+        return PostUpdateResponse.toDto(request, this, m);
     }
 
     public void likeUp() {

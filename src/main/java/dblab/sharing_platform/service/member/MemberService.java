@@ -7,8 +7,8 @@ import dblab.sharing_platform.domain.post.Post;
 import dblab.sharing_platform.dto.member.MemberPagingCondition;
 import dblab.sharing_platform.dto.member.MemberPrivateDto;
 import dblab.sharing_platform.dto.member.MemberProfileDto;
-import dblab.sharing_platform.dto.member.MemberUpdateRequestDto;
-import dblab.sharing_platform.dto.member.OAuthMemberUpdateRequestDto;
+import dblab.sharing_platform.dto.member.MemberUpdateRequest;
+import dblab.sharing_platform.dto.member.OAuthMemberUpdateRequest;
 import dblab.sharing_platform.dto.member.PagedMemberListDto;
 import dblab.sharing_platform.dto.post.PostDto;
 import dblab.sharing_platform.exception.auth.DuplicateNicknameException;
@@ -63,18 +63,18 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberPrivateDto updateMember(String username, MemberUpdateRequestDto requestDto){
+    public MemberPrivateDto updateMember(String username, MemberUpdateRequest request){
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(MemberNotFoundException::new);
-        memberUpdate(requestDto, member);
+        memberUpdate(request, member);
         return MemberPrivateDto.toDto(member);
     }
 
     @Transactional
-    public MemberPrivateDto oauthMemberUpdate(String username, OAuthMemberUpdateRequestDto requestDto){
+    public MemberPrivateDto oauthMemberUpdate(String username, OAuthMemberUpdateRequest request){
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(MemberNotFoundException::new);
-        oAuthMemberUpdate(requestDto, member);
+        oAuthMemberUpdate(request, member);
         return MemberPrivateDto.toDto(member);
     }
 
@@ -82,17 +82,17 @@ public class MemberService {
         return passwordEncoder.encode(password);
     }
 
-    private void memberUpdate(MemberUpdateRequestDto requestDto, Member member) {
-        validateDuplicateNickname(requestDto.getNickname());
-        member.updateMember(requestDto);
-        String profileImage = member.updateMemberProfileImage(requestDto);
-        profileImageServerUpdate(requestDto.getImage(), member, profileImage);
+    private void memberUpdate(MemberUpdateRequest request, Member member) {
+        validateDuplicateNickname(request.getNickname());
+        member.updateMember(request);
+        String profileImage = member.updateMemberProfileImage(request);
+        profileImageServerUpdate(request.getImage(), member, profileImage);
     }
 
-    private void oAuthMemberUpdate(OAuthMemberUpdateRequestDto requestDto, Member member) {
-        validateDuplicateNickname(requestDto.getNickname());
-        String profileImage = member.updateOAuthMember(requestDto);
-        profileImageServerUpdate(requestDto.getImage(), member, profileImage);
+    private void oAuthMemberUpdate(OAuthMemberUpdateRequest request, Member member) {
+        validateDuplicateNickname(request.getNickname());
+        String profileImage = member.updateOAuthMember(request);
+        profileImageServerUpdate(request.getImage(), member, profileImage);
     }
 
     private void profileImageServerUpdate(MultipartFile file, Member member, String profileImage) {

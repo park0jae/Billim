@@ -138,7 +138,7 @@ class PostRepositoryTest {
         //given
         postInit();
 
-        PostPagingCondition cond = new PostPagingCondition(0, 10, "category1", "title", null);
+        PostPagingCondition cond = new PostPagingCondition(0, 10, "category", "title", null);
 
         //when
         Page<PostDto> result = postRepository.findAllByCategoryAndTitle(cond);

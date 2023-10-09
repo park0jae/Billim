@@ -1,7 +1,7 @@
 package dblab.sharing_platform.service.category;
 
 import dblab.sharing_platform.domain.category.Category;
-import dblab.sharing_platform.dto.category.CategoryCreateRequestDto;
+import dblab.sharing_platform.dto.category.CategoryCreateRequest;
 import dblab.sharing_platform.dto.category.CategoryDto;
 import dblab.sharing_platform.repository.category.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +43,7 @@ public class CategoryServiceTest {
     @DisplayName("카테고리 생성 테스트 (부모 존재 X)")
     public void createCategoryTest(){
         // Given
-        CategoryCreateRequestDto categoryCreateRequestDto = new CategoryCreateRequestDto(childCategory.getName(), null);
+        CategoryCreateRequest categoryCreateRequest = new CategoryCreateRequest(childCategory.getName(), null);
 
         given(categoryRepository.save(any(Category.class))).willAnswer(invocation -> {
             Category savedCategory = invocation.getArgument(0);
@@ -51,7 +51,7 @@ public class CategoryServiceTest {
         });
 
         // When
-        categoryService.createCategory(categoryCreateRequestDto);
+        categoryService.createCategory(categoryCreateRequest);
 
         // Then
         verify(categoryRepository).save(any(Category.class));
@@ -60,16 +60,16 @@ public class CategoryServiceTest {
     @DisplayName("카테고리 생성 테스트 (부모 존재 O)")
     public void createCategoryWithParentTest(){
         // Given
-        CategoryCreateRequestDto categoryCreateRequestDto = new CategoryCreateRequestDto(childCategory.getName(), parentCategory.getName());
+        CategoryCreateRequest categoryCreateRequest = new CategoryCreateRequest(childCategory.getName(), parentCategory.getName());
 
-        given(categoryRepository.findByName(categoryCreateRequestDto.getParentCategoryName())).willReturn(Optional.of(parentCategory));
+        given(categoryRepository.findByName(categoryCreateRequest.getParentCategoryName())).willReturn(Optional.of(parentCategory));
         given(categoryRepository.save(any(Category.class))).willAnswer(invocation -> {
             Category savedCategory = invocation.getArgument(0);
             return savedCategory;
         });
 
         // When
-        categoryService.createCategory(categoryCreateRequestDto);
+        categoryService.createCategory(categoryCreateRequest);
 
         // Then
         verify(categoryRepository).save(any(Category.class));

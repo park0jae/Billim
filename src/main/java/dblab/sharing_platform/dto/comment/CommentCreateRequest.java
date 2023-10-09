@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CommentCreateRequestDto {
+public class CommentCreateRequest {
 
     @ApiModelProperty(value = "댓글 내용", notes = "댓글 내용을 입력해주세요", required = true, example = "안녕하세요.")
     @NotBlank(message = "댓글 내용을 입력해주세요")
