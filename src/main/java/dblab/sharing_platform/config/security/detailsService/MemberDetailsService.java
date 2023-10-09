@@ -24,8 +24,8 @@ public class MemberDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Member> member = Optional.ofNullable(memberRepository.findOneWithRolesByUsername(username).
-                orElseThrow(MemberNotFoundException::new));
+        Optional<Member> member = Optional.ofNullable(memberRepository.findOneWithRolesByUsername(username)
+                        .orElseThrow(MemberNotFoundException::new));
         return createUser(member.get());
     }
 

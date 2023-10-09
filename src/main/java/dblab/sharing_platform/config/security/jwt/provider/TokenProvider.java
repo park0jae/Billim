@@ -87,7 +87,8 @@ public class TokenProvider {
 
     @Transactional
     public void reIssueRefreshToken(Authentication authentication){
-        RefreshToken token = refreshTokenRepository.findByUsername(authentication.getName()).orElseThrow(TokenNotFoundException::new);
+        RefreshToken token = refreshTokenRepository.findByUsername(authentication.getName())
+                .orElseThrow(TokenNotFoundException::new);
         String newRefreshToken = createToken(authentication, REFRESH);
         token.changeToken(newRefreshToken);
     }

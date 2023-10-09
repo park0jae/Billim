@@ -26,8 +26,10 @@ public class ReportService {
 
     @Transactional
     public void createReportToPostOrUser(ReportCreateRequestDto requestDto, String username) {
-        Post post = requestDto.getPostId() == null ? null : postRepository.findById(Long.valueOf(requestDto.getPostId())).orElseThrow(PostNotFoundException::new);
-        Member member = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
+        Post post = requestDto.getPostId() == null ? null : postRepository.findById(Long.valueOf(requestDto.getPostId()))
+                .orElseThrow(PostNotFoundException::new);
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(MemberNotFoundException::new);
         reportRepository.save(new Report(requestDto.getReportType(),
                 requestDto.getContent(),
                 member,
@@ -36,7 +38,8 @@ public class ReportService {
     }
     @Transactional
     public void deleteReportByReportId(Long reportId) {
-        Report report = reportRepository.findById(reportId).orElseThrow(ReportNotFoundException::new);
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(ReportNotFoundException::new);
         reportRepository.delete(report);
     }
 

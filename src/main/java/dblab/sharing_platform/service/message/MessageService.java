@@ -32,15 +32,18 @@ public class MessageService {
 
     @Transactional
     public MessageDto findMessageById(Long id) {
-        Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
+        Message message = messageRepository.findById(id)
+                .orElseThrow(MessageNotFoundException::new);
         message.readByReceiver();
         return MessageDto.toDto(message);
     }
 
     @Transactional
     public MessageDto sendMessageToReceiverByCurrentUser(MessageCreateRequestDto requestDto, String username) {
-        Member sender = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
-        Member receiver = memberRepository.findByNickname(requestDto.getReceiveMember()).orElseThrow(MemberNotFoundException::new);
+        Member sender = memberRepository.findByUsername(username)
+                .orElseThrow(MemberNotFoundException::new);
+        Member receiver = memberRepository.findByNickname(requestDto.getReceiveMember())
+                .orElseThrow(MemberNotFoundException::new);
 
         Post post = postValidation(Long.valueOf(requestDto.getPostId()), receiver, sender);
 
@@ -62,7 +65,8 @@ public class MessageService {
 
     @Transactional
     public void deleteMessageBySender(Long id) {
-        Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
+        Message message = messageRepository.findById(id)
+                .orElseThrow(MessageNotFoundException::new);
         message.deleteBySender();
 
         if (deletedByBothSides(message)) {
@@ -76,7 +80,8 @@ public class MessageService {
 
     @Transactional
     public void deleteMessageByReceiver(Long id) {
-        Message message = messageRepository.findById(id).orElseThrow(MessageNotFoundException::new);
+        Message message = messageRepository.findById(id)
+                .orElseThrow(MessageNotFoundException::new);
         message.deleteByReceiver();
 
         if (deletedByBothSides(message)) {
@@ -85,7 +90,8 @@ public class MessageService {
     }
 
     private Post postValidation(Long postId, Member receiver, Member sender) {
-        Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
 
         if (post.getMember().getNickname().equals(receiver.getNickname()) || // 게시글 작성자와 메시지 수신자가 일치하거나
                 (post.getMember().getNickname().equals(sender.getNickname()) && messageRepository.findBySenderIdAndPostId(receiver.getId(), post.getId()).isPresent())) { // 게시글에 대해 받은 메시지가 있는 경우

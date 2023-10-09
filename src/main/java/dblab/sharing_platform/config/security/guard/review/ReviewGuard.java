@@ -15,8 +15,12 @@ public class ReviewGuard extends Guard {
     private final TradeRepository tradeRepository;
     @Override
     protected boolean isResourceOwner(Long id) {
-        Trade trade = tradeRepository.findById(id).orElseThrow(GuardException::new);
-        return Long.valueOf(SecurityUtil.getCurrentUserId().orElseThrow(GuardException::new)).equals(trade.getBorrowerMember().getId());
+        Trade trade = tradeRepository.findById(id)
+                .orElseThrow(GuardException::new);
+        return Long.valueOf(SecurityUtil.getCurrentUserId()
+                            .orElseThrow(GuardException::new))
+                            .equals(trade.getBorrowerMember()
+                            .getId());
     }
 }
 

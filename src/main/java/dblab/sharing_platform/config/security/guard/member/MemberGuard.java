@@ -16,7 +16,8 @@ public class MemberGuard extends Guard {
 
     @Override
     protected boolean isResourceOwner(Long id) {
-        Member member = memberRepository.findById(id).orElseThrow(GuardException::new);
+        Member member = memberRepository.findById(id)
+                .orElseThrow(GuardException::new);
         Long memberId = Long.valueOf(SecurityUtil.getCurrentUserId().get());
 
         return memberId.equals(id);

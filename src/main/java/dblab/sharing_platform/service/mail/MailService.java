@@ -49,7 +49,8 @@ public class MailService {
             throw new AlreadySendAuthKeyException();
         }
         authKey = createAuthKey();
-        memberRepository.findByUsername(email).orElseThrow(MemberNotFoundException::new);
+        memberRepository.findByUsername(email)
+                .orElseThrow(MemberNotFoundException::new);
         sendMail(email, RESET_PASSWORD);
     }
 

@@ -56,7 +56,8 @@ public class NotificationService {
     }
 
     public void send(NotificationRequestDto requestDto){
-        Member receiver = memberRepository.findByNickname(requestDto.getReceiver()).orElseThrow(MemberNotFoundException::new);
+        Member receiver = memberRepository.findByNickname(requestDto.getReceiver())
+                .orElseThrow(MemberNotFoundException::new);
 
         Notification notification = notificationRepository.save(
                 new Notification(

@@ -16,10 +16,13 @@ public class TradeGuard extends Guard {
 
     @Override
     protected boolean isResourceOwner(Long id) {
-        Long currentId = Long.valueOf(SecurityUtil.getCurrentUserId().orElseThrow(GuardException::new));
+        Long currentId = Long.valueOf(SecurityUtil.getCurrentUserId()
+                .orElseThrow(GuardException::new));
 
-        Member render = tradeRepository.findById(id).orElseThrow(GuardException::new).getRenderMember();
-        Member borrower = tradeRepository.findById(id).orElseThrow(GuardException::new).getBorrowerMember();
+        Member render = tradeRepository.findById(id)
+                .orElseThrow(GuardException::new).getRenderMember();
+        Member borrower = tradeRepository.findById(id)
+                .orElseThrow(GuardException::new).getBorrowerMember();
 
         return currentId.equals(render.getId()) || currentId.equals(borrower.getId());
     }

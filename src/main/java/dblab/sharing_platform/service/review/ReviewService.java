@@ -37,9 +37,12 @@ public class ReviewService {
 
     @Transactional
     public ReviewResponseDto writeReviewByTradeId(ReviewRequestDto reviewRequestDto, Long tradeId, String username) {
-        Trade trade = tradeRepository.findById(tradeId).orElseThrow(TradeNotFoundException::new);
-        Member writer = memberRepository.findByUsername(username).orElseThrow(AuthenticationEntryPointException::new); // 리뷰 작성자
-        Member member = memberRepository.findById(trade.getRenderMember().getId()).orElseThrow(MemberNotFoundException::new); // 리뷰 받는 사람
+        Trade trade = tradeRepository.findById(tradeId)
+                .orElseThrow(TradeNotFoundException::new);
+        Member writer = memberRepository.findByUsername(username)
+                .orElseThrow(AuthenticationEntryPointException::new); // 리뷰 작성자
+        Member member = memberRepository.findById(trade.getRenderMember().getId())
+                .orElseThrow(MemberNotFoundException::new); // 리뷰 받는 사람
 
         validateWriteReview(username, trade);
 
@@ -56,8 +59,10 @@ public class ReviewService {
 
     @Transactional
     public void deleteReviewByTradeId(Long tradeId) {
-        Trade trade = tradeRepository.findById(tradeId).orElseThrow(TradeNotFoundException::new);
-        Review review = reviewRepository.findById(trade.getReview().getId()).orElseThrow(ReviewNotFoundException::new);
+        Trade trade = tradeRepository.findById(tradeId)
+                .orElseThrow(TradeNotFoundException::new);
+        Review review = reviewRepository.findById(trade.getReview().getId())
+                .orElseThrow(ReviewNotFoundException::new);
         trade.deleteReview();
 
         reviewRepository.delete(review);

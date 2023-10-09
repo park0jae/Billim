@@ -15,7 +15,8 @@ public class SendMessageGuard extends Guard {
 
     @Override
     protected boolean isResourceOwner(Long id) {
-        Message message = messageRepository.findById(id).orElseThrow(GuardException::new);
+        Message message = messageRepository.findById(id)
+                .orElseThrow(GuardException::new);
         Long senderId = message.getSendMember().getId();
         Long memberId = Long.valueOf(SecurityUtil.getCurrentUserId().get());
 

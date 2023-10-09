@@ -29,9 +29,12 @@ public class CommentService {
 
     @Transactional
     public Long createCommentWithPostId(Long postId, CommentCreateRequestDto requestDto, String username) {
-        Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
-        Member member = memberRepository.findByUsername(username).orElseThrow(AuthenticationEntryPointException::new);
-        Comment parent = requestDto.getParentCommentId() == null ? null : commentRepository.findById(requestDto.getParentCommentId()).orElseThrow(RootCommentNotFoundException::new);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(AuthenticationEntryPointException::new);
+        Comment parent = requestDto.getParentCommentId() == null ? null : commentRepository.findById(requestDto.getParentCommentId())
+                .orElseThrow(RootCommentNotFoundException::new);
 
         Comment createComment = commentRepository.save(
                 new Comment(requestDto.getContent(),
@@ -44,7 +47,8 @@ public class CommentService {
 
     @Transactional
     public void deleteCommentByCommentId(Long id) {
-        Comment comment = commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(CommentNotFoundException::new);
         comment.delete();
     }
 
@@ -54,6 +58,7 @@ public class CommentService {
     }
 
     private void validatePostExists(Long postId) {
-        postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
+        postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
     }
 }

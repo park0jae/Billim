@@ -60,7 +60,8 @@ public class SignService {
     public void signUp(MemberCreateRequestDto requestDto){
         validateDuplicateUsernameAndNickname(requestDto);
         validateEmailAuthKey(requestDto, AUTH_KEY_SIGN_UP);
-        List<Role> roles = List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new));
+        List<Role> roles = List.of(roleRepository.findByRoleType(RoleType.USER)
+                .orElseThrow(RoleNotFoundException::new));
 
         Member member = new Member(requestDto.getUsername(),
                 passwordEncoder.encode(requestDto.getPassword()),
@@ -76,7 +77,9 @@ public class SignService {
 
     @Transactional
     public void resetPassword(PasswordResetRequestDto requestDto) {
-        Member member = memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(MemberNotFoundException::new);
+        Member member = memberRepository.findByUsername(requestDto.getUsername())
+                .orElseThrow(MemberNotFoundException::new);
+
         validateEmailAuthKey(requestDto, AUTH_KEY_RESET_PASSWORD);
         validatePasswordEqualsVerifyPassword(requestDto);
 
@@ -87,7 +90,8 @@ public class SignService {
 
     @Transactional
     public void oAuth2Signup(OAuth2MemberCreateRequestDto requestDto) {
-        List<Role> roles = List.of(roleRepository.findByRoleType(RoleType.USER).orElseThrow(RoleNotFoundException::new));
+        List<Role> roles = List.of(roleRepository.findByRoleType(RoleType.USER)
+                .orElseThrow(RoleNotFoundException::new));
 
         Member member = new Member(requestDto.getEmail(),
                 passwordEncoder.encode(requestDto.getEmail()),
@@ -109,7 +113,8 @@ public class SignService {
 
     @Transactional
     public LogInResponseDto login(LoginRequestDto requestDto) {
-        memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(MemberNotFoundException::new);
+        memberRepository.findByUsername(requestDto.getUsername())
+                .orElseThrow(MemberNotFoundException::new);
         List<String> tokens = jwtLoginRequest(requestDto);
         String accessToken = tokens.get(0);
         String refreshToken = tokens.get(1);
@@ -127,7 +132,8 @@ public class SignService {
             String accessToken = tokenProvider.createToken(authentication, TokenProvider.ACCESS);
             String refreshToken = tokenProvider.createToken(authentication, TokenProvider.REFRESH);
 
-            RefreshToken findToken = tokenRepository.findByUsername(requestDto.getUsername()).orElse(null);
+            RefreshToken findToken = tokenRepository.findByUsername(requestDto.getUsername())
+                    .orElse(null);
 
             if (findToken == null) {
                 tokenRepository.save(createToken(requestDto.getUsername(), refreshToken));
@@ -154,7 +160,8 @@ public class SignService {
     }
 
     private void validateEmailAuthKey(EmailAuthRequest requestDto, String purpose) {
-        EmailAuth emailAuth = emailAuthRepository.findByEmailAndPurpose(requestDto.getUsername(), purpose).orElseThrow(EmailAuthNotFoundException::new);
+        EmailAuth emailAuth = emailAuthRepository.findByEmailAndPurpose(requestDto.getUsername(), purpose)
+                .orElseThrow(EmailAuthNotFoundException::new);
         if (!emailAuth.getKey().equals(requestDto.getAuthKey())) {
             throw new EmailAuthNotEqualsException();
         }

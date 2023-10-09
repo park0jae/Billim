@@ -16,8 +16,10 @@ public class PostGuard extends Guard {
 
     @Override
     protected boolean isResourceOwner(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(GuardException::new);
-        Long memberId = Long.valueOf(SecurityUtil.getCurrentUserId().orElseThrow(GuardException::new));
+        Post post = postRepository.findById(id)
+                .orElseThrow(GuardException::new);
+        Long memberId = Long.valueOf(SecurityUtil.getCurrentUserId()
+                .orElseThrow(GuardException::new));
 
         return post.getMember().getId().equals(memberId);
     }

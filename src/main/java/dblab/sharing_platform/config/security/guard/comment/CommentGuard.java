@@ -14,7 +14,8 @@ public class CommentGuard extends Guard {
 
     @Override
     protected boolean isResourceOwner(Long id) {
-        Comment comment = commentRepository.findById(id).orElseThrow(GuardException::new);
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(GuardException::new);
         return comment.getId().equals(id);
     }
 }

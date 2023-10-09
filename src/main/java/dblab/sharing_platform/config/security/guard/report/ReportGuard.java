@@ -15,7 +15,8 @@ public class ReportGuard extends Guard {
 
     @Override
     protected boolean isResourceOwner(Long id) {
-        Report report = reportRepository.findById(id).orElseThrow(GuardException::new);
+        Report report = reportRepository.findById(id)
+                .orElseThrow(GuardException::new);
 
         return Long.valueOf(SecurityUtil.getCurrentUserId().get()).equals(report.getReporter().getId());
     }

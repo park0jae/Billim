@@ -24,15 +24,18 @@ public class CategoryService {
     @Transactional
     public Long createCategory(CategoryCreateRequestDto requestDto) {
         if (requestDto.getParentCategoryName() != null) {
-            Category parentCategory = categoryRepository.findByName(requestDto.getParentCategoryName()).orElseThrow(CategoryNotFoundException::new);
+            Category parentCategory = categoryRepository.findByName(requestDto.getParentCategoryName())
+                    .orElseThrow(CategoryNotFoundException::new);
             Category category = categoryRepository.save(CategoryCreateRequestDto.toEntity(requestDto, parentCategory));
             return category.getId();
         }
-        return categoryRepository.save(CategoryCreateRequestDto.toEntity(requestDto, null)).getId();
+        Category category = categoryRepository.save(CategoryCreateRequestDto.toEntity(requestDto, null));
+        return category.getId();
     }
 
     @Transactional
     public void deleteCategoryByCategoryName(String categoryName) {
-        categoryRepository.delete(categoryRepository.findByName(categoryName).orElseThrow(CategoryNotFoundException::new));
+        categoryRepository.delete(categoryRepository.findByName(categoryName)
+                .orElseThrow(CategoryNotFoundException::new));
     }
 }

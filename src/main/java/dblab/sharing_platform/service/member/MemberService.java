@@ -37,12 +37,16 @@ public class MemberService {
     private final FileService fileService;
 
     public MemberPrivateDto readCurrentUserInfoByUsername(String username){
-        return MemberPrivateDto.toDto(memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new));
+        return MemberPrivateDto.toDto(memberRepository.findByUsername(username)
+                .orElseThrow(MemberNotFoundException::new));
     }
 
     public MemberProfileDto readMemberProfileByNickname(String nickname) {
         List<Post> posts = postRepository.findAllWithMemberByNickname(nickname);
-        return MemberProfileDto.toDto(memberRepository.findByNickname(nickname).orElseThrow(MemberNotFoundException::new), PostDto.toDtoList(posts));
+        return MemberProfileDto.toDto(
+                memberRepository.findByNickname(nickname)
+                .orElseThrow(MemberNotFoundException::new),
+                PostDto.toDtoList(posts));
     }
 
     public PagedMemberListDto readAllMemberByCond(MemberPagingCondition cond) {
@@ -51,7 +55,8 @@ public class MemberService {
 
     @Transactional
     public void deleteMemberByUsername(String username){
-        Member member = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(MemberNotFoundException::new);
         List<Post> posts = postRepository.findAllWithMemberByNickname(member.getNickname());
         deleteImagesFromServer(posts);
         memberRepository.delete(member);
@@ -59,14 +64,16 @@ public class MemberService {
 
     @Transactional
     public MemberPrivateDto updateMember(String username, MemberUpdateRequestDto requestDto){
-        Member member = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(MemberNotFoundException::new);
         memberUpdate(requestDto, member);
         return MemberPrivateDto.toDto(member);
     }
 
     @Transactional
     public MemberPrivateDto oauthMemberUpdate(String username, OAuthMemberUpdateRequestDto requestDto){
-        Member member = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(MemberNotFoundException::new);
         oAuthMemberUpdate(requestDto, member);
         return MemberPrivateDto.toDto(member);
     }

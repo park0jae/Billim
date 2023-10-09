@@ -67,15 +67,18 @@ public class PostService {
     }
 
     public PostReadResponseDto readSinglePostByPostId(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        Post post = postRepository.findById(id)
+                .orElseThrow(PostNotFoundException::new);
         return PostReadResponseDto.toDto(post);
     }
 
     @Transactional
     public PostCreateResponseDto createPost(PostCreateRequestDto requestDto, String username) {
         List<PostImage> postImages = getImages(requestDto);
-        Category category = categoryRepository.findByName(requestDto.getCategoryName()).orElseThrow(CategoryNotFoundException::new);
-        Member member = memberRepository.findByUsername(username).orElseThrow(AuthenticationEntryPointException::new);
+        Category category = categoryRepository.findByName(requestDto.getCategoryName())
+                .orElseThrow(CategoryNotFoundException::new);
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(AuthenticationEntryPointException::new);
 
         Post post = new Post(requestDto.getTitle(),
                 requestDto.getContent(),
@@ -91,14 +94,16 @@ public class PostService {
 
     @Transactional
     public void deletePostByPostId(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        Post post = postRepository.findById(id)
+                .orElseThrow(PostNotFoundException::new);
         postRepository.delete(post);
         deleteImagesFromServer(post);
     }
 
     @Transactional
     public PostUpdateResponseDto updatePost(Long id, PostUpdateRequestDto requestDto) {
-        Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        Post post = postRepository.findById(id)
+                .orElseThrow(PostNotFoundException::new);
         PostUpdateResponseDto responseDto = post.updatePost(requestDto);
 
         updateImagesToServer(requestDto, responseDto);
@@ -108,8 +113,10 @@ public class PostService {
 
     @Transactional
     public void like(Long id, String username) {
-        Member member = memberRepository.findByUsername(username).orElseThrow(MemberNotFoundException::new);
-        Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(MemberNotFoundException::new);
+        Post post = postRepository.findById(id)
+                .orElseThrow(PostNotFoundException::new);
 
         likeUpOrDown(member, post);
     }
@@ -173,7 +180,8 @@ public class PostService {
             post.likeUp();
             likePosts.add(new LikePost(member, post));
             likePostRepository.save(new LikePost(member, post));
-            Member writeMember = memberRepository.findByUsername(post.getMember().getUsername()).orElseThrow(MemberNotFoundException::new);
+            Member writeMember = memberRepository.findByUsername(post.getMember().getUsername())
+                    .orElseThrow(MemberNotFoundException::new);
             notificationHelper.notificationIfSubscribe(member, writeMember, NotificationType.LIKE, LIKE_POST_MESSAGE);
         }
     }
