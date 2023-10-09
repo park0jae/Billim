@@ -6,6 +6,7 @@ import dblab.sharing_platform.domain.role.Role;
 import dblab.sharing_platform.domain.role.RoleType;
 
 import java.util.List;
+import java.util.Optional;
 
 public class MemberFactory {
     public static Member createMember() {
@@ -32,8 +33,8 @@ public class MemberFactory {
         return new Member("receiver", "", "receiver1", "", createAddress(), "None", List.of());
     }
 
-    public static Address createAddress() {
-        return new Address("city1", "district1", "street1", "zipCode1");
+    public static Optional<Address> createAddress() {
+        return Optional.of(new Address("city1", "district1", "street1", "zipCode1"));
     }
 
     public static Member createRenderMember() {

@@ -68,7 +68,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
                     "",
                     null,
                     oAuth2UserInfo.getPhoneNumber(),
-                    oAuth2UserInfo.getAddress(),
+                    Optional.of(oAuth2UserInfo.getAddress()),
                     oAuth2UserInfo.getProvider(),
                     List.of(roleRepository.findByRoleType(RoleType.USER)
                             .orElseThrow(RoleNotFoundException::new)));

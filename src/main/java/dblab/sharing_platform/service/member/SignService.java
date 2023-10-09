@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static dblab.sharing_platform.domain.refresh.RefreshToken.createToken;
 
@@ -67,7 +68,7 @@ public class SignService {
                 passwordEncoder.encode(request.getPassword()),
                 request.getNickname(),
                 request.getPhoneNumber(),
-                request.getAddress(),
+                Optional.of(request.getAddress()),
                 NONE,
                 roles);
 
@@ -95,9 +96,9 @@ public class SignService {
 
         Member member = new Member(request.getEmail(),
                 passwordEncoder.encode(request.getEmail()),
-                null,
-                null,
-                null,
+                String.valueOf(Optional.empty()),
+                String.valueOf(Optional.empty()),
+                Optional.empty(),
                 request.getProvider(),
                 roles);
         memberRepository.save(member);

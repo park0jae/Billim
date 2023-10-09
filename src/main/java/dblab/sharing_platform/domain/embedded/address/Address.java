@@ -25,5 +25,4 @@ public class Address {
 
     @ApiModelProperty(value = "우편번호", required = true, example = "54475")
     private String zipCode;
-
 }

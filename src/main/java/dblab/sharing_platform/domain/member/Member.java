@@ -23,6 +23,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
@@ -61,17 +62,19 @@ public class  Member {
     @JoinColumn(name = "profile_image_id")
     private ProfileImage profileImage;
 
-    public Member(String username, String password, String nickname, String phoneNumber, Address address, String provider, List<Role> roles) {
+    public Member(String username, String password, String nickname, String phoneNumber, Optional<Address> address, String provider, List<Role> roles) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.phoneNumber = phoneNumber;
-        this.address = address;
+        this.address = address.get();
         this.provider = provider;
         this.introduce = "자기소개가 없습니다.";
         this.profileImage = null;
         addRoles(roles);
     }
+
+
 
     private void addRoles(List<Role> roles) {
         List<MemberRole> roleList = roles.stream().map(role -> new MemberRole(this, role)).collect(Collectors.toList());
