@@ -23,22 +23,23 @@ import static dblab.sharing_platform.config.mail.MailConfigInfo.HOST_EMAIL;
 @Service
 public class MailService {
 
-    private final JavaMailSender emailSender;
-    private final EmailAuthRepository emailAuthRepository;
-    private final MemberRepository memberRepository;
     private static final String SIGN_UP = "SIGN-UP";
     private static final String RESET_PASSWORD = "RESET-PASSWORD";
     private static final String CHARSET = "utf-8";
     private static final String SUBTYPE = "html";
     private static final String PERSONAL = "SharingPlatform_Admin";
-    private String ePw;
+
+    private final JavaMailSender emailSender;
+    private final EmailAuthRepository emailAuthRepository;
+    private final MemberRepository memberRepository;
+    private String authKey;
 
     @Transactional
     public void sendSignUpMail(String email) {
         if (emailAuthRepository.existsByEmailAndPurpose(email, SIGN_UP)) {
             throw new AlreadySendAuthKeyException();
         }
-        ePw = createAuthKey();
+        authKey = createAuthKey();
         sendMail(email, SIGN_UP);
     }
 
@@ -47,7 +48,7 @@ public class MailService {
         if (emailAuthRepository.existsByEmailAndPurpose(email, RESET_PASSWORD)) {
             throw new AlreadySendAuthKeyException();
         }
-        ePw = createAuthKey();
+        authKey = createAuthKey();
         memberRepository.findByUsername(email).orElseThrow(MemberNotFoundException::new);
         sendMail(email, RESET_PASSWORD);
     }
@@ -83,7 +84,7 @@ public class MailService {
 
         try {
             emailSender.send(message);
-            emailAuthRepository.save(new EmailAuth(ePw, email, purpose));
+            emailAuthRepository.save(new EmailAuth(authKey, email, purpose));
         } catch (Exception e) {
             throw new IllegalArgumentException();
         }
@@ -96,10 +97,9 @@ public class MailService {
 
         switch (purpose) {
             case "RESET-PASSWORD":
-                message.setSubject("[뭐든빌리개]" + "Sharing-Platform 비밀번호 재설정 페이지에 대한 인증코드 입니다.");
-                // msgg += "<img src=../resources/static/image/emailheader.jpg />";
+                message.setSubject("[Billim]" + "Billim 비밀번호 재설정 페이지에 대한 인증코드 입니다.");
                 msgg += "<h1>안녕하세요</h1>";
-                msgg += "<h1>대여 서비스 플랫폼 뭐든빌리개 입니다</h1>";
+                msgg += "<h1>대여 서비스 플랫폼 Billim 입니다</h1>";
                 msgg += "<br>";
                 msgg += "<p>아래 인증코드를 비밀번호 재설정 페이지에 입력해주세요</p>";
                 msgg += "<br>";
@@ -107,16 +107,14 @@ public class MailService {
                 msgg += "<div align='center' style='border:1px solid black'>";
                 msgg += "<h3 style='color:blue'>비밀번호 재설정을 하기 위한 사전인증코드 입니다</h3>";
                 msgg += "<div style='font-size:130%'>";
-                msgg += "<strong>" + ePw + "</strong></div><br/>";
+                msgg += "<strong>" + authKey + "</strong></div><br/>";
                 msgg += "</div>";
-                // msgg += "<img src=../resources/static/image/emailfooter.jpg />"; // footer image
                 break;
 
             case "SIGN-UP":
-                message.setSubject("[뭐든빌리개]" + "Sharing-Platform 회원가입 인증코드 입니다.");
-                // msgg += "<img src=../resources/static/image/emailheader.jpg />";
+                message.setSubject("[Billim]" + "Billim 회원가입 인증코드 입니다.");
                 msgg += "<h1>안녕하세요</h1>";
-                msgg += "<h1>대여 서비스 플랫폼 뭐든빌리개 입니다</h1>";
+                msgg += "<h1>대여 서비스 플랫폼 Billim 입니다</h1>";
                 msgg += "<br>";
                 msgg += "<p>아래 인증코드를 회원가입 페이지에 입력해주세요</p>";
                 msgg += "<br>";
@@ -124,9 +122,8 @@ public class MailService {
                 msgg += "<div align='center' style='border:1px solid black'>";
                 msgg += "<h3 style='color:blue'>회원가입 인증코드 입니다</h3>";
                 msgg += "<div style='font-size:130%'>";
-                msgg += "<strong>" + ePw + "</strong></div><br/>" ;
+                msgg += "<strong>" + authKey + "</strong></div><br/>" ;
                 msgg += "</div>";
-                // msgg += "<img src=../resources/static/image/emailfooter.jpg />"; // footer image
                 break;
         }
         message.setText(msgg, CHARSET, SUBTYPE);

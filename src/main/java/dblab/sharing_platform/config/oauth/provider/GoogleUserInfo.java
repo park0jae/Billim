@@ -1,11 +1,9 @@
 package dblab.sharing_platform.config.oauth.provider;
 
 import dblab.sharing_platform.domain.embedded.address.Address;
-
 import java.util.Map;
 
 import static dblab.sharing_platform.config.oauth.provider.OAuthInfo.*;
-
 public class GoogleUserInfo implements OAuth2UserInfo{
 
     private Map<String, Object> attributes;

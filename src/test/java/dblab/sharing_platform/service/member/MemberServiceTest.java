@@ -130,7 +130,4 @@ public class MemberServiceTest {
         // When & Then
         assertThatThrownBy(() -> memberService.readCurrentUserInfoByUsername(username)).isInstanceOf(MemberNotFoundException.class);
     }
-
-
-
 }

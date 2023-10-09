@@ -1,7 +1,18 @@
 package dblab.sharing_platform.advisor;
 
 import dblab.sharing_platform.dto.response.Response;
-import dblab.sharing_platform.exception.auth.*;
+import dblab.sharing_platform.exception.auth.AccessDeniedException;
+import dblab.sharing_platform.exception.auth.AlreadyExistsMemberException;
+import dblab.sharing_platform.exception.auth.AlreadySendAuthKeyException;
+import dblab.sharing_platform.exception.auth.AuthenticationEntryPointException;
+import dblab.sharing_platform.exception.auth.DuplicateNicknameException;
+import dblab.sharing_platform.exception.auth.DuplicateUsernameException;
+import dblab.sharing_platform.exception.auth.EmailAuthNotEqualsException;
+import dblab.sharing_platform.exception.auth.EmailAuthNotFoundException;
+import dblab.sharing_platform.exception.auth.IllegalAuthenticationException;
+import dblab.sharing_platform.exception.auth.LoginFailureException;
+import dblab.sharing_platform.exception.auth.NotEqualsPasswordToVerifiedException;
+import dblab.sharing_platform.exception.auth.ValidateTokenException;
 import dblab.sharing_platform.exception.category.CategoryNotFoundException;
 import dblab.sharing_platform.exception.comment.CommentNotFoundException;
 import dblab.sharing_platform.exception.comment.RootCommentNotFoundException;

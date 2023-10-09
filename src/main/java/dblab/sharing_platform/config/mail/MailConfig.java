@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import static dblab.sharing_platform.config.mail.MailConfigInfo.*;
 
+
 @Configuration
 public class MailConfig {
 

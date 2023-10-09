@@ -19,12 +19,12 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import static dblab.sharing_platform.config.oauth.provider.OAuthInfo.*;
+
 
 @Service
 @RequiredArgsConstructor

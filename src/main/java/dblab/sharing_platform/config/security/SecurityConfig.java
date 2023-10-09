@@ -64,34 +64,35 @@ public class SecurityConfig {
                 .antMatchers("/home", "/auth/sign-up", "/auth/login").permitAll()
                 .antMatchers("/swagger-uri/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll()
 
-                .antMatchers(HttpMethod.GET, "/members").permitAll()
-                .antMatchers(HttpMethod.GET, "/members/my-profile").permitAll()
-                .antMatchers(HttpMethod.PATCH, "/members/oauth").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/members").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/members/my-profile").permitAll()
+                .antMatchers(HttpMethod.PATCH, "/api/members/oauth").permitAll()
 
-                .antMatchers(HttpMethod.DELETE, "/category/**").hasAuthority("ADMIN")
-                .antMatchers(HttpMethod.POST, "/category/**").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/api/category/**").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/category/**").hasAuthority("ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/messages/{messageId}").access("@sendMessageGuard.check(#messageId) or @receiveMessageGuard.check(#messageId)")
+                .antMatchers(HttpMethod.GET, "/api/messages/received").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/messages/sent").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/messages/{messageId}").access("@sendMessageGuard.check(#messageId) or @receiveMessageGuard.check(#messageId)")
+                .antMatchers(HttpMethod.DELETE, "/api/messages/{messageId}/sent").access("@sendMessageGuard.check(#messageId)")
+                .antMatchers(HttpMethod.DELETE, "/api/messages/{messageId}/received").access("@receiveMessageGuard.check(#messageId)")
 
-                .antMatchers(HttpMethod.DELETE, "/messages/{messageId}/sent").access("@sendMessageGuard.check(#messageId)")
-                .antMatchers(HttpMethod.DELETE, "/messages/{messageId}/received").access("@receiveMessageGuard.check(#messageId)")
+                .antMatchers(HttpMethod.DELETE, "/api/posts/{postId}").access("@postGuard.check(#postId)")
+                .antMatchers(HttpMethod.PATCH, "/api/posts/{postId}").access("@postGuard.check(#postId)")
 
-                .antMatchers(HttpMethod.DELETE, "/posts/{postId}").access("@postGuard.check(#postId)")
-                .antMatchers(HttpMethod.PATCH, "/posts/{postId}").access("@postGuard.check(#postId)")
+                .antMatchers(HttpMethod.DELETE, "/api/comments/{commentId}").access("@commentGuard.check(#commentId)")
 
-                .antMatchers(HttpMethod.DELETE, "/comments/{commentId}").access("@commentGuard.check(#commentId)")
+                .antMatchers(HttpMethod.POST, "/api/trades/{postId}").access("@postGuard.check(#postId)")
+                .antMatchers(HttpMethod.PATCH, "/api/trades/trade/{tradeId}").access("@tradeGuard.check(#tradeId)")
+                .antMatchers(HttpMethod.DELETE, "/api/trades/{tradeId}").access("@tradeGuard.check(#tradeId)")
 
-                .antMatchers(HttpMethod.POST, "/trades/{postId}").access("@postGuard.check(#postId)")
-                .antMatchers(HttpMethod.PATCH, "/trades/trade/{tradeId}").access("@tradeGuard.check(#tradeId)")
-                .antMatchers(HttpMethod.DELETE, "/trades/{tradeId}").access("@tradeGuard.check(#tradeId)")
+                .antMatchers(HttpMethod.POST, "/api/reviews/{tradeId}").access("@reviewGuard.check(#tradeId)")
+                .antMatchers(HttpMethod.DELETE, "/api/reviews/{tradeId}").access("@reviewGuard.check(#tradeId)")
+                .antMatchers(HttpMethod.GET, "/api/reviews/all").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/reviews").hasAnyAuthority("ADMIN", "MANAGER", "USER")
 
-                .antMatchers(HttpMethod.POST, "/reviews/{tradeId}").access("@reviewGuard.check(#tradeId)")
-                .antMatchers(HttpMethod.DELETE, "/reviews/{tradeId}").access("@reviewGuard.check(#tradeId)")
-                .antMatchers(HttpMethod.GET, "/reviews/all").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.GET, "/reviews").hasAnyAuthority("ADMIN", "MANAGER", "USER")
-
-                .antMatchers(HttpMethod.DELETE, "/reports/{reportId}").access("@reportGuard.check(#reportId)")
-                .antMatchers(HttpMethod.GET, "/reports").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/api/reports/{reportId}").access("@reportGuard.check(#reportId)")
+                .antMatchers(HttpMethod.GET, "/api/reports").hasAnyAuthority("ADMIN")
 
                 .and()
                 .oauth2Login()

@@ -1,7 +1,11 @@
 package dblab.sharing_platform.domain.member;
 
 import dblab.sharing_platform.domain.role.Role;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;
