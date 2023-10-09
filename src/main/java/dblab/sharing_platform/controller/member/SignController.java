@@ -1,6 +1,10 @@
 package dblab.sharing_platform.controller.member;
 
-import dblab.sharing_platform.dto.member.*;
+import dblab.sharing_platform.dto.member.LogInResponseDto;
+import dblab.sharing_platform.dto.member.LoginRequestDto;
+import dblab.sharing_platform.dto.member.MemberCreateRequestDto;
+import dblab.sharing_platform.dto.member.OAuth2MemberCreateRequestDto;
+import dblab.sharing_platform.dto.member.PasswordResetRequestDto;
 import dblab.sharing_platform.dto.oauth.AccessTokenRequestDto;
 import dblab.sharing_platform.dto.response.Response;
 import dblab.sharing_platform.exception.member.MemberNotFoundException;
@@ -12,7 +16,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 

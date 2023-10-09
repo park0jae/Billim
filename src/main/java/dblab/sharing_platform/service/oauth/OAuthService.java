@@ -14,13 +14,22 @@ import dblab.sharing_platform.exception.oauth.OAuthUserNotFoundException;
 import dblab.sharing_platform.exception.oauth.SocialAgreementException;
 import dblab.sharing_platform.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 import static dblab.sharing_platform.config.oauth.provider.OAuthInfo.*;
 
 @Service
